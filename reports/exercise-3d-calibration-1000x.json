@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "guideCount": 29,
+  "uniqueExercisePresets": 29,
+  "fallbackPreset": "standing",
+  "views": [
+    "animation",
+    "start",
+    "finish"
+  ],
+  "cameraViews": [
+    "front",
+    "side",
+    "back",
+    "drag-360"
+  ],
+  "renderer": "native-webgl-procedural",
+  "externalModelFiles": false,
+  "threeJsDependency": false,
+  "cycles": 1000,
+  "deterministicChecks": 435000,
+  "generatedAt": "2026-08-05T15:04:31.137Z",
+  "durationMs": 12668
+}

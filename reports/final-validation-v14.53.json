@@ -1,0 +1,40 @@
+{
+  "status": "PASS_WITH_ENVIRONMENT_LIMITATION",
+  "version": "1.4.53",
+  "validatedAt": "2026-08-05T06:40:30Z",
+  "exerciseGuides": {
+    "renderer": "native WebGL procedural character",
+    "guideCount": 29,
+    "uniqueMotionPresets": 29,
+    "externalModelFiles": false,
+    "threeJsDependency": false,
+    "cameraControls": ["front", "side", "back", "drag-360", "wheel-zoom", "pinch-zoom"],
+    "movementModes": ["animation", "start", "finish"],
+    "calibrationCycles": 11500,
+    "deterministicPoseChecks": 5002500
+  },
+  "sourceAudit": {
+    "cycles": 100,
+    "uniqueSourceFiles": 82,
+    "checkedFiles": 8200,
+    "checkedImports": 29600,
+    "brokenLocalImports": 0,
+    "syntaxErrors": 0
+  },
+  "featureAudits": {
+    "uiContent": "PASS",
+    "premiumGates": "PASS",
+    "subscriptionFlow": "PASS",
+    "jogging": "PASS",
+    "sqlCompatibility": "PASS"
+  },
+  "focusedTypeChecks": {
+    "exerciseGuideData": "PASS",
+    "exercise3DMotion": "PASS",
+    "exercise3DComponents": "PASS_WITH_LOCAL_REACT_TYPE_STUBS"
+  },
+  "productionBuild": {
+    "status": "NOT_RUN",
+    "reason": "The isolated package registry available in this environment returns HTTP 404 for required project dependencies. No new npm dependency was added by v1.4.53."
+  }
+}

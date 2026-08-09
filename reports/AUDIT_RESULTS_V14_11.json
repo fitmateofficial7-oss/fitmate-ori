@@ -1,0 +1,64 @@
+{
+  "release": "FitMate AI v14.11",
+  "tested_at": "2026-07-30T11:35:00+07:00",
+  "timezone": "Asia/Jakarta",
+  "results": {
+    "ui_content_audit": {
+      "status": "PASS",
+      "free_plan_generations_lifetime": 2,
+      "free_ai_consultations_lifetime": 1,
+      "free_meal_scans_lifetime": 1,
+      "premium_ai_consultations_daily": 10,
+      "premium_meal_scans_daily": 10,
+      "premium_monthly_price_idr": 49000
+    },
+    "sql_compatibility_audit": {
+      "status": "PASS",
+      "migrations_checked": [
+        "202607280008_prelaunch_features.sql",
+        "202607300009_subscription_and_generation_quota.sql",
+        "202607300010_ai_feature_entitlements.sql",
+        "202607300011_billing_checkout_lock.sql",
+        "202607300012_atomic_ai_completions.sql"
+      ]
+    },
+    "subscription_flow_audit": {
+      "status": "PASS",
+      "checks_passed": 21,
+      "checks_failed": 0
+    },
+    "project_static_audit": {
+      "status": "PASS",
+      "cycles": 100,
+      "unique_source_files": 71,
+      "checked_files": 7100,
+      "checked_imports": 26100,
+      "broken_local_imports": 0,
+      "syntax_errors": 0
+    },
+    "typescript_parser_audit": {
+      "status": "PASS",
+      "source_files_parsed": 69,
+      "parse_errors": 0
+    },
+    "exercise_motion_audit": {
+      "status": "PASS",
+      "cycles": 100,
+      "calibrated_guides": 29,
+      "total_sampled_poses": 29000,
+      "maximum_perceptual_stall_ms": 200
+    },
+    "account_export_zip_integrity": {
+      "status": "PASS",
+      "validator": "unzip -t",
+      "archive_errors": 0
+    }
+  },
+  "not_executed_in_this_environment": [
+    "npm run lint",
+    "npm run typecheck",
+    "npm run build",
+    "npm run test:e2e"
+  ],
+  "limitation": "The isolated runtime could not complete npm ci because the available dependency registry/network could not resolve all packages. Run the full commands in network-enabled staging or CI before production."
+}

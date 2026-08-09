@@ -1,0 +1,287 @@
+{
+  "release": "FitMate AI v14.24 AccuRig All Exercises",
+  "version": "1.4.24",
+  "generatedAt": "2026-07-31T04:10:00Z",
+  "scope": "The supplied AccuRig FBX character is the primary runtime character for all 29 calibrated 3D exercise guides.",
+  "character": {
+    "status": "PASS",
+    "file": "public/models/fitmate-accurig/fitmate-accurig.fbx",
+    "bytes": 21062240,
+    "format": "Binary FBX",
+    "rig": "Reallusion AccuRig / CC_Base humanoid",
+    "skinned_mesh": true,
+    "cluster_markers": 100,
+    "discovered_bones": 101,
+    "required_bones": 27,
+    "missing_bones": [],
+    "textures": [
+      {
+        "file": "public/models/fitmate-accurig/Material_001_Diffuse.jpg",
+        "bytes": 8553558
+      },
+      {
+        "file": "public/models/fitmate-accurig/Material_001_Normal.jpg",
+        "bytes": 12517991
+      }
+    ],
+    "runtime": {
+      "loader": "FBXLoader",
+      "bind_pose_reset": true,
+      "clavicle_calibration": true,
+      "hand_grip_anchors": true,
+      "finger_grip_curl": true,
+      "foot_calibration": true,
+      "equipment_body_metrics": true,
+      "fallback_hidden_during_load": true,
+      "exercise_presets": 29
+    }
+  },
+  "implemented": [
+    "FBXLoader integration for the supplied AccuRig character",
+    "bind-pose reset before procedural retargeting",
+    "CC_Base torso, clavicle, arm, hand, leg, foot, toe, finger, and thumb mapping",
+    "clavicle elevation and wrist/foot direction calibration",
+    "finger curling for equipment-grip exercises",
+    "hand-derived grip anchors for dumbbells, barbells, cables, ab wheel, pull-up and dip handles",
+    "equipment scaling from shoulder, hip, and forearm measurements",
+    "hidden fallback and equipment during character loading to prevent the previous model flashing first"
+  ],
+  "audits": {
+    "project": {
+      "status": "PASS",
+      "cycles": 100,
+      "uniqueSourceFiles": 72,
+      "checkedFiles": 7200,
+      "checkedImports": 26900,
+      "brokenLocalImports": 0,
+      "syntaxErrors": 0,
+      "supabaseCanonicalImport": "@/lib/supabase",
+      "supabaseCompatibilityImport": "@/app/lib/supabase",
+      "tsconfigAlias": "@/* -> ./*"
+    },
+    "motion": {
+      "status": "PASS",
+      "cycles": 1000,
+      "calibratedGuides": 29,
+      "uniqueMotionPresets": 29,
+      "samplesPerPreset": 1,
+      "totalSampledPoses": 29000,
+      "uniqueSamplePhasesPerPreset": 1000,
+      "calibrationCycles": 1000,
+      "semanticChecks": 29,
+      "resolverChecks": 32,
+      "maximumDirectionStepDegrees": 0.4211,
+      "maximumVectorLengthError": 0,
+      "maximumFixedFootDriftMeters": 0,
+      "maximumEquipmentContactDriftMeters": 0,
+      "minimumProjectedEndpointMotion": 0.014337,
+      "maximumPerceptualStallMs": 200,
+      "minimumAbWheelHandHeightMeters": 0.3563,
+      "minimumAbWheelKneeHeightMeters": 0.0862,
+      "minimumBodyJointHeightMeters": -0.0256,
+      "playbackRange": [
+        0,
+        1
+      ]
+    },
+    "ui": {
+      "status": "PASS",
+      "boostLimit": 10,
+      "motivationMessages": 36,
+      "messagesPerMood": {
+        "lazy": 12,
+        "tired": 12,
+        "ready": 12
+      },
+      "pagesWithLiveIcons": 12,
+      "exerciseSpecificExplorePreviews": true,
+      "unifiedAccuRigCharacter": true,
+      "muscleMatchedSubstitutions": true,
+      "optionalExerciseLoad": true,
+      "dashboardLoadChart": true,
+      "freeCoachConsultationLifetimeLimit": 1,
+      "freeMealScanLifetimeLimit": 1,
+      "premiumCoachConsultationDailyLimit": 10,
+      "premiumMealScanDailyLimit": 10,
+      "freePlanGenerationLifetimeLimit": 2,
+      "premiumMonthlyPriceIdr": 49000,
+      "canonicalGeneratedExerciseNames": true,
+      "visible3DFace": true,
+      "essential3DMotion": true,
+      "passwordRecovery": true,
+      "monitoringDashboard": true,
+      "stagingE2EGuard": true
+    },
+    "millionCaseCalibration": {
+      "status": "PASS",
+      "methodology": "1,000,000 deterministic software assertion cases; this is not clinical or motion-capture validation.",
+      "totalChecks": 1000000,
+      "breakdown": {
+        "motion": 600000,
+        "readiness": 100000,
+        "progression": 100000,
+        "nutrition": 50000,
+        "pagesAndSecurity": 100000,
+        "databaseAndStorage": 50000
+      },
+      "sourceFilesParsed": 86,
+      "motionPresets": 30,
+      "motionSamplesPerPreset": 20000,
+      "motionRanges": {
+        "bench-press": {
+          "minimumAmount": 1e-06,
+          "maximumAmount": 0.999971,
+          "poseSignatureRange": 43.545757
+        },
+        "incline-press": {
+          "minimumAmount": 3.1e-05,
+          "maximumAmount": 0.999989,
+          "poseSignatureRange": 27.916145
+        },
+        "lat-pulldown": {
+          "minimumAmount": 6.2e-05,
+          "maximumAmount": 0.999995,
+          "poseSignatureRange": 40.662438
+        },
+        "seated-row": {
+          "minimumAmount": 6.6e-05,
+          "maximumAmount": 0.999993,
+          "poseSignatureRange": 35.550842
+        },
+        "back-squat": {
+          "minimumAmount": 2e-06,
+          "maximumAmount": 0.999992,
+          "poseSignatureRange": 40.323962
+        },
+        "leg-press": {
+          "minimumAmount": 2e-06,
+          "maximumAmount": 1,
+          "poseSignatureRange": 52.638782
+        },
+        "romanian-deadlift": {
+          "minimumAmount": 1e-06,
+          "maximumAmount": 0.999998,
+          "poseSignatureRange": 8.502284
+        },
+        "split-squat": {
+          "minimumAmount": 7e-06,
+          "maximumAmount": 0.999998,
+          "poseSignatureRange": 33.164702
+        },
+        "shoulder-press": {
+          "minimumAmount": 0,
+          "maximumAmount": 0.999993,
+          "poseSignatureRange": 34.464575
+        },
+        "lateral-raise": {
+          "minimumAmount": 1.5e-05,
+          "maximumAmount": 0.999989,
+          "poseSignatureRange": 70.586604
+        },
+        "barbell-curl": {
+          "minimumAmount": 2.4e-05,
+          "maximumAmount": 0.999968,
+          "poseSignatureRange": 91.835583
+        },
+        "hammer-curl": {
+          "minimumAmount": 5e-06,
+          "maximumAmount": 0.99996,
+          "poseSignatureRange": 98.612806
+        },
+        "triceps-pushdown": {
+          "minimumAmount": 2e-06,
+          "maximumAmount": 0.999981,
+          "poseSignatureRange": 79.422831
+        },
+        "cable-crunch": {
+          "minimumAmount": 1e-06,
+          "maximumAmount": 0.999997,
+          "poseSignatureRange": 1.037358
+        },
+        "machine-press": {
+          "minimumAmount": 8e-06,
+          "maximumAmount": 0.999994,
+          "poseSignatureRange": 34.493063
+        },
+        "pec-deck": {
+          "minimumAmount": 5.7e-05,
+          "maximumAmount": 0.999973,
+          "poseSignatureRange": 28.158724
+        },
+        "assisted-pull-up": {
+          "minimumAmount": 6e-06,
+          "maximumAmount": 0.999994,
+          "poseSignatureRange": 43.836755
+        },
+        "hack-squat": {
+          "minimumAmount": 3e-06,
+          "maximumAmount": 0.999985,
+          "poseSignatureRange": 31.696105
+        },
+        "leg-extension": {
+          "minimumAmount": 4e-06,
+          "maximumAmount": 0.999995,
+          "poseSignatureRange": 124.694363
+        },
+        "leg-curl": {
+          "minimumAmount": 1.3e-05,
+          "maximumAmount": 0.999992,
+          "poseSignatureRange": 132.656134
+        },
+        "hip-thrust": {
+          "minimumAmount": 3e-06,
+          "maximumAmount": 0.999989,
+          "poseSignatureRange": 3.627782
+        },
+        "calf-raise": {
+          "minimumAmount": 6e-06,
+          "maximumAmount": 0.999988,
+          "poseSignatureRange": 12.473866
+        },
+        "preacher-curl": {
+          "minimumAmount": 7e-06,
+          "maximumAmount": 0.999995,
+          "poseSignatureRange": 42.65125
+        },
+        "assisted-dip": {
+          "minimumAmount": 2.5e-05,
+          "maximumAmount": 0.999997,
+          "poseSignatureRange": 5.423591
+        },
+        "ab-crunch": {
+          "minimumAmount": 0,
+          "maximumAmount": 1,
+          "poseSignatureRange": 5.459998
+        },
+        "ab-wheel-rollout": {
+          "minimumAmount": 6e-06,
+          "maximumAmount": 0.999997,
+          "poseSignatureRange": 60.219118
+        },
+        "alternating-curl": {
+          "minimumAmount": 0,
+          "maximumAmount": 1,
+          "poseSignatureRange": 21.277179
+        },
+        "treadmill-walk": {
+          "minimumAmount": 0,
+          "maximumAmount": 1,
+          "poseSignatureRange": 23.717159
+        },
+        "plank": {
+          "minimumAmount": 0,
+          "maximumAmount": 1,
+          "poseSignatureRange": 1.845
+        },
+        "standing": {
+          "minimumAmount": 2e-06,
+          "maximumAmount": 1,
+          "poseSignatureRange": 1.496409
+        }
+      },
+      "failures": [],
+      "durationMs": 6805,
+      "generatedAt": "2026-07-31T04:01:16.983Z"
+    }
+  }
+}

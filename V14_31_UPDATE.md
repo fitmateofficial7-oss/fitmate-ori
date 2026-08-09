@@ -1,0 +1,25 @@
+# FitMate v14.31 – Unsupported Exercise Resolver Fix
+
+- Fixed a large group of exercises that previously fell back to the static standing pose.
+- Added alias and inference coverage so more exercise names resolve to animated calibrated presets instead of `standing`.
+- Explicitly covered common unsupported examples reported in testing, including:
+  - Barbell Rack Pull
+  - Barbell Shrug
+  - Bear Crawl
+  - Bird Dog
+  - Bench Dip
+  - Burpee
+  - Butt Kicks
+  - Cable Front Raise
+  - Cable Glute Kickback
+  - Cable Overhead Tricep Extension
+  - Cable Pull Through
+  - Cat Cow Stretch
+  - Chest Doorway Stretch
+  - Close Grip Push Up
+  - Cycling
+  - Dead Bug
+  - Decline Barbell Bench Press
+  - Decline Dumbbell Press
+- Preserved the Meshy character trial as primary with the FitMate green mascot as fallback.
+- Motion, import, and UI audits pass.

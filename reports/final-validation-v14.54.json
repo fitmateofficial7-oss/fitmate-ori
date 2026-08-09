@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "version": "1.4.54",
+  "renderer": "native-webgl-procedural",
+  "fixes": {
+    "doubleSidedMeshes": true,
+    "fullLengthTorso": true,
+    "connectedNeckShouldersHips": true,
+    "poseAwareFeet": true,
+    "cameraTiltLimited": true
+  },
+  "exerciseGuidePresets": 29,
+  "deterministicPoseChecks": 435000,
+  "premiumGateAudit": "PASS",
+  "subscriptionAudit": "PASS",
+  "joggingAudit": "PASS"
+}

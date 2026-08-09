@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "migration": "supabase/migrations/202607280008_prelaunch_features.sql",
+  "transactionWrappers": {
+    "begin": 1,
+    "commit": 1
+  },
+  "dynamicDoBlocks": 4,
+  "compatibleParentIds": [
+    "workout_sessions.id",
+    "workout_exercise_logs.id",
+    "exercises.id",
+    "nutrition_analyses.id"
+  ],
+  "failures": []
+}

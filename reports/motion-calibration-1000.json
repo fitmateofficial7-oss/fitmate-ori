@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "cycles": 1000,
+  "calibratedGuides": 29,
+  "uniqueMotionPresets": 29,
+  "samplesPerPreset": 1,
+  "totalSampledPoses": 29000,
+  "uniqueSamplePhasesPerPreset": 1000,
+  "calibrationCycles": 1000,
+  "semanticChecks": 29,
+  "resolverChecks": 32,
+  "maximumDirectionStepDegrees": 0.4211,
+  "maximumVectorLengthError": 0,
+  "maximumFixedFootDriftMeters": 0,
+  "maximumEquipmentContactDriftMeters": 0,
+  "minimumProjectedEndpointMotion": 0.014337,
+  "maximumPerceptualStallMs": 200,
+  "minimumAbWheelHandHeightMeters": 0.3563,
+  "minimumAbWheelKneeHeightMeters": 0.0862,
+  "minimumBodyJointHeightMeters": -0.0256,
+  "playbackRange": [
+    0,
+    1
+  ]
+}

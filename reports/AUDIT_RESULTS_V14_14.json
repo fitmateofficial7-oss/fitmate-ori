@@ -1,0 +1,169 @@
+{
+  "release": "v14.14",
+  "status": "PASS",
+  "checks": {
+    "project": {
+      "status": "PASS",
+      "cycles": 100,
+      "uniqueSourceFiles": 72,
+      "checkedFiles": 7200,
+      "checkedImports": 26900,
+      "brokenLocalImports": 0,
+      "syntaxErrors": 0,
+      "supabaseCanonicalImport": "@/lib/supabase",
+      "supabaseCompatibilityImport": "@/app/lib/supabase",
+      "tsconfigAlias": "@/* -> ./*"
+    },
+    "sql": {
+      "status": "PASS",
+      "migrations": {
+        "202607280008_prelaunch_features.sql": {
+          "begin": 1,
+          "commit": 1,
+          "dollarQuotes": 8,
+          "dynamicDoBlocks": 4
+        },
+        "202607300009_subscription_and_generation_quota.sql": {
+          "begin": 1,
+          "commit": 1,
+          "dollarQuotes": 10,
+          "dynamicDoBlocks": 0
+        },
+        "202607300010_ai_feature_entitlements.sql": {
+          "begin": 1,
+          "commit": 1,
+          "dollarQuotes": 6,
+          "dynamicDoBlocks": 0
+        },
+        "202607300011_billing_checkout_lock.sql": {
+          "begin": 1,
+          "commit": 1,
+          "dollarQuotes": 4,
+          "dynamicDoBlocks": 0
+        },
+        "202607300012_atomic_ai_completions.sql": {
+          "begin": 1,
+          "commit": 1,
+          "dollarQuotes": 4,
+          "dynamicDoBlocks": 0
+        }
+      },
+      "compatibleParentIds": [
+        "workout_sessions.id",
+        "workout_exercise_logs.id",
+        "exercises.id",
+        "nutrition_analyses.id"
+      ],
+      "commercialRules": {
+        "freePlanGenerationsLifetime": 2,
+        "freeAiConsultationsLifetime": 1,
+        "freeMealScansLifetime": 1,
+        "premiumAiConsultationsDaily": 10,
+        "premiumMealScansDaily": 10,
+        "checkoutMutex": true,
+        "atomicPlanCompletion": true,
+        "atomicCoachCompletion": true
+      },
+      "failures": []
+    },
+    "subscription": {
+      "status": "PASS",
+      "checks": {
+        "premium price": true,
+        "free plan generation limit": true,
+        "Xendit 2026 API version": true,
+        "session API uses version header": true,
+        "checkout requires recurring consent": true,
+        "checkout uses idempotency reference": true,
+        "checkout mutex": true,
+        "orphan checkout cleanup": true,
+        "webhook token verification": true,
+        "webhook duplicate protection": true,
+        "webhook preserves active state on late session events": true,
+        "stale failure protection": true,
+        "refund webhook support": true,
+        "refund cancels recurring plan": true,
+        "account deletion cancels subscription first": true,
+        "atomic workout completion": true,
+        "atomic coach completion": true,
+        "premium UI has recurring consent": true,
+        "premium UI displays 10 daily limits": true,
+        "admin subscription metrics API": true,
+        "admin subscription metrics UI": true
+      },
+      "failures": []
+    },
+    "premiumGates": {
+      "status": "PASS",
+      "autoRedirects": [
+        "plan-generation",
+        "ai-consultation",
+        "meal-scan"
+      ],
+      "free3DExercises": 10,
+      "lockedPages": [
+        "progress",
+        "nutrition"
+      ],
+      "themeAwarePremiumPage": true
+    },
+    "ui": {
+      "status": "PASS",
+      "boostLimit": 10,
+      "motivationMessages": 36,
+      "messagesPerMood": {
+        "lazy": 12,
+        "tired": 12,
+        "ready": 12
+      },
+      "pagesWithLiveIcons": 12,
+      "exerciseSpecificExplorePreviews": true,
+      "staticModelFallback": true,
+      "muscleMatchedSubstitutions": true,
+      "optionalExerciseLoad": true,
+      "dashboardLoadChart": true,
+      "freeCoachConsultationLifetimeLimit": 1,
+      "freeMealScanLifetimeLimit": 1,
+      "premiumCoachConsultationDailyLimit": 10,
+      "premiumMealScanDailyLimit": 10,
+      "freePlanGenerationLifetimeLimit": 2,
+      "premiumMonthlyPriceIdr": 49000,
+      "canonicalGeneratedExerciseNames": true,
+      "visible3DFace": true,
+      "essential3DMotion": true,
+      "passwordRecovery": true,
+      "monitoringDashboard": true,
+      "stagingE2EGuard": true
+    },
+    "typescriptSyntax": {
+      "status": "PASS",
+      "files": [
+        {
+          "file": "app/api/coach/route.ts",
+          "syntax": "PASS",
+          "errors": []
+        },
+        {
+          "file": "lib/billing-server.ts",
+          "syntax": "PASS",
+          "errors": []
+        },
+        {
+          "file": "lib/ai-usage-server.ts",
+          "syntax": "PASS",
+          "errors": []
+        },
+        {
+          "file": "app/plan/page.tsx",
+          "syntax": "PASS",
+          "errors": []
+        },
+        {
+          "file": "app/coach/page.tsx",
+          "syntax": "PASS",
+          "errors": []
+        }
+      ]
+    }
+  }
+}

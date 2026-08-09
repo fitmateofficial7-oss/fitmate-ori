@@ -1,0 +1,171 @@
+{
+  "status": "PASS",
+  "methodology": "1,000,000 deterministic software assertion cases; this is not clinical or motion-capture validation.",
+  "totalChecks": 1000000,
+  "breakdown": {
+    "motion": 600000,
+    "readiness": 100000,
+    "progression": 100000,
+    "nutrition": 50000,
+    "pagesAndSecurity": 100000,
+    "databaseAndStorage": 50000
+  },
+  "sourceFilesParsed": 86,
+  "motionPresets": 30,
+  "motionSamplesPerPreset": 20000,
+  "motionRanges": {
+    "bench-press": {
+      "minimumAmount": 0.000001,
+      "maximumAmount": 0.999971,
+      "poseSignatureRange": 43.545757
+    },
+    "incline-press": {
+      "minimumAmount": 0.000031,
+      "maximumAmount": 0.999989,
+      "poseSignatureRange": 27.916145
+    },
+    "lat-pulldown": {
+      "minimumAmount": 0.000062,
+      "maximumAmount": 0.999995,
+      "poseSignatureRange": 40.662438
+    },
+    "seated-row": {
+      "minimumAmount": 0.000066,
+      "maximumAmount": 0.999993,
+      "poseSignatureRange": 35.550842
+    },
+    "back-squat": {
+      "minimumAmount": 0.000002,
+      "maximumAmount": 0.999992,
+      "poseSignatureRange": 40.323962
+    },
+    "leg-press": {
+      "minimumAmount": 0.000002,
+      "maximumAmount": 1,
+      "poseSignatureRange": 52.638782
+    },
+    "romanian-deadlift": {
+      "minimumAmount": 0.000001,
+      "maximumAmount": 0.999998,
+      "poseSignatureRange": 8.502284
+    },
+    "split-squat": {
+      "minimumAmount": 0.000007,
+      "maximumAmount": 0.999998,
+      "poseSignatureRange": 33.164702
+    },
+    "shoulder-press": {
+      "minimumAmount": 0,
+      "maximumAmount": 0.999993,
+      "poseSignatureRange": 34.464575
+    },
+    "lateral-raise": {
+      "minimumAmount": 0.000015,
+      "maximumAmount": 0.999989,
+      "poseSignatureRange": 70.586604
+    },
+    "barbell-curl": {
+      "minimumAmount": 0.000024,
+      "maximumAmount": 0.999968,
+      "poseSignatureRange": 91.835583
+    },
+    "hammer-curl": {
+      "minimumAmount": 0.000005,
+      "maximumAmount": 0.99996,
+      "poseSignatureRange": 98.612806
+    },
+    "triceps-pushdown": {
+      "minimumAmount": 0.000002,
+      "maximumAmount": 0.999981,
+      "poseSignatureRange": 79.422831
+    },
+    "cable-crunch": {
+      "minimumAmount": 0.000001,
+      "maximumAmount": 0.999997,
+      "poseSignatureRange": 1.037358
+    },
+    "machine-press": {
+      "minimumAmount": 0.000008,
+      "maximumAmount": 0.999994,
+      "poseSignatureRange": 34.493063
+    },
+    "pec-deck": {
+      "minimumAmount": 0.000057,
+      "maximumAmount": 0.999973,
+      "poseSignatureRange": 28.158724
+    },
+    "assisted-pull-up": {
+      "minimumAmount": 0.000006,
+      "maximumAmount": 0.999994,
+      "poseSignatureRange": 43.836755
+    },
+    "hack-squat": {
+      "minimumAmount": 0.000003,
+      "maximumAmount": 0.999985,
+      "poseSignatureRange": 31.696105
+    },
+    "leg-extension": {
+      "minimumAmount": 0.000004,
+      "maximumAmount": 0.999995,
+      "poseSignatureRange": 124.694363
+    },
+    "leg-curl": {
+      "minimumAmount": 0.000013,
+      "maximumAmount": 0.999992,
+      "poseSignatureRange": 132.656134
+    },
+    "hip-thrust": {
+      "minimumAmount": 0.000003,
+      "maximumAmount": 0.999989,
+      "poseSignatureRange": 3.627782
+    },
+    "calf-raise": {
+      "minimumAmount": 0.000006,
+      "maximumAmount": 0.999988,
+      "poseSignatureRange": 12.473866
+    },
+    "preacher-curl": {
+      "minimumAmount": 0.000007,
+      "maximumAmount": 0.999995,
+      "poseSignatureRange": 42.65125
+    },
+    "assisted-dip": {
+      "minimumAmount": 0.000025,
+      "maximumAmount": 0.999997,
+      "poseSignatureRange": 5.423591
+    },
+    "ab-crunch": {
+      "minimumAmount": 0,
+      "maximumAmount": 1,
+      "poseSignatureRange": 5.459998
+    },
+    "ab-wheel-rollout": {
+      "minimumAmount": 0.000006,
+      "maximumAmount": 0.999997,
+      "poseSignatureRange": 60.219118
+    },
+    "alternating-curl": {
+      "minimumAmount": 0,
+      "maximumAmount": 1,
+      "poseSignatureRange": 21.277179
+    },
+    "treadmill-walk": {
+      "minimumAmount": 0,
+      "maximumAmount": 1,
+      "poseSignatureRange": 23.717159
+    },
+    "plank": {
+      "minimumAmount": 0,
+      "maximumAmount": 1,
+      "poseSignatureRange": 1.845
+    },
+    "standing": {
+      "minimumAmount": 0.000002,
+      "maximumAmount": 1,
+      "poseSignatureRange": 1.496409
+    }
+  },
+  "failures": [],
+  "durationMs": 6805,
+  "generatedAt": "2026-07-31T04:01:16.983Z"
+}

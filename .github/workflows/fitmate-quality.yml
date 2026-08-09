@@ -1,0 +1,45 @@
+name: FitMate Quality
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL || 'https://build-check.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY || 'build-check-anon-key' }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY || 'build-check-service-role-key' }}
+          OPENAI_API_KEY: ${{ secrets.STAGING_OPENAI_API_KEY || 'build-check-openai-key' }}
+
+  staging-e2e:
+    if: ${{ vars.FITMATE_E2E_ENABLED == 'true' }}
+    needs: code-quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run test:e2e
+        env:
+          FITMATE_E2E_TARGET: staging
+          FITMATE_E2E_BASE_URL: ${{ vars.FITMATE_E2E_BASE_URL }}
+          FITMATE_E2E_EMAIL: ${{ secrets.FITMATE_E2E_EMAIL }}
+          FITMATE_E2E_PASSWORD: ${{ secrets.FITMATE_E2E_PASSWORD }}
+          FITMATE_E2E_SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+          FITMATE_E2E_SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
+          FITMATE_E2E_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+          FITMATE_E2E_RUN_AI: ${{ vars.FITMATE_E2E_RUN_AI }}

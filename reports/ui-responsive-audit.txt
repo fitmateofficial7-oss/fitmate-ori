@@ -1,0 +1,98 @@
+=== RESPONSIVE UI ===
+{
+  "status": "PASS",
+  "protectedRoutes": 9,
+  "mobilePrimaryActions": 5,
+  "secondaryMenu": true,
+  "safeAreaSupport": true,
+  "minSupportedWidth": 320,
+  "responsiveTables": true,
+  "accessibleDialog": true,
+  "themeAndLanguageRetained": true,
+  "reducedMotionRetained": true
+}
+
+=== SQL COMPATIBILITY ===
+{
+  "status": "PASS",
+  "migration": "supabase/migrations/202607280008_prelaunch_features.sql",
+  "transactionWrappers": {
+    "begin": 1,
+    "commit": 1
+  },
+  "dynamicDoBlocks": 4,
+  "compatibleParentIds": [
+    "workout_sessions.id",
+    "workout_exercise_logs.id",
+    "exercises.id",
+    "nutrition_analyses.id"
+  ],
+  "failures": []
+}
+
+=== IMPORT/SYNTAX (100 CYCLES) ===
+{
+  "status": "PASS",
+  "cycles": 100,
+  "uniqueSourceFiles": 55,
+  "checkedFiles": 5500,
+  "checkedImports": 19800,
+  "brokenLocalImports": 0,
+  "syntaxErrors": 0,
+  "supabaseCanonicalImport": "@/lib/supabase",
+  "supabaseCompatibilityImport": "@/app/lib/supabase",
+  "tsconfigAlias": "@/* -> ./*"
+}
+
+=== MOTION (100 CYCLES) ===
+{
+  "status": "PASS",
+  "cycles": 100,
+  "calibratedGuides": 29,
+  "uniqueMotionPresets": 29,
+  "samplesPerPreset": 10,
+  "totalSampledPoses": 29000,
+  "uniqueSamplePhasesPerPreset": 1000,
+  "calibrationCycles": 100,
+  "semanticChecks": 29,
+  "resolverChecks": 32,
+  "maximumDirectionStepDegrees": 0.4211,
+  "maximumVectorLengthError": 0,
+  "maximumFixedFootDriftMeters": 0,
+  "maximumEquipmentContactDriftMeters": 0,
+  "minimumProjectedEndpointMotion": 0.014337,
+  "maximumPerceptualStallMs": 200,
+  "minimumAbWheelHandHeightMeters": 0.3563,
+  "minimumAbWheelKneeHeightMeters": 0.0862,
+  "minimumBodyJointHeightMeters": -0.0256,
+  "playbackRange": [
+    0,
+    1
+  ]
+}
+
+=== EXISTING UI CONTENT ===
+{
+  "status": "PASS",
+  "boostLimit": 10,
+  "motivationMessages": 36,
+  "messagesPerMood": {
+    "lazy": 12,
+    "tired": 12,
+    "ready": 12
+  },
+  "pagesWithLiveIcons": 12,
+  "exerciseSpecificExplorePreviews": true,
+  "staticModelFallback": true,
+  "muscleMatchedSubstitutions": true,
+  "optionalExerciseLoad": true,
+  "dashboardLoadChart": true,
+  "coachConsultationLimit": 10,
+  "mealScanLimit": 10,
+  "canonicalGeneratedExerciseNames": true,
+  "visible3DFace": true,
+  "essential3DMotion": true,
+  "passwordRecovery": true,
+  "monitoringDashboard": true,
+  "stagingE2EGuard": true
+}

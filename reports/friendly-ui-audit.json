@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "userPagesChecked": 19,
+  "touchTargetsAtLeast44Px": true,
+  "mobileFormFontAtLeast16Px": true,
+  "reducedMotionSupported": true,
+  "simplifiedBottomNavigation": true,
+  "installExplanationBeforePrompt": true,
+  "sharedRouteCoverage": [
+    "/dashboard",
+    "/plan",
+    "/workout",
+    "/exercises",
+    "/progress",
+    "/nutrition",
+    "/coach",
+    "/motivation",
+    "/settings"
+  ],
+  "failures": [],
+  "generatedAt": "2026-07-28T05:47:57.761Z"
+}

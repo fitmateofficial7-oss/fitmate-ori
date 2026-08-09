@@ -1,0 +1,470 @@
+{
+  "presets": [
+    {
+      "preset": "bench-press",
+      "maxBoneVariance": 0.0555,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0.0555,
+        "rightForearm": 0.0555,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": 0.037,
+      "wristChestMarginMax": 0.08
+    },
+    {
+      "preset": "incline-press",
+      "maxBoneVariance": 0.0823,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0.0823,
+        "rightForearm": 0.0823,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": -0.128,
+      "wristChestMarginMax": 0.12
+    },
+    {
+      "preset": "lat-pulldown",
+      "maxBoneVariance": 0.0114,
+      "boneVariance": {
+        "leftUpperArm": 0.0114,
+        "rightUpperArm": 0.0114,
+        "leftForearm": 0.0059,
+        "rightForearm": 0.0059,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": 0.1,
+      "wristChestMarginMax": 0.1
+    },
+    {
+      "preset": "seated-row",
+      "maxBoneVariance": 0.0495,
+      "boneVariance": {
+        "leftUpperArm": 0.0177,
+        "rightUpperArm": 0.0177,
+        "leftForearm": 0.0495,
+        "rightForearm": 0.0495,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": 0.38,
+      "wristChestMarginMax": 0.925
+    },
+    {
+      "preset": "back-squat",
+      "maxBoneVariance": 0,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0,
+        "rightForearm": 0,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": 0.154,
+      "wristChestMarginMax": 0.167
+    },
+    {
+      "preset": "leg-press",
+      "maxBoneVariance": 0,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0,
+        "rightForearm": 0,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": -0.131,
+      "wristChestMarginMax": -0.131
+    },
+    {
+      "preset": "romanian-deadlift",
+      "maxBoneVariance": 0.018,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0.018,
+        "rightForearm": 0.018,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": -0.08,
+      "wristChestMarginMax": -0.08
+    },
+    {
+      "preset": "split-squat",
+      "maxBoneVariance": 0,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0,
+        "rightForearm": 0,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": 0,
+      "wristChestMarginMax": 0
+    },
+    {
+      "preset": "shoulder-press",
+      "maxBoneVariance": 0,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0,
+        "rightForearm": 0,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": -0.174,
+      "wristChestMarginMax": -0.057
+    },
+    {
+      "preset": "lateral-raise",
+      "maxBoneVariance": 0,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0,
+        "rightForearm": 0,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": 0,
+      "wristChestMarginMax": 0.017
+    },
+    {
+      "preset": "barbell-curl",
+      "maxBoneVariance": 0.0124,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0.0124,
+        "rightForearm": 0.0124,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": 0.18,
+      "wristChestMarginMax": 0.577
+    },
+    {
+      "preset": "hammer-curl",
+      "maxBoneVariance": 0.0129,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0.0129,
+        "rightForearm": 0.0129,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": 0.14,
+      "wristChestMarginMax": 0.568
+    },
+    {
+      "preset": "triceps-pushdown",
+      "maxBoneVariance": 0.0006,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0.0006,
+        "rightForearm": 0.0006,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": 0.12,
+      "wristChestMarginMax": 0.234
+    },
+    {
+      "preset": "cable-crunch",
+      "maxBoneVariance": 0.0156,
+      "boneVariance": {
+        "leftUpperArm": 0.0156,
+        "rightUpperArm": 0.0156,
+        "leftForearm": 0.0037,
+        "rightForearm": 0.0037,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": -0.534,
+      "wristChestMarginMax": -0.16
+    },
+    {
+      "preset": "machine-press",
+      "maxBoneVariance": 0.054,
+      "boneVariance": {
+        "leftUpperArm": 0.054,
+        "rightUpperArm": 0.054,
+        "leftForearm": 0.0252,
+        "rightForearm": 0.0252,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": 0.58,
+      "wristChestMarginMax": 0.929
+    },
+    {
+      "preset": "pec-deck",
+      "maxBoneVariance": 0.0685,
+      "boneVariance": {
+        "leftUpperArm": 0.0685,
+        "rightUpperArm": 0.0685,
+        "leftForearm": 0.013,
+        "rightForearm": 0.013,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": 0.4,
+      "wristChestMarginMax": 0.848
+    },
+    {
+      "preset": "assisted-pull-up",
+      "maxBoneVariance": 0,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0,
+        "rightForearm": 0,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": -0.001,
+      "wristChestMarginMax": 0.027
+    },
+    {
+      "preset": "hack-squat",
+      "maxBoneVariance": 0,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0,
+        "rightForearm": 0,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": -0.338,
+      "wristChestMarginMax": -0.151
+    },
+    {
+      "preset": "leg-extension",
+      "maxBoneVariance": 0,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0,
+        "rightForearm": 0,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": -0.13,
+      "wristChestMarginMax": -0.13
+    },
+    {
+      "preset": "leg-curl",
+      "maxBoneVariance": 0,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0,
+        "rightForearm": 0,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": -0.13,
+      "wristChestMarginMax": -0.13
+    },
+    {
+      "preset": "hip-thrust",
+      "maxBoneVariance": 0,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0,
+        "rightForearm": 0,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": 0.09,
+      "wristChestMarginMax": 0.09
+    },
+    {
+      "preset": "calf-raise",
+      "maxBoneVariance": 0,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0,
+        "rightForearm": 0,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": 0,
+      "wristChestMarginMax": 0
+    },
+    {
+      "preset": "preacher-curl",
+      "maxBoneVariance": 0,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0,
+        "rightForearm": 0,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": 0.642,
+      "wristChestMarginMax": 0.85
+    },
+    {
+      "preset": "assisted-dip",
+      "maxBoneVariance": 0,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0,
+        "rightForearm": 0,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": 0,
+      "wristChestMarginMax": 0
+    },
+    {
+      "preset": "ab-crunch",
+      "maxBoneVariance": 0.0353,
+      "boneVariance": {
+        "leftUpperArm": 0.0353,
+        "rightUpperArm": 0.0353,
+        "leftForearm": 0.0116,
+        "rightForearm": 0.0116,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": -0.784,
+      "wristChestMarginMax": -0.3
+    },
+    {
+      "preset": "ab-wheel-rollout",
+      "maxBoneVariance": 0,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0,
+        "rightForearm": 0,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": -1.267,
+      "wristChestMarginMax": -0.657
+    },
+    {
+      "preset": "alternating-curl",
+      "maxBoneVariance": 0.0129,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0.0129,
+        "rightForearm": 0,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": 0.14,
+      "wristChestMarginMax": 0.568
+    },
+    {
+      "preset": "treadmill-walk",
+      "maxBoneVariance": 0.2302,
+      "boneVariance": {
+        "leftUpperArm": 0.0694,
+        "rightUpperArm": 0.0694,
+        "leftForearm": 0.048,
+        "rightForearm": 0.048,
+        "leftThigh": 0.1799,
+        "rightThigh": 0.2302,
+        "leftShin": 0.1033,
+        "rightShin": 0.0399
+      },
+      "wristChestMarginMin": -0.5,
+      "wristChestMarginMax": 0.5
+    },
+    {
+      "preset": "plank",
+      "maxBoneVariance": 0,
+      "boneVariance": {
+        "leftUpperArm": 0,
+        "rightUpperArm": 0,
+        "leftForearm": 0,
+        "rightForearm": 0,
+        "leftThigh": 0,
+        "rightThigh": 0,
+        "leftShin": 0,
+        "rightShin": 0
+      },
+      "wristChestMarginMin": -0.631,
+      "wristChestMarginMax": -0.629
+    }
+  ],
+  "globalMaxBoneVariance": 0.2302,
+  "checkedSamples": 609
+}

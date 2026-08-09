@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "guideCount": 29,
+  "uniquePresets": 29,
+  "views": [
+    "comparison",
+    "start",
+    "finish"
+  ],
+  "languages": [
+    "id",
+    "en"
+  ],
+  "cycles": 11500,
+  "deterministicChecks": 1000500,
+  "webglDependency": false,
+  "generatedAt": "2026-08-05T04:20:01.701Z",
+  "durationMs": 2731
+}

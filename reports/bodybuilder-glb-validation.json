@@ -1,0 +1,66 @@
+{
+  "status": "PASS",
+  "file": "public/models/titan-physique-rigged-ultra-precision.glb",
+  "bytes": 59292648,
+  "format": "glTF 2.0 binary (.glb)",
+  "generator": "OpenAI Titan Humanoid Rig Ultra Precision Calibration V2",
+  "scene": "Titan_Physique_Scene",
+  "nodes": 70,
+  "meshes": 1,
+  "skins": 1,
+  "skin_joints": 68,
+  "materials": 1,
+  "textures": 4,
+  "source_bounds": [
+    [
+      -0.4990030825138092,
+      -0.8999999761581421,
+      -0.15173181891441345
+    ],
+    [
+      0.49715930223464966,
+      0.8999999761581421,
+      0.15045396983623505
+    ]
+  ],
+  "source_height": 1.7999999523162842,
+  "runtime_target_height": 4.72469839,
+  "runtime_normalization_scale": 2.6248325084232045,
+  "required_nodes": [
+    "Armature",
+    "Hips",
+    "Spine",
+    "Spine1",
+    "Spine2",
+    "Neck",
+    "Head",
+    "LeftArm",
+    "LeftForeArm",
+    "LeftHand",
+    "RightArm",
+    "RightForeArm",
+    "RightHand",
+    "LeftUpLeg",
+    "LeftLeg",
+    "LeftFoot",
+    "RightUpLeg",
+    "RightLeg",
+    "RightFoot",
+    "Titan_Physique_Rigged_Ultra_Precision"
+  ],
+  "missing_nodes": [],
+  "animations": [
+    "Idle_Breath",
+    "Rig_Check_Arms",
+    "Rig_Check_Legs",
+    "Rig_Check_Fingers"
+  ],
+  "required_animations": [
+    "Idle_Breath",
+    "Rig_Check_Arms",
+    "Rig_Check_Legs",
+    "Rig_Check_Fingers"
+  ],
+  "missing_animations": [],
+  "primary_use": "FitMate procedural animation source for every calibrated exercise guide"
+}

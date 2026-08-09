@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "validationDate": "2026-07-28",
+  "projectAuditCycles": 100,
+  "sourceFilePasses": 3900,
+  "importChecks": 15100,
+  "brokenLocalImports": 0,
+  "syntaxErrors": 0,
+  "uiAuditRuns": 100,
+  "uiAuditPasses": 100,
+  "motionCalibrationCycles": 100,
+  "calibratedMotionPresets": 29,
+  "sampledMotionPoses": 29000,
+  "uniqueMotionPhasesPerPreset": 1000,
+  "supabaseImportPaths": [
+    "@/lib/supabase",
+    "@/app/lib/supabase"
+  ],
+  "dependencyInstall": "NOT_COMPLETED_REGISTRY_503",
+  "dependencyInstallNote": "The npm package registry returned HTTP 503 while downloading zod-validation-error. Full lint, typecheck, and Next.js build require npm install on a working registry."
+}

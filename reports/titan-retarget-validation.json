@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "methodology": "Offline skeleton-hierarchy simulation of the runtime Titan retarget adapter using every calibrated exercise pose at 101 phase samples per preset.",
+  "model": "public/models/titan-physique-rigged-ultra-precision.glb",
+  "presets": 29,
+  "phase_samples_per_preset": 101,
+  "sampled_poses": 2929,
+  "mapped_limb_chains_per_pose": 8,
+  "direction_checks": 23432,
+  "source_height": 1.8,
+  "runtime_target_height": 4.72469839,
+  "runtime_normalization_scale": 2.624832438888889,
+  "maximum_mapped_direction_error_degrees": 0.3208082910508327,
+  "maximum_error_location": {
+    "preset": "plank",
+    "phase_index": 100,
+    "limb": "leftShoulder",
+    "torso_scale": [
+      1.032,
+      1.022,
+      1.105
+    ]
+  },
+  "allowed_maximum_error_degrees": 0.5,
+  "joint_position_bounds": {
+    "minimum": [
+      -1.95082622,
+      0.07689355,
+      -4.17999585
+    ],
+    "maximum": [
+      1.95566584,
+      4.87535274,
+      2.03657329
+    ]
+  },
+  "foot_joint_height_range": [
+    0.07689355280000758,
+    3.1252941892620214
+  ],
+  "notes": [
+    "The maximum residual deviation is caused by intentional non-uniform torso scaling; it remains below the 0.5-degree acceptance threshold.",
+    "This validates retarget mathematics and hierarchy stability, not clinical biomechanics or motion-capture accuracy."
+  ],
+  "generatedAt": "2026-07-31T02:27:30Z"
+}

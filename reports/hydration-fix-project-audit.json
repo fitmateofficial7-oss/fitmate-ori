@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "cycles": 100,
+  "uniqueSourceFiles": 55,
+  "checkedFiles": 5500,
+  "checkedImports": 20000,
+  "brokenLocalImports": 0,
+  "syntaxErrors": 0,
+  "supabaseCanonicalImport": "@/lib/supabase",
+  "supabaseCompatibilityImport": "@/app/lib/supabase",
+  "tsconfigAlias": "@/* -> ./*"
+}

@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "cycles": 1000,
+  "model": "fitmate-bodybuilder-rig.glb",
+  "vertices": 92551,
+  "meshNodes": 9,
+  "joints": 17,
+  "requiredNodes": [
+    "FitMateBodybuilderRig",
+    "Torso",
+    "LeftShoulder",
+    "LeftElbow",
+    "LeftHand",
+    "RightShoulder",
+    "RightElbow",
+    "RightHand",
+    "LeftHip",
+    "LeftKnee",
+    "LeftFoot",
+    "RightHip",
+    "RightKnee",
+    "RightFoot"
+  ],
+  "missingNodes": [],
+  "weightSumRange": [
+    0.9999999701976776,
+    1.000000030733645
+  ],
+  "maximumJointIndex": 16,
+  "jointInfluencedVertexCounts": {
+    "Pelvis": 18207,
+    "Torso": 21227,
+    "Chest": 28567,
+    "Neck": 11336,
+    "Head": 10750,
+    "LeftShoulder": 9984,
+    "LeftElbow": 6686,
+    "LeftHand": 2603,
+    "RightShoulder": 9733,
+    "RightElbow": 6322,
+    "RightHand": 2463,
+    "LeftHip": 7745,
+    "LeftKnee": 6297,
+    "LeftFoot": 6477,
+    "RightHip": 7615,
+    "RightKnee": 6145,
+    "RightFoot": 6599
+  },
+  "sampledVerticesPerCycle": 1200,
+  "maximumSampleRadius": 1.140906,
+  "sampleExtentRange": [
+    1.676501,
+    2.699317
+  ],
+  "failures": [],
+  "methodology": "Deterministic structural validation plus 1,000 randomized safe-range linear-blend-skinning stress poses. This is not manual Blender weight-paint review or motion-capture certification."
+}

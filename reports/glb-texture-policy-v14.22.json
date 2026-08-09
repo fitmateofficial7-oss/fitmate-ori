@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "embeddedTextures": 4,
+  "mimeTypes": [
+    "image/png"
+  ],
+  "csp": {
+    "imageBlobAllowed": true,
+    "fetchBlobAllowed": true
+  }
+}

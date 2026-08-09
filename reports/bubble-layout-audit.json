@@ -1,0 +1,61 @@
+{
+  "status": "PASS",
+  "description": "Organic circular bubble cluster collision audit",
+  "items": [
+    {
+      "name": "Beranda",
+      "x": -5.55,
+      "y": 5.25
+    },
+    {
+      "name": "Rencana",
+      "x": 0.15,
+      "y": 6.55
+    },
+    {
+      "name": "Latihan",
+      "x": 5.65,
+      "y": 5.15
+    },
+    {
+      "name": "Gerakan",
+      "x": -7.5,
+      "y": 11.8
+    },
+    {
+      "name": "Progres",
+      "x": 7.45,
+      "y": 11.65
+    },
+    {
+      "name": "Nutrisi",
+      "x": -5.35,
+      "y": 18.0
+    },
+    {
+      "name": "Coach",
+      "x": 0.25,
+      "y": 18.8
+    },
+    {
+      "name": "Atur",
+      "x": 5.55,
+      "y": 17.8
+    }
+  ],
+  "layouts": {
+    "desktop": {
+      "status": "PASS",
+      "collisions": []
+    },
+    "compact_320px": {
+      "status": "PASS",
+      "collisions": []
+    }
+  },
+  "orbital_shell": {
+    "desktop_width_rem": 22,
+    "compact_width": "calc(100vw - 0.75rem)",
+    "height_rem": 24
+  }
+}

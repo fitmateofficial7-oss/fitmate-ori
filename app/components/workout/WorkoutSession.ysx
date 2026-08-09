@@ -1,0 +1,599 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+
+type Exercise = {
+  id: number;
+  name: string;
+  target_muscle: string;
+  equipment: string;
+};
+
+type PlanExercise = {
+  id: number;
+  exercise_order: number;
+  sets: number | null;
+  reps: number | null;
+  rest_seconds: number | null;
+  notes: string | null;
+  exercise: Exercise;
+};
+
+type SessionData = {
+  id: number;
+  status: string;
+  started_at: string;
+  workout_day: {
+    name: string;
+    muscle_group: string | null;
+    workout_plan_exercises: PlanExercise[];
+  };
+};
+
+type SetLog = {
+  reps: number;
+  weight: number;
+  completed: boolean;
+};
+
+export default function WorkoutSession({
+  sessionId
+}: {
+  sessionId: string;
+}) {
+  const [session, setSession] =
+    useState<SessionData | null>(null);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [error, setError] =
+    useState<string | null>(null);
+
+  const [logs, setLogs] = useState<
+    Record<number, SetLog[]>
+  >({});
+
+  const [saving, setSaving] =
+    useState(false);
+
+  useEffect(() => {
+    loadSession();
+  }, [sessionId]);
+
+  async function loadSession() {
+    try {
+      const {
+        data,
+        error
+      } = await supabase
+        .from("workout_sessions")
+        .select(`
+          id,
+          status,
+          started_at,
+
+          workout_day:workout_days (
+            name,
+            muscle_group,
+
+            workout_plan_exercises (
+              id,
+              exercise_order,
+              sets,
+              reps,
+              rest_seconds,
+              notes,
+
+              exercise:exercises (
+                id,
+                name,
+                target_muscle,
+                equipment
+              )
+            )
+          )
+        `)
+        .eq("id", sessionId)
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
+      setSession(data as any);
+
+      const initialLogs: Record<
+        number,
+        SetLog[]
+      > = {};
+
+      data?.workout_day?.workout_plan_exercises?.forEach(
+        (exercise: PlanExercise) => {
+          const setCount =
+            exercise.sets || 3;
+
+          initialLogs[
+            exercise.id
+          ] = Array.from(
+            {
+              length: setCount
+            },
+            () => ({
+              reps:
+                exercise.reps || 0,
+              weight: 0,
+              completed: false
+            })
+          );
+        }
+      );
+
+      setLogs(initialLogs);
+    } catch (err: any) {
+      console.error(err);
+
+      setError(
+        err?.message ||
+          "Failed to load workout session."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function updateSet(
+    exerciseId: number,
+    setIndex: number,
+    field: "reps" | "weight",
+    value: number
+  ) {
+    setLogs((current) => {
+      const updated = {
+        ...current
+      };
+
+      updated[exerciseId] = [
+        ...updated[exerciseId]
+      ];
+
+      updated[exerciseId][setIndex] = {
+        ...updated[exerciseId][
+          setIndex
+        ],
+        [field]: value
+      };
+
+      return updated;
+    });
+  }
+
+  function toggleSet(
+    exerciseId: number,
+    setIndex: number
+  ) {
+    setLogs((current) => {
+      const updated = {
+        ...current
+      };
+
+      updated[exerciseId] = [
+        ...updated[exerciseId]
+      ];
+
+      updated[exerciseId][setIndex] = {
+        ...updated[exerciseId][
+          setIndex
+        ],
+        completed:
+          !updated[exerciseId][
+            setIndex
+          ].completed
+      };
+
+      return updated;
+    });
+  }
+
+  async function finishWorkout() {
+    if (!session) {
+      return;
+    }
+
+    try {
+      setSaving(true);
+
+      const {
+        data: {
+          user
+        }
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        throw new Error(
+          "You are not logged in."
+        );
+      }
+
+      const logRows: any[] = [];
+
+      session.workout_day.workout_plan_exercises.forEach(
+        (exercise) => {
+          const exerciseLogs =
+            logs[exercise.id] || [];
+
+          exerciseLogs.forEach(
+            (set, index) => {
+              if (
+                set.completed
+              ) {
+                logRows.push({
+                  workout_session_id:
+                    session.id,
+
+                  exercise_id:
+                    exercise.exercise.id,
+
+                  set_number:
+                    index + 1,
+
+                  reps: set.reps,
+
+                  weight: set.weight,
+
+                  is_completed:
+                    true,
+
+                  completed_at:
+                    new Date().toISOString()
+                });
+              }
+            }
+          );
+        }
+      );
+
+      if (logRows.length > 0) {
+        const {
+          error: logsError
+        } = await supabase
+          .from(
+            "workout_exercise_logs"
+          )
+          .insert(logRows);
+
+        if (logsError) {
+          throw logsError;
+        }
+      }
+
+      const {
+        error: sessionError
+      } = await supabase
+        .from("workout_sessions")
+        .update({
+          status: "completed",
+          completed_at:
+            new Date().toISOString()
+        })
+        .eq(
+          "id",
+          session.id
+        )
+        .eq(
+          "user_id",
+          user.id
+        );
+
+      if (sessionError) {
+        throw sessionError;
+      }
+
+      window.location.href =
+        "/workout?completed=true";
+    } catch (err: any) {
+      console.error(err);
+
+      alert(
+        err?.message ||
+          "Failed to finish workout."
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-zinc-950 p-8 text-white">
+        Loading workout...
+      </main>
+    );
+  }
+
+  if (error || !session) {
+    return (
+      <main className="min-h-screen bg-zinc-950 p-8 text-white">
+        <div className="mx-auto max-w-2xl py-20 text-center">
+          <h1 className="text-2xl font-bold">
+            Workout Not Found
+          </h1>
+
+          <p className="mt-3 text-zinc-400">
+            {error}
+          </p>
+
+          <button
+            onClick={() =>
+              (window.location.href =
+                "/workout")
+            }
+            className="mt-6 rounded-xl bg-white px-6 py-3 font-semibold text-black"
+          >
+            Back to Workout
+          </button>
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-zinc-950 text-white">
+      <div className="mx-auto max-w-4xl px-6 py-8 md:py-12">
+
+        {/* HEADER */}
+
+        <div className="mb-10">
+          <button
+            onClick={() =>
+              (window.location.href =
+                "/workout")
+            }
+            className="mb-6 text-sm text-zinc-500 hover:text-white"
+          >
+            ← Back to Workout
+          </button>
+
+          <p className="text-sm uppercase tracking-widest text-zinc-500">
+            Active Workout
+          </p>
+
+          <h1 className="mt-2 text-4xl font-bold">
+            {
+              session.workout_day
+                .name
+            }
+          </h1>
+
+          <p className="mt-2 text-zinc-400">
+            {
+              session.workout_day
+                .muscle_group ||
+              "Full Body"
+            }
+          </p>
+        </div>
+
+
+        {/* EXERCISES */}
+
+        <div className="space-y-6">
+          {session.workout_day.workout_plan_exercises
+            .sort(
+              (a, b) =>
+                a.exercise_order -
+                b.exercise_order
+            )
+            .map(
+              (
+                exercise
+              ) => (
+                <div
+                  key={
+                    exercise.id
+                  }
+                  className="rounded-3xl border border-zinc-800 bg-zinc-900 p-6"
+                >
+                  <div className="mb-6">
+                    <p className="text-xs text-zinc-500">
+                      Exercise{" "}
+                      {
+                        exercise.exercise_order
+                      }
+                    </p>
+
+                    <h2 className="mt-1 text-2xl font-bold">
+                      {
+                        exercise
+                          .exercise
+                          .name
+                      }
+                    </h2>
+
+                    <p className="mt-2 text-sm text-zinc-500">
+                      {
+                        exercise
+                          .exercise
+                          .target_muscle
+                      }
+                      {" · "}
+                      {
+                        exercise
+                          .exercise
+                          .equipment
+                      }
+                    </p>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-zinc-800 text-left text-xs uppercase tracking-wider text-zinc-500">
+                          <th className="pb-3">
+                            Set
+                          </th>
+
+                          <th className="pb-3">
+                            Target
+                          </th>
+
+                          <th className="pb-3">
+                            Weight
+                          </th>
+
+                          <th className="pb-3">
+                            Reps
+                          </th>
+
+                          <th className="pb-3">
+                            Done
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        {(
+                          logs[
+                            exercise.id
+                          ] || []
+                        ).map(
+                          (
+                            set,
+                            index
+                          ) => (
+                            <tr
+                              key={
+                                index
+                              }
+                              className="border-b border-zinc-800 last:border-0"
+                            >
+                              <td className="py-4 font-semibold">
+                                {index +
+                                  1}
+                              </td>
+
+                              <td className="py-4 text-sm text-zinc-500">
+                                {
+                                  exercise.reps
+                                }{" "}
+                                reps
+                              </td>
+
+                              <td className="py-4">
+                                <input
+                                  type="number"
+                                  min="0"
+                                  value={
+                                    set.weight
+                                  }
+                                  onChange={(
+                                    e
+                                  ) =>
+                                    updateSet(
+                                      exercise.id,
+                                      index,
+                                      "weight",
+                                      Number(
+                                        e
+                                          .target
+                                          .value
+                                      )
+                                    )
+                                  }
+                                  className="w-24 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-white outline-none focus:border-white"
+                                />
+                              </td>
+
+                              <td className="py-4">
+                                <input
+                                  type="number"
+                                  min="0"
+                                  value={
+                                    set.reps
+                                  }
+                                  onChange={(
+                                    e
+                                  ) =>
+                                    updateSet(
+                                      exercise.id,
+                                      index,
+                                      "reps",
+                                      Number(
+                                        e
+                                          .target
+                                          .value
+                                      )
+                                    )
+                                  }
+                                  className="w-20 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-white outline-none focus:border-white"
+                                />
+                              </td>
+
+                              <td className="py-4">
+                                <button
+                                  onClick={() =>
+                                    toggleSet(
+                                      exercise.id,
+                                      index
+                                    )
+                                  }
+                                  className={`flex h-8 w-8 items-center justify-center rounded-full border transition ${
+                                    set.completed
+                                      ? "border-white bg-white text-black"
+                                      : "border-zinc-600 text-transparent"
+                                  }`}
+                                >
+                                  ✓
+                                </button>
+                              </td>
+                            </tr>
+                          )
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {exercise.rest_seconds && (
+                    <p className="mt-5 text-xs text-zinc-500">
+                      Rest between sets:{" "}
+                      {
+                        exercise.rest_seconds
+                      }{" "}
+                      seconds
+                    </p>
+                  )}
+
+                  {exercise.notes && (
+                    <p className="mt-2 text-sm text-zinc-400">
+                      {
+                        exercise.notes
+                      }
+                    </p>
+                  )}
+                </div>
+              )
+            )}
+        </div>
+
+
+        {/* FINISH */}
+
+        <div className="mt-10">
+          <button
+            onClick={
+              finishWorkout
+            }
+            disabled={saving}
+            className="w-full rounded-2xl bg-white py-5 text-lg font-bold text-black transition hover:bg-zinc-200 disabled:opacity-50"
+          >
+            {saving
+              ? "Saving Workout..."
+              : "Finish Workout"}
+          </button>
+        </div>
+
+      </div>
+    </main>
+  );
+}

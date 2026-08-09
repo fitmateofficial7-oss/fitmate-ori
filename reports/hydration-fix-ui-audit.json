@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "boostLimit": 10,
+  "motivationMessages": 36,
+  "messagesPerMood": {
+    "lazy": 12,
+    "tired": 12,
+    "ready": 12
+  },
+  "pagesWithLiveIcons": 12,
+  "exerciseSpecificExplorePreviews": true,
+  "staticModelFallback": true,
+  "muscleMatchedSubstitutions": true,
+  "optionalExerciseLoad": true,
+  "dashboardLoadChart": true,
+  "coachConsultationLimit": 10,
+  "mealScanLimit": 10,
+  "canonicalGeneratedExerciseNames": true,
+  "visible3DFace": true,
+  "essential3DMotion": true,
+  "passwordRecovery": true,
+  "monitoringDashboard": true,
+  "stagingE2EGuard": true
+}

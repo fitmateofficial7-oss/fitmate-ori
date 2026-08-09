@@ -1,0 +1,71 @@
+{
+  "name": "fitmate-ai",
+  "version": "1.4.54",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --webpack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --pretty false",
+    "audit:imports": "node scripts/audit-project.cjs --cycles 100",
+    "audit:guides": "node scripts/audit-exercise-3d.cjs --cycles 1000",
+    "audit:guides:100": "node scripts/audit-exercise-3d.cjs --cycles 100",
+    "audit:motion": "npm run audit:guides",
+    "audit:motion:100": "npm run audit:guides:100",
+    "audit:ui": "node scripts/audit-ui-content.cjs",
+    "calibrate:100": "npm run audit:imports && npm run audit:guides:100 && npm run audit:ui && npm run audit:jogging",
+    "test:e2e": "playwright test",
+    "test:e2e:desktop": "playwright test --project=desktop-chromium",
+    "check": "npm run lint && npm run typecheck && npm run audit:sql && npm run audit:subscription && npm run audit:premium-gates && npm run audit:jogging && npm run calibrate:100 && npm run build",
+    "calibrate:1m": "node scripts/audit-exercise-3d.cjs --cycles 11500",
+    "release:check": "npm run lint && npm run typecheck && npm run audit:sql && npm run audit:subscription && npm run audit:premium-gates && npm run audit:jogging && npm run audit:imports && npm run audit:guides && npm run audit:ui && npm run calibrate:1m && npm run build",
+    "audit:sql": "node scripts/audit-sql-compatibility.cjs",
+    "audit:subscription": "node scripts/audit-subscription-flow.cjs",
+    "test:billing-periods": "node --no-warnings --experimental-strip-types scripts/test-billing-periods.mjs",
+    "audit:premium-gates": "node scripts/audit-premium-gates.cjs",
+    "audit:jogging": "node scripts/audit-jogging-feature.cjs",
+    "verify:xendit": "node scripts/verify-xendit-config.mjs",
+    "native:configure": "node scripts/configure-native-background-gps.cjs",
+    "native:add:android": "npx cap add android && npm run native:configure",
+    "native:add:ios": "npx cap add ios && npm run native:configure",
+    "native:sync": "npx cap sync && npm run native:configure",
+    "native:open:android": "npx cap open android",
+    "native:open:ios": "npx cap open ios",
+    "dev:turbopack": "next dev",
+    "dev:clean": "node scripts/clean-dev-cache.cjs && next dev --webpack"
+  },
+  "dependencies": {
+    "@capacitor-community/background-geolocation": "^1.2.26",
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/core": "^7.4.3",
+    "@capacitor/ios": "^7.4.3",
+    "@capacitor/local-notifications": "^7.0.2",
+    "@supabase/ssr": "^0.12.3",
+    "@supabase/supabase-js": "^2.110.8",
+    "next": "16.2.12",
+    "openai": "^6.49.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.4.3",
+    "@next/env": "16.2.12",
+    "@playwright/test": "^1.62.0",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.12",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "overrides": {
+    "next": {
+      "postcss": "8.5.25",
+      "sharp": "0.35.3"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "protectedRoutes": 9,
+  "mobilePrimaryLinks": 4,
+  "centeredBubbleAction": true,
+  "secondaryBubbleMenu": true,
+  "fullScreenOverlay": false,
+  "safeAreaSupport": true,
+  "minSupportedWidth": 320,
+  "responsiveTables": true,
+  "accessibleMenu": true,
+  "themeAndLanguageRetained": true,
+  "reducedMotionRetained": true
+}

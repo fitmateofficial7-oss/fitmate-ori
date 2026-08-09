@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "file": "public/models/fitmate-accurig/fitmate-accurig.fbx",
+  "bytes": 21062240,
+  "format": "Binary FBX",
+  "rig": "Reallusion AccuRig / CC_Base humanoid",
+  "skinned_mesh": true,
+  "cluster_markers": 100,
+  "discovered_bones": 101,
+  "required_bones": 27,
+  "missing_bones": [],
+  "textures": [
+    {
+      "file": "public/models/fitmate-accurig/Material_001_Diffuse.jpg",
+      "bytes": 8553558
+    },
+    {
+      "file": "public/models/fitmate-accurig/Material_001_Normal.jpg",
+      "bytes": 12517991
+    }
+  ],
+  "runtime": {
+    "primary_character": "FitMate procedural bodybuilder",
+    "retained_reference_asset": "Reallusion AccuRig FBX",
+    "hand_grip_anchors": true,
+    "finger_grip_curl": true,
+    "foot_calibration": true,
+    "equipment_body_metrics": true,
+    "immediate_render_without_network_model_load": true,
+    "exercise_presets": 29
+  }
+}

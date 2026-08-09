@@ -1,0 +1,12 @@
+{
+  "status": "BLOCKED",
+  "stage": "npm ci",
+  "nextBuildExecuted": false,
+  "reason": "The internal npm registry returned HTTP 503 while downloading required dependency tarballs.",
+  "observedPackages": [
+    "zod-validation-error-4.0.2.tgz",
+    "zod-4.4.3.tgz"
+  ],
+  "sourceAuditsCompleted": true,
+  "requiredDeveloperCommand": "npm ci && npm run release:check"
+}

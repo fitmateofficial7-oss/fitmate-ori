@@ -1,0 +1,57 @@
+{
+  "version": "v14.8",
+  "pages": {
+    "dashboard": {
+      "uses_app_shell": true,
+      "has_responsive_max_width": true,
+      "has_dark_mode": true
+    },
+    "plan": {
+      "uses_app_shell": true,
+      "has_responsive_max_width": true,
+      "has_dark_mode": true
+    },
+    "workout": {
+      "uses_app_shell": true,
+      "has_responsive_max_width": true,
+      "has_dark_mode": true
+    },
+    "exercises": {
+      "uses_app_shell": true,
+      "has_responsive_max_width": true,
+      "has_dark_mode": true
+    },
+    "progress": {
+      "uses_app_shell": true,
+      "has_responsive_max_width": true,
+      "has_dark_mode": true
+    },
+    "nutrition": {
+      "uses_app_shell": true,
+      "has_responsive_max_width": true,
+      "has_dark_mode": true
+    },
+    "coach": {
+      "uses_app_shell": true,
+      "has_responsive_max_width": true,
+      "has_dark_mode": true
+    },
+    "settings": {
+      "uses_app_shell": true,
+      "has_responsive_max_width": true,
+      "has_dark_mode": true
+    }
+  },
+  "checks": {
+    "all_pages_use_app_shell": true,
+    "plan_precision_cards": true,
+    "workout_precision_cards": true,
+    "exercise_rectangular_cards": true,
+    "service_worker_cache": true,
+    "bubble_collisions": {
+      "desktop": [],
+      "mobile_320": []
+    },
+    "bubble_collision_free": true
+  }
+}
