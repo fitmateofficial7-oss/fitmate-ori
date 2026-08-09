@@ -8,6 +8,7 @@ import FitMateBrand from "@/components/fitmate-brand";
 import FitMateIcon from "@/components/fitmate-icon";
 import { useLanguage } from "@/components/language-provider";
 import { supabase } from "@/lib/supabase";
+import { getAuthRedirectUrl } from "@/lib/auth-redirect";
 
 export default function LoginPage() {
   const { tr } = useLanguage();
@@ -54,6 +55,13 @@ export default function LoginPage() {
           tr(
             "Akun berhasil dibuat. Silakan login.",
             "Your account was created. Please log in."
+          )
+        );
+      } else if (noticeType === "email-confirmed") {
+        setNotice(
+          tr(
+            "Email berhasil diverifikasi. Silakan login untuk melanjutkan.",
+            "Your email has been verified. Please log in to continue."
           )
         );
       } else if (noticeType === "password-reset") {
@@ -174,7 +182,7 @@ export default function LoginPage() {
         await supabase.auth.resetPasswordForEmail(
           normalizedEmail,
           {
-            redirectTo: `${window.location.origin}/reset-password`,
+            redirectTo: getAuthRedirectUrl("/reset-password"),
           }
         );
 

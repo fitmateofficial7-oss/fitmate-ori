@@ -13,6 +13,7 @@ import {
   FITMATE_TERMS_VERSION,
 } from "@/lib/legal";
 import { supabase } from "@/lib/supabase";
+import { getAuthRedirectUrl } from "@/lib/auth-redirect";
 
 export default function RegisterPage() {
   const { tr } = useLanguage();
@@ -68,6 +69,7 @@ export default function RegisterPage() {
         email: normalizedEmail,
         password,
         options: {
+          emailRedirectTo: getAuthRedirectUrl("/auth/callback?next=/onboarding"),
           data: {
             fitmate_terms_accepted: true,
             fitmate_terms_version: FITMATE_TERMS_VERSION,

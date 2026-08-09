@@ -61,6 +61,7 @@ for lazy, tired, and ready-to-train moments.
 | `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes* | Browser-safe legacy anon key |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Yes* | Browser-safe publishable key |
+| `NEXT_PUBLIC_APP_URL` | Recommended | Stable public FitMate URL used by email verification and password reset redirects |
 | `SUPABASE_SERVICE_ROLE_KEY` | Yes | Server-only database access for plan generation |
 | `OPENAI_API_KEY` | Yes | Server-only OpenAI API access |
 | `OPENAI_MODEL` | No | Default model used by workout generation and the AI coach; defaults to `gpt-5.6` |
@@ -86,12 +87,27 @@ the user creates a new password at `/reset-password`, and the app returns to
 Login with a success message. Passwords require at least eight characters,
 including a letter and a number.
 
-Add every allowed recovery URL in **Supabase → Authentication → URL
-Configuration → Redirect URLs**. At minimum, configure:
+Set `NEXT_PUBLIC_APP_URL` to a stable base URL whenever verification or reset
+emails can be opened outside the browser running `npm run dev`. Do not keep an
+expired ngrok URL here. Examples:
 
-- `http://localhost:3000/reset-password` for local development;
-- `https://your-staging-domain/reset-password` for staging;
-- `https://your-production-domain/reset-password` for production.
+- local-only testing: `NEXT_PUBLIC_APP_URL=http://localhost:3000`;
+- staging: `NEXT_PUBLIC_APP_URL=https://your-staging-domain`;
+- production: `NEXT_PUBLIC_APP_URL=https://your-production-domain`.
+
+Add the matching URLs in **Supabase → Authentication → URL Configuration →
+Redirect URLs**. At minimum, configure both auth routes for every environment:
+
+- `http://localhost:3000/auth/callback`;
+- `http://localhost:3000/reset-password`;
+- `https://your-staging-domain/auth/callback`;
+- `https://your-staging-domain/reset-password`;
+- `https://your-production-domain/auth/callback`;
+- `https://your-production-domain/reset-password`.
+
+Also set **Site URL** in Supabase to your stable production FitMate domain. Old
+emails keep the URL that was generated when they were sent, so request a new
+verification/reset email after changing the URL configuration.
 
 ## AI coach and nutrition scan
 
