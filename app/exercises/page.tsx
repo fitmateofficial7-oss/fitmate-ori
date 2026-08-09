@@ -448,7 +448,7 @@ export default function ExercisesPage() {
                           variant="float"
                           className="transition group-hover:translate-x-1"
                         >
-                         
+                          <span className="text-lg leading-none">→</span>
                         </LiveIcon>
                       </div>
                     </div>
