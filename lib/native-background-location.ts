@@ -15,24 +15,38 @@ export type NativeBackgroundLocationError = {
   message?: string;
 };
 
-type BackgroundWatcherOptions = {
+type BackgroundStartOptions = {
   backgroundMessage?: string;
   backgroundTitle?: string;
   requestPermissions?: boolean;
   stale?: boolean;
   distanceFilter?: number;
+  minIntervalMs?: number;
 };
 
 type BackgroundGeolocationPlugin = {
-  addWatcher(
-    options: BackgroundWatcherOptions,
+  start(
+    options: BackgroundStartOptions,
     callback: (
       location?: NativeBackgroundLocationSample,
       error?: NativeBackgroundLocationError
     ) => void
-  ): Promise<string>;
-  removeWatcher(options: { id: string }): Promise<void>;
+  ): Promise<void>;
+  stop(): Promise<void>;
   openSettings(): Promise<void>;
+  checkPermissions?: () => Promise<{
+    location?: string;
+    backgroundLocation?: string;
+    notification?: string;
+  }>;
+  requestPermissions?: (options?: {
+    location?: boolean;
+    notification?: boolean;
+  }) => Promise<{
+    location?: string;
+    backgroundLocation?: string;
+    notification?: string;
+  }>;
 };
 
 type NativeContext = {
@@ -40,25 +54,25 @@ type NativeContext = {
   plugin: BackgroundGeolocationPlugin;
 };
 
+const ACTIVE_TRACKER_ID = "fitmate-capgo-background-location";
 let nativeContextPromise: Promise<NativeContext | null> | null = null;
 
 async function getNativeContext(): Promise<NativeContext | null> {
-  if (typeof window === "undefined") {
-    return null;
-  }
+  if (typeof window === "undefined") return null;
 
   nativeContextPromise ??= (async () => {
     try {
-      const { Capacitor, registerPlugin } = await import("@capacitor/core");
-      if (!Capacitor.isNativePlatform()) {
-        return null;
-      }
+      const [{ Capacitor }, backgroundModule] = await Promise.all([
+        import("@capacitor/core"),
+        import("@capgo/background-geolocation"),
+      ]);
+
+      if (!Capacitor.isNativePlatform()) return null;
 
       return {
         platform: Capacitor.getPlatform(),
-        plugin: registerPlugin<BackgroundGeolocationPlugin>(
-          "BackgroundGeolocation"
-        ),
+        plugin:
+          backgroundModule.BackgroundGeolocation as unknown as BackgroundGeolocationPlugin,
       };
     } catch {
       return null;
@@ -66,25 +80,6 @@ async function getNativeContext(): Promise<NativeContext | null> {
   })();
 
   return nativeContextPromise;
-}
-
-async function requestAndroidNotificationPermission(platform: string) {
-  if (platform !== "android") {
-    return;
-  }
-
-  try {
-    const { LocalNotifications } = await import(
-      "@capacitor/local-notifications"
-    );
-    const current = await LocalNotifications.checkPermissions();
-    if (current.display !== "granted") {
-      await LocalNotifications.requestPermissions();
-    }
-  } catch {
-    // The location plugin will still attempt to start. Android versions below
-    // 13 do not require the notification runtime permission.
-  }
 }
 
 export async function isNativeBackgroundLocationAvailable() {
@@ -95,62 +90,75 @@ export async function getNativeLocationPlatform() {
   return (await getNativeContext())?.platform ?? null;
 }
 
+export async function getNativeLocationPermissionStatus() {
+  const context = await getNativeContext();
+  if (!context?.plugin.checkPermissions) return null;
+
+  try {
+    return await context.plugin.checkPermissions();
+  } catch {
+    return null;
+  }
+}
+
 export async function startNativeBackgroundLocation(
   onLocation: (location: NativeBackgroundLocationSample) => void,
   onError: (error: NativeBackgroundLocationError) => void
 ): Promise<string | null> {
   const context = await getNativeContext();
-  if (!context) {
-    return null;
-  }
-
-  await requestAndroidNotificationPermission(context.platform);
+  if (!context) return null;
 
   const english =
     typeof window !== "undefined" &&
     window.localStorage.getItem("fitmate_language") === "en";
 
-  return context.plugin.addWatcher(
+  // Always stop a previous native tracker before starting a new jogging session.
+  try {
+    await context.plugin.stop();
+  } catch {
+    // There may be no active native tracker yet.
+  }
+
+  await context.plugin.start(
     {
-      backgroundTitle: english ? "FitMate Jogging is active" : "FitMate Jogging aktif",
+      backgroundTitle: english
+        ? "FitMate Jogging is active"
+        : "FitMate Jogging aktif",
       backgroundMessage: english
         ? "FitMate is recording your route. Tap to return."
         : "FitMate sedang merekam rute lari. Ketuk notifikasi untuk kembali.",
       requestPermissions: true,
       stale: false,
-      // Three metres keeps the route responsive while reducing GPS noise and
-      // battery drain compared with requesting every raw fix.
+      // 3 m keeps the route responsive while filtering small GPS jitter.
       distanceFilter: 3,
+      // Prevent excessive callbacks while keeping jogging pace responsive.
+      minIntervalMs: 1_500,
     },
     (location, error) => {
       if (error) {
         onError(error);
         return;
       }
-      if (location) {
-        onLocation(location);
-      }
+      if (location) onLocation(location);
     }
   );
+
+  return ACTIVE_TRACKER_ID;
 }
 
-export async function stopNativeBackgroundLocation(watcherId: string) {
+export async function stopNativeBackgroundLocation(_trackerId: string) {
   const context = await getNativeContext();
-  if (!context) {
-    return;
-  }
+  if (!context) return;
 
   try {
-    await context.plugin.removeWatcher({ id: watcherId });
+    await context.plugin.stop();
   } catch {
-    // Removing an already stopped native watcher should be harmless.
+    // Stopping an already stopped native tracker is harmless.
   }
 }
 
 export async function openNativeLocationSettings() {
   const context = await getNativeContext();
-  if (!context) {
-    return;
-  }
+  if (!context) return;
   await context.plugin.openSettings();
 }

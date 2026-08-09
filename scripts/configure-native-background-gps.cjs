@@ -21,6 +21,17 @@ function addBefore(content, marker, addition) {
   return `${content.slice(0, index)}${addition}${content.slice(index)}`;
 }
 
+function removePermission(content, permission) {
+  const escaped = permission.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return content.replace(
+    new RegExp(
+      `\\s*<uses-permission\\s+android:name=["']${escaped}["']\\s*/>\\s*`,
+      "g"
+    ),
+    "\n"
+  );
+}
+
 function configureAndroid() {
   const manifestPath = path.join(
     root,
@@ -32,22 +43,36 @@ function configureAndroid() {
     return false;
   }
 
+  // FitMate jogging starts location tracking only after a deliberate user tap.
+  // It runs as a visible LOCATION foreground service. ACCESS_BACKGROUND_LOCATION
+  // is intentionally omitted to keep the permission scope minimal for Play Store.
   const permissions = [
     "android.permission.ACCESS_COARSE_LOCATION",
     "android.permission.ACCESS_FINE_LOCATION",
-    "android.permission.ACCESS_BACKGROUND_LOCATION",
     "android.permission.FOREGROUND_SERVICE",
     "android.permission.FOREGROUND_SERVICE_LOCATION",
     "android.permission.POST_NOTIFICATIONS",
-    "android.permission.SCHEDULE_EXACT_ALARM",
   ];
+
+  manifest = removePermission(
+    manifest,
+    "android.permission.ACCESS_BACKGROUND_LOCATION"
+  );
+  manifest = removePermission(
+    manifest,
+    "android.permission.SCHEDULE_EXACT_ALARM"
+  );
+  manifest = removePermission(
+    manifest,
+    "android.permission.USE_EXACT_ALARM"
+  );
 
   for (const permission of permissions) {
     if (!manifest.includes(permission)) {
       manifest = addBefore(
         manifest,
         "<application",
-        `    <uses-permission android:name=\"${permission}\" />\n\n    `
+        `    <uses-permission android:name="${permission}" />\n\n    `
       );
     }
   }
@@ -80,17 +105,19 @@ function configureAndroid() {
     ];
 
     for (const [name, value] of values) {
-      if (!strings.includes(`name=\"${name}\"`)) {
+      if (!strings.includes(`name="${name}"`)) {
         strings = strings.replace(
           "</resources>",
-          `    <string name=\"${name}\">${value}</string>\n</resources>`
+          `    <string name="${name}">${value}</string>\n</resources>`
         );
       }
     }
     write(stringsPath, strings);
   }
 
-  console.log("Android background-GPS and timer notification configuration applied.");
+  console.log("Android foreground-location configuration applied.");
+  console.log("ACCESS_BACKGROUND_LOCATION intentionally omitted.");
+  console.log("Exact-alarm permissions intentionally omitted.");
   return true;
 }
 
@@ -109,7 +136,7 @@ function configureIos() {
     ],
     [
       "NSLocationAlwaysAndWhenInUseUsageDescription",
-      "FitMate membutuhkan lokasi saat layar mati agar rute jogging tetap direkam.",
+      "FitMate membutuhkan lokasi saat layar mati agar rute jogging tetap direkam selama sesi aktif.",
     ],
   ];
 
@@ -143,6 +170,8 @@ console.log(
       status: android || ios ? "CONFIGURED" : "WAITING_FOR_NATIVE_PROJECTS",
       android,
       ios,
+      androidBackgroundLocationPermission: false,
+      exactAlarmPermission: false,
     },
     null,
     2

@@ -5,6 +5,9 @@ const root = path.resolve(__dirname, "..");
 const PACKAGE_NAME = "com.growsia.fitmate";
 const VERSION_CODE = 1;
 const VERSION_NAME = "1.0.0";
+const MIN_SDK = 24;
+const COMPILE_SDK = 36;
+const TARGET_SDK = 36;
 
 function replaceOrThrow(text, regex, replacement, label) {
   if (!regex.test(text)) {
@@ -20,11 +23,10 @@ if (!fs.existsSync(androidDir)) {
   process.exit(0);
 }
 
-const gradleCandidates = [
+const gradlePath = [
   path.join(androidDir, "app", "build.gradle"),
   path.join(androidDir, "app", "build.gradle.kts"),
-];
-const gradlePath = gradleCandidates.find(fs.existsSync);
+].find(fs.existsSync);
 
 if (!gradlePath) {
   throw new Error("android/app/build.gradle(.kts) tidak ditemukan.");
@@ -86,11 +88,24 @@ if (gradlePath.endsWith(".kts")) {
 
 fs.writeFileSync(gradlePath, gradle);
 
-console.log("✅ Android release identity configured");
+const variablesPath = path.join(androidDir, "variables.gradle");
+if (fs.existsSync(variablesPath)) {
+  let variables = fs.readFileSync(variablesPath, "utf8");
+  const replacements = [
+    [/minSdkVersion\s*=\s*\d+/, `minSdkVersion = ${MIN_SDK}`],
+    [/compileSdkVersion\s*=\s*\d+/, `compileSdkVersion = ${COMPILE_SDK}`],
+    [/targetSdkVersion\s*=\s*\d+/, `targetSdkVersion = ${TARGET_SDK}`],
+  ];
+  for (const [regex, replacement] of replacements) {
+    if (regex.test(variables)) variables = variables.replace(regex, replacement);
+  }
+  fs.writeFileSync(variablesPath, variables);
+}
+
+console.log("✅ Android Play Store configuration applied");
 console.log(`   package      : ${PACKAGE_NAME}`);
 console.log(`   versionCode  : ${VERSION_CODE}`);
 console.log(`   versionName  : ${VERSION_NAME}`);
-console.log("");
-console.log("Catatan: target SDK tidak dipaksa dari script ini.");
-console.log("Project masih memakai Capacitor 7, yang resmi mendukung target SDK 35.");
-console.log("Migrasi Capacitor 8 diperlukan untuk target SDK 36.");
+console.log(`   minSdk       : ${MIN_SDK}`);
+console.log(`   compileSdk   : ${COMPILE_SDK}`);
+console.log(`   targetSdk    : ${TARGET_SDK}`);

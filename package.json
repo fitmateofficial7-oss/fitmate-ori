@@ -1,6 +1,6 @@
 {
   "name": "fitmate-ai",
-  "version": "1.4.78",
+  "version": "1.4.81",
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
@@ -27,9 +27,9 @@
     "audit:jogging": "node scripts/audit-jogging-feature.cjs",
     "verify:xendit": "node scripts/verify-xendit-config.mjs",
     "native:configure": "node scripts/configure-native-background-gps.cjs",
-    "native:add:android": "npx cap add android && npm run native:configure && npm run playstore:android:configure",
+    "native:add:android": "npx cap add android && npm run native:configure && npm run playstore:android:configure && npm run playstore:branding",
     "native:add:ios": "npx cap add ios && npm run native:configure",
-    "native:sync": "npx cap sync && npm run native:configure && npm run playstore:android:configure",
+    "native:sync": "npx cap sync && npm run native:configure && npm run playstore:android:configure && npm run playstore:branding:apply",
     "native:open:android": "npx cap open android",
     "native:open:ios": "npx cap open ios",
     "dev:turbopack": "next dev",
@@ -42,24 +42,28 @@
     "playstore:android:configure": "node scripts/configure-playstore-android.cjs",
     "playstore:android:verify": "node scripts/verify-playstore-android.cjs",
     "playstore:capacitor8:check": "node scripts/check-capacitor8-readiness.cjs",
-    "playstore:preflight": "npm run verify:package-name && npm run playstore:android:verify && npm run playstore:capacitor8:check"
+    "playstore:preflight": "npm run verify:package-name && npm run playstore:android:verify && npm run playstore:capacitor8:check && npm run playstore:policy-audit && npm run playstore:branding:verify && npm run audit:jogging",
+    "playstore:policy-audit": "node scripts/audit-playstore-sensitive-permissions.cjs",
+    "playstore:branding:apply": "node scripts/apply-prebuilt-android-branding.cjs",
+    "playstore:branding:verify": "node scripts/verify-playstore-branding.cjs",
+    "playstore:branding": "npm run playstore:branding:apply && npm run playstore:branding:verify"
   },
   "dependencies": {
-    "@capacitor-community/background-geolocation": "^1.2.26",
-    "@capacitor/android": "^7.4.3",
-    "@capacitor/core": "^7.4.3",
-    "@capacitor/ios": "^7.4.3",
-    "@capacitor/local-notifications": "^7.0.2",
+    "@capacitor/android": "8.5.0",
+    "@capacitor/core": "8.5.0",
+    "@capacitor/ios": "8.5.0",
+    "@capacitor/local-notifications": "8.2.1",
     "@supabase/ssr": "^0.12.3",
     "@supabase/supabase-js": "^2.110.8",
     "next": "16.2.12",
     "openai": "^6.49.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "zod": "^4.4.3"
+    "zod": "^4.4.3",
+    "@capgo/background-geolocation": "8.4.0"
   },
   "devDependencies": {
-    "@capacitor/cli": "^7.4.3",
+    "@capacitor/cli": "8.5.0",
     "@next/env": "16.2.12",
     "@playwright/test": "^1.62.0",
     "@tailwindcss/postcss": "^4",

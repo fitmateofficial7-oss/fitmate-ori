@@ -12,9 +12,9 @@ const checks = [
   [timer.includes('visibilitychange'), "timer resyncs after backgrounding"],
   [timer.includes("scheduleRestTimerNotification"), "native notification is scheduled"],
   [timer.includes("alarmIntervalRef"), "in-app alarm continues until dismissed"],
-  [notification.includes("allowWhileIdle: true"), "native timer can fire during Android idle"],
+  [!notification.includes("allowWhileIdle: true"), "native timer avoids exact-alarm special access"],
   [notification.includes("requestPermissions"), "notification permission is handled"],
-  [native.includes("android.permission.SCHEDULE_EXACT_ALARM"), "Android exact alarm permission is configured"],
+  [!native.includes('const permissions = [\n    "android.permission.SCHEDULE_EXACT_ALARM"'), "Android exact alarm permission is not requested"],
   [native.includes("android.permission.POST_NOTIFICATIONS"), "Android notification permission is configured"],
 ];
 

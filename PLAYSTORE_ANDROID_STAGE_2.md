@@ -1,3 +1,5 @@
+> **Historical note:** Stage 2 described the Capacitor 7 blocker. Stage 3 has now migrated the source to Capacitor 8 and `@capgo/background-geolocation`. See `PLAYSTORE_CAPACITOR8_STAGE_3.md`.
+
 # FitMate — Play Store Stage 2
 ## Android Project + Versioning Preparation
 
@@ -76,3 +78,7 @@ Stage 3 harus:
 4. audit permission Android 16,
 5. tes background GPS,
 6. baru lanjut icon, splash, signing, dan AAB.
+
+## Stage 3 completed in source
+
+See `PLAYSTORE_CAPACITOR8_STAGE_3.md`. The project is now configured for Capacitor 8 + target SDK 36 using `@capgo/background-geolocation`.

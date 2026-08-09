@@ -1,5 +1,5 @@
 {
-  "appName": "FitMate",
+  "appName": "FitMate AI",
   "androidPackageName": "com.growsia.fitmate",
   "release": {
     "versionCode": 1,
@@ -7,11 +7,24 @@
   },
   "android": {
     "minimumSdk": 24,
-    "currentCapacitorMajor": 7,
-    "currentSupportedTargetSdk": 35,
+    "currentCapacitorMajor": 8,
+    "currentSupportedTargetSdk": 36,
     "playRequiredTargetSdkFrom2026-08-31": 36,
-    "desiredPlayTargetSdk": 36
+    "desiredPlayTargetSdk": 36,
+    "backgroundLocationPermission": "not-requested",
+    "foregroundServiceLocation": true
   },
-  "status": "android-versioning-prepared-capacitor8-migration-required",
-  "nextStage": "capacitor-8-migration-and-background-location-plugin-decision"
+  "status": "stage4-install-sharp-fixed",
+  "nextStage": "signing-keystore-release-aab",
+  "branding": {
+    "stage": 4,
+    "status": "prepared",
+    "adaptiveIcon": true,
+    "monochromeIcon": true,
+    "lightSplash": true,
+    "darkSplash": true,
+    "playStoreIcon512": "playstore/branding/playstore-icon-512.png",
+    "assetGeneration": "prebuilt-no-sharp",
+    "capacitorAssetsDependency": false
+  }
 }

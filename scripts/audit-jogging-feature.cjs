@@ -128,7 +128,7 @@ assert(
     nativeLocation.includes("FitMate Jogging is active") &&
     nativeLocation.includes("backgroundMessage:") &&
     nativeLocation.includes("distanceFilter: 3") &&
-    nativeLocation.includes("@capacitor/local-notifications"),
+    nativeLocation.includes("@capgo/background-geolocation"),
   "Native background tracking must use a visible notification and a distance filter."
 );
 assert(
@@ -137,14 +137,15 @@ assert(
   "Capacitor must use the Android legacy bridge and configurable hosted URL."
 );
 assert(
-  packageJson.dependencies?.["@capacitor-community/background-geolocation"] &&
+  packageJson.dependencies?.["@capgo/background-geolocation"] &&
     packageJson.dependencies?.["@capacitor/core"] &&
     packageJson.dependencies?.["@capacitor/local-notifications"],
-  "Required Capacitor background-location dependencies must be declared."
+  "Required Capacitor 8 background-location dependencies must be declared."
 );
 assert(
   nativeConfigurator.includes("FOREGROUND_SERVICE_LOCATION") &&
     nativeConfigurator.includes("POST_NOTIFICATIONS") &&
+    !nativeConfigurator.includes('const permissions = [\n    "android.permission.ACCESS_BACKGROUND_LOCATION"') &&
     nativeConfigurator.includes("NSLocationAlwaysAndWhenInUseUsageDescription") &&
     nativeConfigurator.includes("UIBackgroundModes"),
   "Native configuration must include Android foreground-location and iOS background-location settings."

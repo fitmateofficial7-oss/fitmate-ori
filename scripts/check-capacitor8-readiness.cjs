@@ -4,31 +4,46 @@ const path = require("path");
 const root = path.resolve(__dirname, "..");
 const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
 
-const capacitorCore = pkg.dependencies?.["@capacitor/core"] ?? "";
-const capacitorAndroid = pkg.dependencies?.["@capacitor/android"] ?? "";
-const bgGeo = pkg.dependencies?.["@capacitor-community/background-geolocation"] ?? "";
+const core = pkg.dependencies?.["@capacitor/core"] ?? "";
+const android = pkg.dependencies?.["@capacitor/android"] ?? "";
+const ios = pkg.dependencies?.["@capacitor/ios"] ?? "";
+const cli = pkg.devDependencies?.["@capacitor/cli"] ?? "";
+const bgGeo = pkg.dependencies?.["@capgo/background-geolocation"] ?? "";
+const legacyBgGeo = pkg.dependencies?.["@capacitor-community/background-geolocation"];
 
 const major = (version) => {
   const m = String(version).match(/(\d+)/);
   return m ? Number(m[1]) : 0;
 };
 
-const capMajor = Math.max(major(capacitorCore), major(capacitorAndroid));
+const values = [
+  ["Capacitor core", core],
+  ["Capacitor Android", android],
+  ["Capacitor iOS", ios],
+  ["Capacitor CLI", cli],
+  ["Capgo Background GPS", bgGeo],
+];
 
-console.log(`Capacitor core    : ${capacitorCore || "tidak ditemukan"}`);
-console.log(`Capacitor Android : ${capacitorAndroid || "tidak ditemukan"}`);
-console.log(`Background GPS    : ${bgGeo || "tidak ditemukan"}`);
-
-if (capMajor >= 8) {
-  console.log("✅ Capacitor 8+ terdeteksi. Target SDK 36 dapat disiapkan sesuai dukungan resmi Capacitor 8.");
-  process.exit(0);
+for (const [label, value] of values) {
+  console.log(`${label.padEnd(24)}: ${value || "tidak ditemukan"}`);
 }
 
+let failed = false;
+for (const [label, value] of values) {
+  if (major(value) !== 8) {
+    console.error(`❌ ${label} harus major v8.`);
+    failed = true;
+  }
+}
+
+if (legacyBgGeo) {
+  console.error("❌ Plugin background geolocation Capacitor 7 lama masih terpasang.");
+  failed = true;
+}
+
+if (failed) process.exit(1);
+
 console.log("");
-console.log("⚠️  Capacitor 7 masih digunakan.");
-console.log("    Capacitor 7 resmi mendukung target SDK 35.");
-console.log("    Untuk Play Store setelah 31 Agustus 2026, FitMate perlu target SDK 36 / Capacitor 8.");
-console.log("");
-console.log("⚠️  Jangan upgrade otomatis dulu:");
-console.log("    @capacitor-community/background-geolocation v1.2.26 secara resmi mencantumkan dukungan sampai Capacitor v7.");
-console.log("    Plugin background GPS harus diputuskan/migrasikan terlebih dahulu agar fitur jogging tidak rusak.");
+console.log("✅ Capacitor 8 migration configuration is consistent.");
+console.log("✅ Background GPS uses the Capacitor 8-compatible Capgo plugin.");
+console.log("✅ Android target SDK 36 can be generated/configured.");
