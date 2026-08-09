@@ -1,4 +1,7 @@
+"use client";
+
 import FitMateBrand from "@/components/fitmate-brand";
+import { useLanguage } from "@/components/language-provider";
 
 type CompanySignatureProps = {
   className?: string;
@@ -11,6 +14,8 @@ export default function CompanySignature({
   compact = false,
   inverse = false,
 }: CompanySignatureProps) {
+  const { tr } = useLanguage();
+
   return (
     <div
       className={`${
@@ -30,7 +35,10 @@ export default function CompanySignature({
           inverse ? "text-slate-400" : "text-slate-500 dark:text-slate-400"
         }`}
       >
-        © 2026 PT Growsia Solusi Indonesia Maju. Seluruh hak dilindungi.
+        {tr(
+          "© 2026 PT Growsia Solusi Indonesia Maju. Seluruh hak dilindungi.",
+          "© 2026 PT Growsia Solusi Indonesia Maju. All rights reserved."
+        )}
       </p>
     </div>
   );

@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 
 import CompanySignature from "@/components/company-signature";
 import FitMateBrand from "@/components/fitmate-brand";
+import FitMateIcon from "@/components/fitmate-icon";
 import { useLanguage } from "@/components/language-provider";
-import LiveIcon from "@/components/live-icon";
 import {
   PREMIUM_MONTHLY_PRICE_IDR,
   type BillingStatusResponse,
@@ -97,7 +97,7 @@ export default function PremiumPage() {
           setCheckingPayment(true);
           setNotice(
             tr(
-              "Pembayaran diterima oleh halaman checkout. FitMate sedang menunggu konfirmasi resmi dari Xendit.",
+              "Menunggu konfirmasi pembayaran dari Xendit.",
               "Checkout was completed. FitMate is waiting for Xendit's official confirmation."
             )
           );
@@ -146,8 +146,8 @@ export default function PremiumPage() {
         setCheckingPayment(false);
         setNotice(
           tr(
-            "Konfirmasi pembayaran belum masuk. Gunakan tombol Periksa status; akses Premium akan aktif otomatis setelah webhook diterima.",
-            "Payment confirmation has not arrived yet. Use Check status; Premium will activate automatically after the webhook is received."
+            "Pembayaran belum terkonfirmasi. Periksa status lagi.",
+            "Payment is not confirmed yet. Check the status again."
           )
         );
       }
@@ -189,6 +189,7 @@ export default function PremiumPage() {
           acceptSubscriptionTerms: acceptedSubscriptionTerms,
           acceptRecurringTerms:
             paymentMode === "recurring" ? acceptedRecurringTerms : false,
+          language,
         }),
       });
       const payload = (await response.json()) as {
@@ -247,8 +248,8 @@ export default function PremiumPage() {
             "Cancel the unfinished QRIS checkout?"
           )
         : tr(
-            "Hentikan perpanjangan Premium? Akses yang sudah dibayar tetap tersedia sampai akhir periode berjalan.",
-            "Stop Premium renewal? Paid access remains available until the end of the current period."
+            "Hentikan perpanjangan? Akses tetap aktif sampai akhir periode.",
+            "Stop renewal? Access stays active until the period ends."
           )
     );
     if (!confirmed) return;
@@ -307,7 +308,8 @@ export default function PremiumPage() {
   const hasCancelableSubscription = Boolean(
     subscription &&
       (["pending", "requires_action"].includes(subscription.status) ||
-        (subscription.paymentMode === "recurring" &&
+        (subscription.accessSource !== "manual" &&
+          subscription.paymentMode === "recurring" &&
           ["active", "past_due"].includes(subscription.status)))
   );
 
@@ -341,26 +343,26 @@ export default function PremiumPage() {
           <div className="relative grid gap-8 lg:grid-cols-[1.15fr_.85fr] lg:items-center">
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-amber-300/10 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-amber-200">
-                <LiveIcon variant="pulse">✦</LiveIcon>
+                <FitMateIcon name="shield" className="h-4 w-4" />
                 FitMate Premium
               </div>
               <h1 className="mt-5 max-w-3xl text-4xl font-black tracking-tight text-white sm:text-6xl">
                 {tr(
-                  "Buka seluruh pengalaman FitMate",
-                  "Unlock the complete FitMate experience"
+                  "Akses FitMate Premium",
+                  "Get full FitMate Premium access"
                 )}
               </h1>
               <p className="mt-4 max-w-2xl text-base font-semibold leading-7 text-slate-300 sm:text-lg">
                 {tr(
-                  "Dapatkan hingga 10 generate program per minggu, 10 konsultasi dan 10 scan makanan per hari, seluruh panduan gerakan 2D, serta halaman Progres dan Nutrisi.",
-                  "Get up to 10 workout-plan generations per week, 10 consultations and 10 meal scans per day, the full 2D exercise library, plus Progress and Nutrition pages."
+                  "10 generate/minggu, 10 konsultasi + 10 scan/hari, Progres, Nutrisi, dan semua panduan gerakan.",
+                  "10 plans/week, 10 consultations + 10 scans/day, Progress, Nutrition, and all exercise guides."
                 )}
               </p>
 
               <div className="mt-6 grid gap-3 text-sm font-bold text-slate-200 sm:grid-cols-2">
                 {[
                   tr("10 generate program per minggu", "10 workout-plan generations weekly"),
-                  tr("10 konsultasi AI per hari", "10 AI consultations daily"),
+                  tr("10 konsultasi Coach per hari", "10 Coach consultations daily"),
                   tr("10 scan makanan per hari", "10 meal scans daily"),
                   tr("Semua panduan latihan 2D", "All 2D exercise guides"),
                   tr("Progres lengkap", "Complete progress tracking"),
@@ -370,7 +372,7 @@ export default function PremiumPage() {
                     key={feature}
                     className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3"
                   >
-                    <span className="text-amber-300">✓</span>
+                    <FitMateIcon name="check" className="h-4 w-4 shrink-0 text-amber-300" />
                     <span>{feature}</span>
                   </div>
                 ))}
@@ -415,9 +417,14 @@ export default function PremiumPage() {
 
               {billing?.isPremium ? (
                 <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-900 dark:border-emerald-400/20 dark:bg-emerald-400/10 dark:text-emerald-100">
-                  <p className="font-black">✓ {tr("Premium aktif", "Premium active")}</p>
+                  <p className="flex items-center gap-2 font-semibold"><FitMateIcon name="check" className="h-4 w-4" /> {tr("Premium aktif", "Premium active")}</p>
                   <p className="mt-1 text-sm font-semibold">
-                    {subscription?.paymentMode === "qris"
+                    {subscription?.accessSource === "manual"
+                      ? tr(
+                          `Akses diberikan oleh admin. Aktif sampai ${formatDate(subscription.currentPeriodEnd, language)}.`,
+                          `Access was granted by an administrator. Active until ${formatDate(subscription.currentPeriodEnd, language)}.`
+                        )
+                      : subscription?.paymentMode === "qris"
                       ? tr(
                           `Pembayaran QRIS sekali bayar. Aktif sampai ${formatDate(subscription.currentPeriodEnd, language)}.`,
                           `One-time QRIS payment. Active until ${formatDate(subscription.currentPeriodEnd, language)}.`
@@ -627,11 +634,11 @@ export default function PremiumPage() {
               {tr("Untuk mencoba fitur utama", "Try the core experience")}
             </h2>
             <ul className="mt-4 space-y-2 text-sm font-semibold text-slate-600 dark:text-slate-300">
-              <li>✓ {tr("2 generate seumur hidup", "2 lifetime generations")}</li>
-              <li>✓ {tr("1 konsultasi AI", "1 AI consultation")}</li>
-              <li>✓ {tr("1 scan makanan", "1 meal scan")}</li>
-              <li>✓ {tr("10 panduan gerakan 2D", "10 2D exercise guides")}</li>
-              <li>🔒 {tr("Progres dan Nutrisi", "Progress and Nutrition")}</li>
+              <li>{tr("2 generate seumur hidup", "2 lifetime generations")}</li>
+              <li>{tr("1 konsultasi Coach", "1 Coach consultation")}</li>
+              <li>{tr("1 scan makanan", "1 meal scan")}</li>
+              <li>{tr("10 panduan gerakan 2D", "10 2D exercise guides")}</li>
+              <li className="text-slate-400">{tr("Progres dan Nutrisi terkunci", "Progress and Nutrition locked")}</li>
             </ul>
             <p className="mt-4 rounded-xl bg-slate-100 px-4 py-3 text-sm font-black text-slate-700 dark:bg-white/5 dark:text-slate-200">
               {tr(
@@ -646,7 +653,7 @@ export default function PremiumPage() {
               FitMate Premium
             </p>
             <h2 className="mt-2 text-xl font-black text-slate-950 dark:text-white">
-              {tr("Semua fitur terbuka", "Every feature unlocked")}
+              {tr("Akses fitur Premium", "Premium feature access")}
             </h2>
             <p className="mt-3 text-sm font-semibold leading-6 text-slate-700 dark:text-amber-50">
               {tr(

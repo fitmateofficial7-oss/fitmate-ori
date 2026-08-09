@@ -177,13 +177,19 @@ export default function PwaManager() {
       if (localStorage.getItem(reminderKey)) return;
 
       const registration = await navigator.serviceWorker.ready;
-      await registration.showNotification("Waktunya latihan bersama FitMate", {
-        body: "Buka program hari ini, cek readiness, lalu catat setiap set.",
+      const english = window.localStorage.getItem("fitmate_language") === "en";
+      await registration.showNotification(
+        english ? "Time to train with FitMate" : "Waktunya latihan bersama FitMate",
+        {
+        body: english
+          ? "Open today’s workout, check your readiness, and log each set."
+          : "Buka latihan hari ini, cek kesiapan, lalu catat setiap set.",
         icon: "/icons/icon-192.png",
         badge: "/icons/icon-192.png",
         data: { url: "/workout" },
         tag: `fitmate-workout-${date}`,
-      });
+        }
+      );
       localStorage.setItem(reminderKey, new Date().toISOString());
     };
 

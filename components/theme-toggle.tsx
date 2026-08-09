@@ -4,7 +4,6 @@ import { useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 
 import { useLanguage } from "@/components/language-provider";
-import LiveIcon from "@/components/live-icon";
 
 type ThemeName = "dark" | "light";
 
@@ -18,6 +17,8 @@ const APP_ROUTES = [
   "/nutrition",
   "/settings",
   "/motivation",
+  "/jogging",
+  "/premium",
 ];
 const THEME_EVENT = "fitmate-theme-change";
 
@@ -62,6 +63,11 @@ export default function ThemeToggle() {
       pathname === route ||
       pathname.startsWith(`${route}/`)
   );
+
+
+  if (isAppPage) {
+    return null;
+  }
 
   const toggleTheme = () => {
     const nextTheme: ThemeName =
@@ -109,13 +115,9 @@ export default function ThemeToggle() {
           : "bottom-4 sm:bottom-5"
       }`}
     >
-      <LiveIcon
-        variant={dark ? "float" : "wiggle"}
-        active
-        className="flex h-7 w-7 items-center justify-center rounded-full bg-green-100 text-base text-green-700"
-      >
-        {dark ? "☀" : "☾"}
-      </LiveIcon>
+      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-green-100 text-[10px] font-bold text-green-700" aria-hidden="true">
+        {dark ? "L" : "D"}
+      </span>
       <span className="hidden sm:inline">
         {dark
           ? tr("Terang", "Light")

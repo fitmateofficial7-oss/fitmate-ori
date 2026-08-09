@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import FitMateBrand from "@/components/fitmate-brand";
-import LiveIcon from "@/components/live-icon";
+import FitMateIcon from "@/components/fitmate-icon";
 import { useLanguage } from "@/components/language-provider";
 import { supabase } from "@/lib/supabase";
 
@@ -167,12 +167,9 @@ export default function ResetPasswordPage() {
       <section className="w-full max-w-md rounded-[2rem] border border-slate-200 bg-white p-6 shadow-2xl shadow-slate-200/70 sm:p-8">
         <FitMateBrand href="/" size="md" showCompany />
 
-        <LiveIcon
-          variant="wiggle"
-          className="mt-10 flex h-14 w-14 items-center justify-center rounded-2xl bg-green-100 text-2xl"
-        >
-          🔐
-        </LiveIcon>
+        <span className="mt-10 flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-green-700">
+          <FitMateIcon name="shield" className="h-5 w-5" />
+        </span>
         <h1 className="mt-5 text-3xl font-black text-slate-900">
           {tr(
             "Buat kata sandi baru",
@@ -292,8 +289,8 @@ export default function ResetPasswordPage() {
                     "Saving…"
                   )
                 : tr(
-                    "Simpan kata sandi baru →",
-                    "Save new password →"
+                    "Simpan kata sandi baru",
+                    "Save new password"
                   )}
             </button>
           </form>
@@ -304,7 +301,7 @@ export default function ResetPasswordPage() {
             href="/login"
             className="mt-6 block rounded-2xl border border-slate-200 px-5 py-3 text-center text-sm font-black text-slate-600 transition hover:bg-slate-50"
           >
-            ← {tr("Kembali ke login", "Back to login")}
+            {tr("Kembali ke login", "Back to login")}
           </Link>
         )}
       </section>

@@ -90,6 +90,7 @@ export type BillingStatusResponse = {
     cancelAtPeriodEnd: boolean;
     checkoutUrl: string | null;
     paymentMode: PremiumPaymentMode;
+    accessSource?: "manual" | "xendit";
   };
   generation: {
     freeUsed: number;

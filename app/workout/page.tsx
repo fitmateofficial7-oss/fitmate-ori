@@ -19,12 +19,17 @@ import {
   getMuscleGroup,
 } from "@/lib/exercise-substitutions";
 import FitMateBrand from "@/components/fitmate-brand";
+import FitMateIcon from "@/components/fitmate-icon";
 import RestTimer, {
   parseRestSeconds,
 } from "@/components/rest-timer";
 import ExerciseSetLogger from "@/components/exercise-set-logger";
-import LiveIcon from "@/components/live-icon";
 import ReadinessBanner from "@/components/readiness-banner";
+import {
+  localizeWorkoutDayName,
+  localizeWorkoutFocus,
+  localizeWorkoutSessionName,
+} from "@/lib/fitness-i18n";
 
 // ======================================================
 // TYPES
@@ -1161,7 +1166,10 @@ export default function WorkoutPage() {
         );
 
         setSuccessMessage(
-          "Workout started! Let's get stronger. 💪"
+          tr(
+            "Latihan dimulai. Catat setiap set agar progres tetap rapi.",
+            "Workout started. Log each set to keep your progress organized."
+          )
         );
 
         setReplacementPickerKey(null);
@@ -1450,7 +1458,10 @@ export default function WorkoutPage() {
         );
 
         setSuccessMessage(
-          "Workout completed successfully! Great job! 🎉"
+          tr(
+            "Latihan selesai. Progres sesi ini sudah tersimpan.",
+            "Workout complete. This session has been saved."
+          )
         );
 
       } catch (error) {
@@ -1491,7 +1502,10 @@ export default function WorkoutPage() {
       });
 
       setSuccessMessage(
-        `Hari ${day.day} dipilih. Tekan "Mulai Latihan" untuk mengulang sesi ini.`
+        tr(
+          `Hari ${day.day} dipilih. Tekan "Mulai Latihan" untuk mengulang sesi ini.`,
+          `Day ${day.day} selected. Tap "Start Workout" to repeat this session.`
+        )
       );
     };
 
@@ -1581,13 +1595,7 @@ export default function WorkoutPage() {
 
         <div className="text-center">
 
-          <LiveIcon
-            variant="pulse"
-            active
-            className="text-6xl"
-          >
-            🏋️
-          </LiveIcon>
+          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-green-50 text-green-700"><FitMateIcon name="dumbbell" className="h-6 w-6" /></span>
 
           <h1 className="mt-6 text-2xl font-bold text-gray-900">
             {tr("Menyiapkan Latihan", "Preparing Your Workout")}
@@ -1640,13 +1648,7 @@ export default function WorkoutPage() {
 
           <div className="w-full max-w-lg rounded-3xl bg-white p-8 text-center shadow-sm">
 
-            <LiveIcon
-              variant="tick"
-              active
-              className="text-6xl"
-            >
-              📋
-            </LiveIcon>
+            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-700"><FitMateIcon name="list" className="h-6 w-6" /></span>
 
             <h1 className="mt-6 text-3xl font-bold text-gray-900">
               {tr(
@@ -1759,13 +1761,17 @@ export default function WorkoutPage() {
                   : tr("Latihan hari ini", "Today’s workout")}
               </p>
               <h1 className="mt-2 truncate text-3xl font-black sm:text-4xl">
-                {activeSession?.workout_name || selectedDay?.name || tr("Pilih latihan", "Choose a workout")}
+                {activeSession
+                  ? localizeWorkoutSessionName(activeSession.workout_name, activeSession.workout_day, language)
+                  : selectedDay
+                    ? localizeWorkoutDayName(selectedDay.name, selectedDay.day, selectedDay.exercises.length > 0, language)
+                    : tr("Pilih latihan", "Choose a workout")}
               </h1>
               <p className="mt-2 text-sm text-green-50/90">
                 {activeSession
                   ? `${activeCompletedExercises}/${activeTotalExercises} ${tr("gerakan selesai", "exercises complete")}`
                   : selectedDay
-                    ? `${selectedDay.exercises.length} ${tr("gerakan", "exercises")} · ${selectedDay.focus}`
+                    ? `${selectedDay.exercises.length} ${tr("gerakan", "exercises")} · ${localizeWorkoutFocus(selectedDay.focus, selectedDay.exercises.length > 0, language)}`
                     : tr("Pilih satu hari untuk melihat sesi.", "Select a day to view the session.")}
               </p>
             </div>
@@ -1844,7 +1850,7 @@ export default function WorkoutPage() {
                             : "bg-white text-slate-600 shadow-sm dark:bg-white/10 dark:text-slate-200"
                         }`}
                       >
-                        {log.completed ? "✓" : index + 1}
+                        {log.completed ? <FitMateIcon name="check" className="h-3.5 w-3.5" /> : index + 1}
                       </span>
 
                       <div className="min-w-0 flex-1">
@@ -1864,7 +1870,7 @@ export default function WorkoutPage() {
                                 onClick={() => startRestForExercise(log.exercise_name, plannedExercise.rest)}
                                 className="rounded-xl bg-orange-100 px-3 py-2 text-xs font-black text-orange-700 dark:bg-orange-400/10 dark:text-orange-200"
                               >
-                                ⏱ {plannedExercise.rest}
+                                {tr("Istirahat", "Rest")} {plannedExercise.rest}
                               </button>
                             )}
                             {libraryExercise && (
@@ -2008,10 +2014,10 @@ export default function WorkoutPage() {
                           {day.day}
                         </span>
                         <span className="text-xs font-black text-slate-400">
-                          {completed ? "✓" : restDay ? tr("REST", "REST") : day.exercises.length}
+                          {completed ? tr("Selesai", "Done") : restDay ? tr("REST", "REST") : day.exercises.length}
                         </span>
                       </div>
-                      <p className="mt-4 line-clamp-3 text-lg font-black leading-snug">{day.name}</p>
+                      <p className="mt-4 line-clamp-3 text-lg font-black leading-snug">{localizeWorkoutDayName(day.name, day.day, day.exercises.length > 0, language)}</p>
                     </button>
                   );
                 })}
@@ -2025,8 +2031,8 @@ export default function WorkoutPage() {
                     <p className="text-xs font-black uppercase tracking-wide text-green-600 dark:text-green-300">
                       {tr("Hari", "Day")} {selectedDay.day}
                     </p>
-                    <h2 className="mt-1 truncate text-2xl font-black">{selectedDay.name}</h2>
-                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{selectedDay.focus}</p>
+                    <h2 className="mt-1 truncate text-2xl font-black">{localizeWorkoutDayName(selectedDay.name, selectedDay.day, selectedDay.exercises.length > 0, language)}</h2>
+                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{localizeWorkoutFocus(selectedDay.focus, selectedDay.exercises.length > 0, language)}</p>
                   </div>
 
                   {selectedDay.exercises.length > 0 && (
@@ -2048,7 +2054,7 @@ export default function WorkoutPage() {
 
                 {selectedDay.exercises.length === 0 ? (
                   <div className="mt-5 rounded-2xl bg-slate-50 p-6 text-center dark:bg-white/5">
-                    <p className="text-3xl" aria-hidden="true">🧘</p>
+                    <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-600"><FitMateIcon name="activity" className="h-5 w-5" /></span>
                     <h3 className="mt-2 font-black">{tr("Hari pemulihan", "Recovery day")}</h3>
                     <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                       {tr("Istirahat, hidrasi, dan tidur cukup.", "Rest, hydrate, and get enough sleep.")}
@@ -2196,7 +2202,7 @@ export default function WorkoutPage() {
                   {tr("Lihat panduan dan alternatif gerakan.", "Browse guides and alternatives.")}
                 </span>
               </span>
-              <span className="text-xl text-green-600 dark:text-green-300">→</span>
+              
             </button>
           </>
         )}

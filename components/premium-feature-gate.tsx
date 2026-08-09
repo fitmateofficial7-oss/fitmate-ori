@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import FitMateIcon from "@/components/fitmate-icon";
 import { useLanguage } from "@/components/language-provider";
 import { usePremiumAccess } from "@/hooks/use-premium-access";
 
@@ -39,13 +40,13 @@ export default function PremiumFeatureGate({
 
       <div className="fixed inset-0 z-[90] flex items-center justify-center overflow-y-auto bg-slate-950/35 px-4 py-8 backdrop-blur-sm dark:bg-black/55">
         <section className="w-full max-w-md rounded-[2rem] border border-white/70 bg-white/95 p-6 text-center text-slate-950 shadow-2xl shadow-slate-950/25 dark:border-white/10 dark:bg-slate-900/95 dark:text-white sm:p-8">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-300 to-yellow-500 text-3xl shadow-lg shadow-amber-500/25">
-            🔒
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
+            <FitMateIcon name="lock" className="h-6 w-6" />
           </div>
-          <p className="mt-5 text-xs font-black uppercase tracking-[0.18em] text-amber-600 dark:text-amber-300">
+          <p className="mt-5 text-sm font-semibold text-amber-700 dark:text-amber-300">
             FitMate Premium
           </p>
-          <h1 className="mt-2 text-3xl font-black tracking-tight">
+          <h1 className="mt-2 text-3xl font-bold tracking-tight">
             {tr(featureNameId, featureNameEn)}
           </h1>
           <p className="mt-3 text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300">

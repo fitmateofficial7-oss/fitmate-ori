@@ -62,6 +62,7 @@ type CheckoutBody = {
   paymentMode?: PremiumPaymentMode;
   acceptSubscriptionTerms?: boolean;
   acceptRecurringTerms?: boolean;
+  language?: "id" | "en";
 };
 
 export async function POST(request: NextRequest) {
@@ -83,6 +84,7 @@ export async function POST(request: NextRequest) {
   }
 
   const paymentMode = normalizePremiumPaymentMode(body.paymentMode);
+  const language = body.language === "en" ? "en" : "id";
 
   if (!paymentMode) {
     return NextResponse.json(
@@ -330,19 +332,23 @@ export async function POST(request: NextRequest) {
               country: "ID",
               expires_at: expiresAt,
               ...xenditCustomer,
-              locale: "id",
+              locale: language,
               notification_channels: ["EMAIL"],
               capture_method: "AUTOMATIC",
               allow_save_payment_method: "DISABLED",
               allowed_payment_channels: ["QRIS"],
-              description: `${PREMIUM_PLAN_NAME} - akses ${PREMIUM_QRIS_ACCESS_DAYS} hari`,
+              description: language === "en"
+                ? `${PREMIUM_PLAN_NAME} - ${PREMIUM_QRIS_ACCESS_DAYS}-day access`
+                : `${PREMIUM_PLAN_NAME} - akses ${PREMIUM_QRIS_ACCESS_DAYS} hari`,
               items: [
                 {
                   reference_id: `${referenceId}-access`,
                   type: "DIGITAL_SERVICE",
                   name: PREMIUM_PLAN_NAME,
                   category: "FITNESS_MEMBERSHIP",
-                  description: `Akses semua fitur Premium selama ${PREMIUM_QRIS_ACCESS_DAYS} hari`,
+                  description: language === "en"
+                    ? `Access all Premium features for ${PREMIUM_QRIS_ACCESS_DAYS} days`
+                    : `Akses semua fitur Premium selama ${PREMIUM_QRIS_ACCESS_DAYS} hari`,
                   net_unit_amount: PREMIUM_MONTHLY_PRICE_IDR,
                   quantity: 1,
                   currency: "IDR",
@@ -363,9 +369,11 @@ export async function POST(request: NextRequest) {
               country: "ID",
               expires_at: expiresAt,
               ...xenditCustomer,
-              locale: "id",
+              locale: language,
               notification_channels: ["EMAIL"],
-              description: `${PREMIUM_PLAN_NAME} - langganan bulanan`,
+              description: language === "en"
+                ? `${PREMIUM_PLAN_NAME} - monthly subscription`
+                : `${PREMIUM_PLAN_NAME} - langganan bulanan`,
               metadata: sessionMetadata,
               subscription: {
                 schedule: {

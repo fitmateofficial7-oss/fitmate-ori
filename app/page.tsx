@@ -5,59 +5,60 @@ import Link from "next/link";
 import CompanySignature from "@/components/company-signature";
 import FitMateBrand from "@/components/fitmate-brand";
 import GetStartedButton from "@/components/get-started-button";
+import FitMateIcon, { type FitMateIconName } from "@/components/fitmate-icon";
 import { useLanguage } from "@/components/language-provider";
 import LiveIcon from "@/components/live-icon";
 
 const FEATURES = [
   {
-    icon: "✦",
+    icon: "message" as FitMateIconName,
     motion: "wiggle",
-    eyebrow: "AI COACH",
+    eyebrow: "COACH",
     titleId: "Konsultasi tanpa terasa menghakimi",
     titleEn: "Support without judgment",
     descriptionId:
-      "Tanyakan latihan, nutrisi, recovery, dan kebiasaan sehat dalam bahasa yang nyaman untukmu.",
+      "Tanya soal latihan, nutrisi, dan recovery.",
     descriptionEn:
-      "Ask about training, nutrition, recovery, and healthy habits in language that feels comfortable.",
+      "Ask about training, nutrition, and recovery.",
     color:
       "from-green-400/20 to-green-400/5 text-green-700",
   },
   {
-    icon: "📷",
+    icon: "camera" as FitMateIconName,
     motion: "pop",
     eyebrow: "MEAL SCAN",
     titleId: "Foto makanan, lihat estimasi nutrisinya",
     titleEn: "Photograph a meal and estimate its nutrition",
     descriptionId:
-      "Dapatkan perkiraan kalori, protein, karbohidrat, lemak, fiber, dan saran yang sesuai tujuanmu.",
+      "Lihat estimasi kalori dan makro dari foto.",
     descriptionEn:
-      "Estimate calories, protein, carbohydrates, fat, fiber, and get suggestions for your goal.",
+      "Estimate calories and macros from a photo.",
     color:
       "from-orange-400/20 to-amber-400/5 text-orange-700",
   },
   {
-    icon: "◉",
+    icon: "dumbbell" as FitMateIconName,
     motion: "float",
     eyebrow: "2D GUIDE",
     titleId: "Gerakan lebih mudah dipahami",
     titleEn: "Movements are easier to understand",
     descriptionId:
-      "Lihat karakter bergerak, putar kamera 360°, periksa posisi awal dan akhir, lalu ikuti tahapan gerakannya.",
+      "Lihat langkah gerakan 2D dari awal sampai akhir.",
     descriptionEn:
-      "Watch the character move, rotate the camera 360°, check the start and finish positions, and follow each movement step.",
+      "Follow clear 2D movement steps from start to finish.",
     color:
       "from-sky-400/20 to-blue-400/5 text-sky-700",
   },
   {
-    icon: "⏱",
+    icon: "timer" as FitMateIconName,
     motion: "tick",
     eyebrow: "REST TIMER",
     titleId: "Recovery tepat di setiap set",
     titleEn: "The right recovery for every set",
     descriptionId:
-      "Timer muncul otomatis setelah latihan selesai dan tetap dapat disesuaikan dengan kebutuhan.",
+      "Timer istirahat otomatis setelah set selesai.",
     descriptionEn:
-      "The timer opens automatically after an exercise and remains easy to adjust.",
+      "Rest timer starts after a completed set.",
     color:
       "from-violet-400/20 to-purple-400/5 text-violet-700",
   },
@@ -67,7 +68,7 @@ export default function Home() {
   const { tr } = useLanguage();
 
   return (
-    <main className="min-h-screen overflow-hidden bg-white text-slate-950">
+    <main className="fitmate-marketing-page min-h-screen overflow-hidden bg-white text-slate-950">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(circle_at_20%_8%,_rgba(34,197,94,.12),_transparent_34%)]" />
 
       <nav className="relative z-20 px-4 py-5 sm:px-6 lg:px-10">
@@ -94,8 +95,8 @@ export default function Home() {
             <div className="inline-flex items-center gap-2 rounded-full border border-green-200 bg-white/80 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-green-700 shadow-sm backdrop-blur">
               <span className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
               {tr(
-                "Pendamping fitness AI personal",
-                "Personal AI fitness companion"
+                "Pendamping latihan personal",
+                "Personal training companion"
               )}
             </div>
 
@@ -108,14 +109,14 @@ export default function Home() {
 
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600 sm:text-xl">
               {tr(
-                "Workout plan personal, coach yang siap diajak bicara, analisis makanan dari foto, dan panduan gerakan 2D—semuanya dalam satu aplikasi yang ramah untuk siapa pun.",
-                "A personal workout plan, a coach ready to help, meal analysis from photos, and clear 2D exercise guides—all in one friendly app."
+                "Rencana latihan, Coach, nutrisi, jogging, dan panduan gerakan dalam satu aplikasi.",
+                "Workout plans, Coach, nutrition, jogging, and exercise guides in one app."
               )}
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <GetStartedButton className="rounded-2xl bg-gradient-to-r from-green-500 to-green-600 px-7 py-4 text-base font-black text-white shadow-xl shadow-green-500/25 transition hover:-translate-y-1 disabled:opacity-60">
-                {tr("Mulai perjalananmu →", "Start your journey →")}
+                {tr("Mulai sekarang", "Get started")}
               </GetStartedButton>
               <a
                 href="#features"
@@ -127,17 +128,16 @@ export default function Home() {
 
             <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold text-slate-500">
               <span>
-                ✓ {tr("Gratis untuk memulai", "Free to start")}
+                {tr("Gratis untuk memulai", "Free to start")}
               </span>
               <span>
-                ✓{" "}
                 {tr(
                   "Dibuat sesuai profilmu",
                   "Built around your profile"
                 )}
               </span>
               <span>
-                ✓ {tr("Mudah digunakan", "Easy to use")}
+                {tr("Mudah digunakan", "Easy to use")}
               </span>
             </div>
           </div>
@@ -158,13 +158,9 @@ export default function Home() {
                     )}
                   </p>
                 </div>
-                <LiveIcon
-                  variant="wiggle"
-                  active
-                  className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10"
-                >
-                  👋
-                </LiveIcon>
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10">
+                  <FitMateIcon name="activity" className="h-5 w-5" />
+                </span>
               </div>
 
               <div className="rounded-[1.8rem] bg-gradient-to-br from-green-400 to-green-600 p-5 text-white">
@@ -181,13 +177,9 @@ export default function Home() {
                       {tr("45 menit", "45 minutes")}
                     </p>
                   </div>
-                  <LiveIcon
-                    variant="pulse"
-                    active
-                    className="rounded-2xl bg-white/20 p-3 text-2xl"
-                  >
-                    💪
-                  </LiveIcon>
+                  <span className="rounded-2xl bg-white/20 p-3">
+                    <FitMateIcon name="dumbbell" className="h-5 w-5" />
+                  </span>
                 </div>
                 <div className="mt-5 h-2 overflow-hidden rounded-full bg-white/20">
                   <div className="h-full w-[68%] rounded-full bg-white" />
@@ -197,13 +189,9 @@ export default function Home() {
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <div className="rounded-[1.5rem] bg-white p-4">
                   <div className="flex items-center gap-3">
-                    <LiveIcon
-                      variant="pop"
-                      active
-                      className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-xl"
-                    >
-                      📷
-                    </LiveIcon>
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-orange-700">
+                      <FitMateIcon name="camera" className="h-5 w-5" />
+                    </span>
                     <div>
                       <p className="text-xs font-bold text-slate-400">
                         MEAL SCAN
@@ -227,16 +215,12 @@ export default function Home() {
 
                 <div className="rounded-[1.5rem] bg-white p-4">
                   <div className="flex items-center gap-3">
-                    <LiveIcon
-                      variant="wiggle"
-                      active
-                      className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-100 text-xl"
-                    >
-                      ✦
-                    </LiveIcon>
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-100 text-green-700">
+                      <FitMateIcon name="message" className="h-5 w-5" />
+                    </span>
                     <div>
                       <p className="text-xs font-bold text-slate-400">
-                        AI COACH
+                        COACH
                       </p>
                       <p className="font-black">Online</p>
                     </div>
@@ -257,7 +241,7 @@ export default function Home() {
                     active
                     className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-400 text-slate-950"
                   >
-                    ⏱
+                    <FitMateIcon name="timer" className="h-5 w-5" />
                   </LiveIcon>
                   <div>
                     <p className="text-xs font-bold text-slate-400">
@@ -297,8 +281,8 @@ export default function Home() {
             </h2>
             <p className="mt-5 text-lg leading-8 text-slate-600">
               {tr(
-                "FitMate membantu mengambil keputusan kecil setiap hari—mulai dari latihan berikutnya sampai makanan yang ada di piringmu.",
-                "FitMate helps with everyday decisions—from your next workout to the food on your plate."
+                "Latihan, nutrisi, dan progres dalam satu alur sederhana.",
+                "Training, nutrition, and progress in one simple flow."
               )}
             </p>
           </div>
@@ -319,7 +303,7 @@ export default function Home() {
                   }
                   className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl shadow-sm"
                 >
-                  {feature.icon}
+                  <FitMateIcon name={feature.icon} className="h-6 w-6" />
                 </LiveIcon>
                 <p className="mt-6 text-xs font-black uppercase tracking-[0.18em] opacity-80">
                   {feature.eyebrow}
@@ -353,8 +337,8 @@ export default function Home() {
             </h2>
             <p className="mt-4 leading-7 text-slate-600">
               {tr(
-                "Tidak perlu memahami istilah fitness yang rumit. FitMate akan memandu dari awal.",
-                "You do not need to understand complicated fitness terms. FitMate guides you from the start."
+                "Isi profil, buat rencana, lalu mulai latihan.",
+                "Set your profile, build a plan, and start training."
               )}
             </p>
           </div>
@@ -404,13 +388,9 @@ export default function Home() {
 
       <section className="bg-white px-4 py-20 sm:px-6 lg:px-10">
         <div className="mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-slate-950 px-6 py-14 text-center text-white shadow-2xl shadow-slate-950/20 sm:px-10 sm:py-20">
-          <LiveIcon
-            variant="wiggle"
-            active
-            className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-green-400 to-green-500 text-3xl shadow-lg shadow-green-500/20"
-          >
-            ✦
-          </LiveIcon>
+          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-green-500 text-white">
+            <FitMateIcon name="activity" className="h-6 w-6" />
+          </span>
           <h2 className="mx-auto mt-7 max-w-3xl text-4xl font-black tracking-tight sm:text-5xl">
             {tr(
               "Mulai dari satu langkah kecil hari ini.",
@@ -419,12 +399,12 @@ export default function Home() {
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">
             {tr(
-              "FitMate akan menemani prosesnya—tanpa membuatmu merasa sendirian atau bingung harus mulai dari mana.",
+              "Mulai latihan dan pantau progresmu.",
               "FitMate stays with you through the process, so you never feel lost or alone."
             )}
           </p>
           <GetStartedButton className="mt-8 rounded-2xl bg-gradient-to-r from-green-400 to-green-500 px-8 py-4 font-black text-slate-950 shadow-xl shadow-green-500/20 transition hover:-translate-y-1 disabled:opacity-60">
-            {tr("Mulai Gratis →", "Get Started for Free →")}
+            {tr("Mulai Gratis", "Get Started for Free")}
           </GetStartedButton>
         </div>
       </section>

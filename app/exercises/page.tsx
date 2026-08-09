@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+import FitMateIcon from "@/components/fitmate-icon";
 import { useLanguage } from "@/components/language-provider";
 import { supabase } from "@/lib/supabase";
 import { getExerciseGuide } from "@/lib/exercise-guides";
@@ -197,7 +198,8 @@ export default function ExercisesPage() {
         <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-green-200 bg-green-50 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-green-700">
-              ◉ {tr("Panduan gerakan 2D", "2D movement guide")}
+              <FitMateIcon name="activity" className="h-4 w-4" />
+              {tr("Panduan gerakan 2D", "2D movement guide")}
             </div>
 
             <h1 className="text-4xl font-black tracking-tight sm:text-5xl">
@@ -206,8 +208,8 @@ export default function ExercisesPage() {
 
             <p className="mt-4 max-w-2xl leading-7 text-slate-600">
               {tr(
-                "Pilih gerakan untuk melihat karakter 2D yang sama, alat yang sesuai, serta langkah gerakan dari awal sampai selesai secara berurutan.",
-                "Choose an exercise to see one consistent 2D character, matching equipment, and clear start-to-finish movement steps."
+                "Pilih gerakan untuk melihat panduannya.",
+                "Choose an exercise to see the guide."
               )}
             </p>
           </div>
@@ -216,7 +218,7 @@ export default function ExercisesPage() {
             href="/coach"
             className="inline-flex items-center justify-center rounded-2xl bg-green-600 px-5 py-3 font-black text-white shadow-lg shadow-green-600/20 transition hover:-translate-y-1 hover:bg-green-700"
           >
-            {tr("Tanya AI Coach", "Ask AI Coach")}
+            {tr("Tanya Coach", "Ask Coach")}
           </Link>
         </div>
 
@@ -300,7 +302,7 @@ export default function ExercisesPage() {
               <p className="mt-1 text-xs font-bold text-amber-600 dark:text-amber-300">
                 {tr(
                   `Paket Free membuka ${FREE_EXERCISE_LIMIT} gerakan. Gerakan lainnya terkunci.`,
-                  `The Free plan unlocks ${FREE_EXERCISE_LIMIT} exercises. The rest are locked.`
+                  `The Free plan includes ${FREE_EXERCISE_LIMIT} exercises. The rest are available with Premium.`
                 )}
               </p>
             )}
@@ -310,7 +312,7 @@ export default function ExercisesPage() {
               href="/premium"
               className="rounded-xl bg-amber-400 px-4 py-2 text-xs font-black text-slate-950 shadow-sm"
             >
-              {tr("Buka semua", "Unlock all")}
+              {tr("Lihat Premium", "View Premium")}
             </Link>
           )}
         </div>
@@ -377,7 +379,7 @@ export default function ExercisesPage() {
                     }}
                     aria-label={
                       isLocked
-                        ? `${tr("Buka dengan Premium", "Unlock with Premium")}: ${exercise.name}`
+                        ? `${tr("Tersedia di Premium", "Available with Premium")}: ${exercise.name}`
                         : `${tr(
                             "Lihat panduan 2D",
                             "View 2D guide"
@@ -446,7 +448,7 @@ export default function ExercisesPage() {
                           variant="float"
                           className="transition group-hover:translate-x-1"
                         >
-                          →
+                         
                         </LiveIcon>
                       </div>
                     </div>
@@ -454,12 +456,12 @@ export default function ExercisesPage() {
                     {isLocked && (
                       <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/30 p-4 backdrop-blur-[1px] dark:bg-slate-950/35">
                         <div className="rounded-2xl border border-white/80 bg-white/95 px-5 py-4 text-center text-slate-950 shadow-xl dark:border-white/10 dark:bg-slate-900/95 dark:text-white">
-                          <span className="text-2xl" aria-hidden="true">🔒</span>
+                          <FitMateIcon name="lock" className="mx-auto h-5 w-5" />
                           <p className="mt-1 text-sm font-black">
                             {tr("Khusus Premium", "Premium only")}
                           </p>
                           <p className="mt-1 text-[11px] font-semibold text-slate-500 dark:text-slate-300">
-                            {tr("Klik untuk membuka", "Click to unlock")}
+                            {tr("Lihat akses Premium", "View Premium access")}
                           </p>
                         </div>
                       </div>
@@ -515,7 +517,7 @@ export default function ExercisesPage() {
                   }
                   className="rounded-full bg-slate-100 px-4 py-2 text-slate-600 hover:bg-slate-200"
                 >
-                  ✕
+                  <FitMateIcon name="x" className="h-4 w-4" />
                 </button>
 
               </div>
@@ -636,8 +638,8 @@ export default function ExercisesPage() {
                     </p>
                     <p className="mt-4 text-xs leading-5 text-slate-500">
                       {tr(
-                        "Ilustrasi 2D ini adalah panduan belajar. Gunakan bantuan pelatih saat mempelajari gerakan baru dan berhenti jika terasa sakit.",
-                        "This 2D illustration guide is for learning. Ask a trainer for help with new movements and stop if you feel pain."
+                        "Gunakan panduan ini sebagai referensi. Berhenti jika terasa sakit.",
+                        "Use this guide as a reference. Stop if you feel pain."
                       )}
                     </p>
                   </div>

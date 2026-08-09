@@ -18,6 +18,21 @@ const officialSources = [
   },
 ];
 
+const officialSourcesEn = [
+  {
+    label: "Law No. 8 of 1999 on Consumer Protection",
+    href: "https://peraturan.bpk.go.id/Details/45288/uu-no-8-tahun-1999",
+  },
+  {
+    label: "Government Regulation No. 80 of 2019 on Electronic Commerce",
+    href: "https://peraturan.bpk.go.id/Details/126143/pp-no-80-tahun-2019",
+  },
+  {
+    label: "Xendit card dispute guide",
+    href: "https://docs.xendit.co/docs/cards-5",
+  },
+];
+
 const copyId: LegalDocumentCopy = {
   title: "Kebijakan Pembatalan & Pengembalian Dana",
   summary:
@@ -156,7 +171,7 @@ const copyEn: LegalDocumentCopy = {
     },
   ],
   sourcesTitle: "Official references",
-  sources: officialSources,
+  sources: officialSourcesEn,
   contactTitle: "Submit a request",
   contactText: "Send the request from the account email and never include passwords, PINs, OTPs, or secret keys.",
   backLabel: "Back to Premium",

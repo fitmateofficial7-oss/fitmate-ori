@@ -11,10 +11,19 @@ import { useRouter } from "next/navigation";
 
 import CompanySignature from "@/components/company-signature";
 import FitMateBrand from "@/components/fitmate-brand";
+import FitMateIcon from "@/components/fitmate-icon";
 import { useLanguage } from "@/components/language-provider";
-import LiveIcon from "@/components/live-icon";
 import type { BillingStatusResponse } from "@/lib/subscription";
 import { supabase } from "@/lib/supabase";
+import {
+  localizeDifficulty,
+  localizeExperience,
+  localizeGoal,
+  localizePlanTitle,
+  localizeTrainingDays,
+  localizeWorkoutDayName,
+  localizeWorkoutFocus,
+} from "@/lib/fitness-i18n";
 
 // ======================================================
 // TYPES
@@ -263,7 +272,7 @@ function normalizeWorkoutPlan(
     rawPlan === null
   ) {
     throw new Error(
-      "AI generated an invalid workout plan format."
+      "Workout plan format is invalid."
     );
   }
 
@@ -343,7 +352,7 @@ function normalizeWorkoutPlan(
     rawDays.length !== 7
   ) {
     throw new Error(
-      "AI generated workout plan must contain exactly 7 days."
+      "Workout plan must contain exactly 7 days."
     );
   }
 
@@ -1140,7 +1149,7 @@ export default function PlanPage(): import("react").JSX.Element {
           !result.plan
         ) {
           throw new Error(
-            "AI did not return a workout plan."
+            "Workout plan could not be created."
           );
         }
 
@@ -1403,9 +1412,7 @@ export default function PlanPage(): import("react").JSX.Element {
       <main className="fitmate-app-page flex min-h-screen items-center justify-center bg-white px-6">
         <div className="text-center">
 
-          <LiveIcon variant="pulse" className="text-6xl">
-            🤖
-          </LiveIcon>
+<span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-green-50 text-green-700"><FitMateIcon name="activity" className="h-6 w-6" /></span>
 
           <h1 className="mt-6 text-2xl font-bold text-gray-900">
             {tr("Menyiapkan Rencana", "Preparing Your Plan")}
@@ -1433,9 +1440,7 @@ export default function PlanPage(): import("react").JSX.Element {
 
         <div className="w-full max-w-md rounded-3xl bg-white p-8 text-center shadow-sm">
 
-          <LiveIcon variant="wiggle" className="text-6xl">
-            😕
-          </LiveIcon>
+<span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-rose-50 text-rose-600"><FitMateIcon name="x" className="h-6 w-6" /></span>
 
           <h1 className="mt-6 text-2xl font-bold text-gray-900">
             {tr(
@@ -1553,20 +1558,20 @@ export default function PlanPage(): import("react").JSX.Element {
               <div>
 
                 <p className="font-semibold text-green-100">
-                  FITMATE AI
+                  FITMATE
                 </p>
 
                 <h1 className="mt-4 text-4xl font-bold md:text-5xl">
                   {tr(
-                    "Rencana Latihan Anda",
-                    "Your Workout Plan"
+                    "Rencana latihan",
+                    "Workout plan"
                   )}
                 </h1>
 
                 <p className="mt-5 max-w-2xl leading-7 text-green-50">
                   {tr(
-                    "Pilih tingkat latihan. FitMate AI akan menyusun jadwal sesuai profil, tujuan, dan pengalaman Anda.",
-                    "Choose your training level. FitMate AI will build a schedule around your profile, goal, and experience."
+                    "Jadwal disesuaikan dengan profil, target, dan kemampuanmu.",
+                    "Your schedule follows your profile, goal, and current level."
                   )}
                 </p>
 
@@ -1581,15 +1586,13 @@ export default function PlanPage(): import("react").JSX.Element {
                   </p>
 
                   <p className="mt-2 text-2xl font-bold capitalize">
-                    {profile.goal}
+                    {localizeGoal(profile.goal, language)}
                   </p>
 
                   <p className="mt-2 text-sm text-green-100">
-                    {profile.training_days ||
-                      tr(
-                        "Jadwal belum dipilih",
-                        "Schedule not selected"
-                      )}
+                    {profile.training_days
+                      ? localizeTrainingDays(profile.training_days, language)
+                      : tr("Jadwal belum dipilih", "Schedule not selected")}
                   </p>
 
                 </div>
@@ -1621,7 +1624,7 @@ export default function PlanPage(): import("react").JSX.Element {
               </p>
 
               <p className="mt-2 font-bold capitalize text-gray-900">
-                {profile.goal}
+                {localizeGoal(profile.goal, language)}
               </p>
 
             </div>
@@ -1633,8 +1636,7 @@ export default function PlanPage(): import("react").JSX.Element {
               </p>
 
               <p className="mt-2 font-bold capitalize text-gray-900">
-                {profile.experience ||
-                  tr("Belum diatur", "Not set")}
+                {localizeExperience(profile.experience, language)}
               </p>
 
             </div>
@@ -1646,8 +1648,7 @@ export default function PlanPage(): import("react").JSX.Element {
               </p>
 
               <p className="mt-2 font-bold text-gray-900">
-                {profile.training_days ||
-                  tr("Belum diatur", "Not set")}
+                {localizeTrainingDays(profile.training_days, language)}
               </p>
 
             </div>
@@ -1796,9 +1797,7 @@ export default function PlanPage(): import("react").JSX.Element {
                 <div className="flex min-h-14 items-start justify-between gap-3">
 
                   <span className="flex h-14 w-14 items-center justify-center rounded-full bg-green-100 shadow-sm">
-                    <LiveIcon variant="pulse" className="text-2xl">
-                      🟢
-                    </LiveIcon>
+<span className="h-4 w-4 rounded-full bg-green-500" aria-hidden="true" />
                   </span>
 
                   {difficulty ===
@@ -1816,7 +1815,7 @@ export default function PlanPage(): import("react").JSX.Element {
 
                 <p className="mt-2 text-sm leading-6 text-gray-600">
                   {tr(
-                    "Volume lebih ringan untuk pemula atau pengguna yang baru kembali berlatih.",
+                    "Volume ringan untuk mulai kembali.",
                     "Lighter volume for beginners or anyone returning to training."
                   )}
                 </p>
@@ -1849,9 +1848,7 @@ export default function PlanPage(): import("react").JSX.Element {
                 <div className="flex min-h-14 items-start justify-between gap-3">
 
                   <span className="flex h-14 w-14 items-center justify-center rounded-full bg-yellow-100 shadow-sm">
-                    <LiveIcon variant="pulse" className="text-2xl">
-                      🟡
-                    </LiveIcon>
+<span className="h-4 w-4 rounded-full bg-yellow-500" aria-hidden="true" />
                   </span>
 
                   {difficulty ===
@@ -1902,9 +1899,7 @@ export default function PlanPage(): import("react").JSX.Element {
                 <div className="flex min-h-14 items-start justify-between gap-3">
 
                   <span className="flex h-14 w-14 items-center justify-center rounded-full bg-red-100 shadow-sm">
-                    <LiveIcon variant="pulse" className="text-2xl">
-                      🔴
-                    </LiveIcon>
+<span className="h-4 w-4 rounded-full bg-red-500" aria-hidden="true" />
                   </span>
 
                   {difficulty ===
@@ -1945,9 +1940,7 @@ export default function PlanPage(): import("react").JSX.Element {
 
             <div className="mt-8 rounded-3xl bg-white p-8 text-center shadow-sm md:p-12">
 
-              <LiveIcon variant="wiggle" className="text-6xl">
-                🤖
-              </LiveIcon>
+<span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-green-50 text-green-700"><FitMateIcon name="activity" className="h-6 w-6" /></span>
 
               <h2 className="mt-6 text-3xl font-bold text-gray-900">
                 {tr(
@@ -1958,7 +1951,7 @@ export default function PlanPage(): import("react").JSX.Element {
 
               <p className="mx-auto mt-4 max-w-xl leading-7 text-gray-600">
                 {tr(
-                  "Rencana dibuat berdasarkan profil, tujuan, dan tingkat latihan yang dipilih.",
+                  "Rencana mengikuti profil dan tujuanmu.",
                   "Your plan is built around your profile, goal, and selected training level."
                 )}
               </p>
@@ -2001,8 +1994,8 @@ export default function PlanPage(): import("react").JSX.Element {
                           "Weekly Quota Used"
                         )
                       : tr(
-                          "🔒 Generate Terkunci · Upgrade Premium",
-                          "🔒 Generation Locked · Upgrade to Premium"
+                          "Pembuatan rencana terkunci · Upgrade Premium",
+                          "Generation locked · Upgrade to Premium"
                         )
                     : tr(
                         "Buat Rencana Saya",
@@ -2027,7 +2020,7 @@ export default function PlanPage(): import("react").JSX.Element {
                   </p>
 
                   <h2 className="mt-2 text-3xl font-bold text-gray-900">
-                    {plan.title}
+                    {localizePlanTitle(plan.title, language)}
                   </h2>
 
                   <p className="mt-3 max-w-2xl leading-7 text-gray-600">
@@ -2078,8 +2071,8 @@ export default function PlanPage(): import("react").JSX.Element {
                               "Weekly Quota Used"
                             )
                           : tr(
-                              "🔒 Generate Terkunci · Upgrade Premium",
-                              "🔒 Generation Locked · Upgrade to Premium"
+                              "Pembuatan rencana terkunci · Upgrade Premium",
+                              "Generation locked · Upgrade to Premium"
                             )
                         : tr(
                             "Buat Rencana Baru",
@@ -2102,7 +2095,7 @@ export default function PlanPage(): import("react").JSX.Element {
                   </p>
 
                   <p className="mt-2 font-bold capitalize text-gray-900">
-                    {plan.summary.goal}
+                    {localizeGoal(plan.summary.goal, language)}
                   </p>
 
                 </div>
@@ -2114,7 +2107,7 @@ export default function PlanPage(): import("react").JSX.Element {
                   </p>
 
                   <p className="mt-2 font-bold capitalize text-gray-900">
-                    {plan.summary.experience}
+                    {localizeExperience(plan.summary.experience, language)}
                   </p>
 
                 </div>
@@ -2126,7 +2119,7 @@ export default function PlanPage(): import("react").JSX.Element {
                   </p>
 
                   <p className="mt-2 font-bold capitalize text-gray-900">
-                    {plan.summary.difficulty}
+                    {localizeDifficulty(plan.summary.difficulty, language)}
                   </p>
 
                 </div>
@@ -2138,7 +2131,7 @@ export default function PlanPage(): import("react").JSX.Element {
                   </p>
 
                   <p className="mt-2 font-bold text-gray-900">
-                    {plan.summary.training_days}
+                    {localizeTrainingDays(plan.summary.training_days, language)}
                   </p>
 
                 </div>
@@ -2196,8 +2189,8 @@ export default function PlanPage(): import("react").JSX.Element {
                     className="text-sm font-semibold text-green-600 hover:text-green-700"
                   >
                     {tr(
-                      "Buka Latihan Lengkap →",
-                      "Open Full Workout →"
+                      "Buka Latihan Lengkap",
+                      "Open Full Workout"
                     )}
                   </button>
 
@@ -2237,15 +2230,20 @@ export default function PlanPage(): import("react").JSX.Element {
                               </p>
 
                               <h4 className="mt-1 text-lg font-bold text-gray-900">
-                                {
-                                  day.name
-                                }
+                                {localizeWorkoutDayName(
+                                  day.name,
+                                  day.day,
+                                  hasExercises,
+                                  language
+                                )}
                               </h4>
 
                               <p className="mt-1 text-sm text-gray-500">
-                                {
-                                  day.focus
-                                }
+                                {localizeWorkoutFocus(
+                                  day.focus,
+                                  hasExercises,
+                                  language
+                                )}
                               </p>
 
                             </div>
@@ -2376,9 +2374,7 @@ export default function PlanPage(): import("react").JSX.Element {
               className="fitmate-action-card flex h-full flex-col rounded-[1.5rem] border border-slate-200 bg-white p-6 text-left shadow-sm transition hover:border-green-200 hover:shadow-md sm:p-7"
             >
 
-              <LiveIcon variant="float" className="text-3xl">
-                📊
-              </LiveIcon>
+<span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-700"><FitMateIcon name="chart" className="h-5 w-5" /></span>
 
               <h3 className="mt-4 text-xl font-bold text-gray-900">
                 {tr("Dashboard Saya", "My Dashboard")}
@@ -2386,13 +2382,13 @@ export default function PlanPage(): import("react").JSX.Element {
 
               <p className="mt-2 text-sm leading-6 text-gray-500">
                 {tr(
-                  "Pantau progres, rentetan latihan, aktivitas, dan insight kebugaran Anda.",
+                  "Pantau progres latihanmu.",
                   "Track your workout progress, streaks, activity, and fitness insights."
                 )}
               </p>
 
               <p className="mt-auto pt-4 font-semibold text-green-600">
-                {tr("Lihat Dashboard →", "View Dashboard →")}
+                {tr("Lihat Dashboard", "View Dashboard")}
               </p>
 
             </button>
@@ -2406,9 +2402,7 @@ export default function PlanPage(): import("react").JSX.Element {
               className="fitmate-action-card flex h-full flex-col rounded-[1.5rem] border border-slate-200 bg-white p-6 text-left shadow-sm transition hover:border-green-200 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50 sm:p-7"
             >
 
-              <LiveIcon variant="pulse" className="text-3xl">
-                🏋️
-              </LiveIcon>
+<span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-700"><FitMateIcon name="dumbbell" className="h-5 w-5" /></span>
 
               <h3 className="mt-4 text-xl font-bold text-gray-900">
                 {tr("Mulai Latihan", "Start Workout")}
@@ -2422,7 +2416,7 @@ export default function PlanPage(): import("react").JSX.Element {
               </p>
 
               <p className="mt-auto pt-4 font-semibold text-green-600">
-                {tr("Buka Latihan →", "Go to Workout →")}
+                {tr("Buka Latihan", "Go to Workout")}
               </p>
 
             </button>
@@ -2435,9 +2429,7 @@ export default function PlanPage(): import("react").JSX.Element {
               className="fitmate-action-card flex h-full flex-col rounded-[1.5rem] border border-slate-200 bg-white p-6 text-left shadow-sm transition hover:border-green-200 hover:shadow-md sm:p-7"
             >
 
-              <LiveIcon variant="tick" className="text-3xl">
-                ⚙️
-              </LiveIcon>
+<span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-700"><FitMateIcon name="settings" className="h-5 w-5" /></span>
 
               <h3 className="mt-4 text-xl font-bold text-gray-900">
                 {tr("Perbarui Profil", "Update Profile")}
@@ -2446,12 +2438,12 @@ export default function PlanPage(): import("react").JSX.Element {
               <p className="mt-2 text-sm leading-6 text-gray-500">
                 {tr(
                   "Perbarui tujuan, pengalaman, data tubuh, dan preferensi latihan Anda.",
-                  "Update your fitness goals, experience, body measurements, and training preferences."
+                  "Update your goals and training profile."
                 )}
               </p>
 
               <p className="mt-auto pt-4 font-semibold text-green-600">
-                {tr("Edit Profil →", "Edit Profile →")}
+                {tr("Edit Profil", "Edit Profile")}
               </p>
 
             </button>

@@ -1,6 +1,6 @@
 {
   "name": "fitmate-ai",
-  "version": "1.4.54",
+  "version": "1.4.75",
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
@@ -17,9 +17,9 @@
     "calibrate:100": "npm run audit:imports && npm run audit:guides:100 && npm run audit:ui && npm run audit:jogging",
     "test:e2e": "playwright test",
     "test:e2e:desktop": "playwright test --project=desktop-chromium",
-    "check": "npm run lint && npm run typecheck && npm run audit:sql && npm run audit:subscription && npm run audit:premium-gates && npm run audit:jogging && npm run calibrate:100 && npm run build",
+    "check": "npm run lint && npm run typecheck && npm run audit:sql && npm run audit:subscription && npm run audit:premium-gates && npm run audit:jogging && npm run audit:ai-scope && npm run audit:timer && npm run audit:mobile-ui && npm run audit:i18n && npm run calibrate:100 && npm run build",
     "calibrate:1m": "node scripts/audit-exercise-3d.cjs --cycles 11500",
-    "release:check": "npm run lint && npm run typecheck && npm run audit:sql && npm run audit:subscription && npm run audit:premium-gates && npm run audit:jogging && npm run audit:imports && npm run audit:guides && npm run audit:ui && npm run calibrate:1m && npm run build",
+    "release:check": "npm run lint && npm run typecheck && npm run audit:sql && npm run audit:subscription && npm run audit:premium-gates && npm run audit:jogging && npm run audit:ai-scope && npm run audit:timer && npm run audit:mobile-ui && npm run audit:i18n && npm run audit:imports && npm run audit:guides && npm run audit:ui && npm run calibrate:1m && npm run build",
     "audit:sql": "node scripts/audit-sql-compatibility.cjs",
     "audit:subscription": "node scripts/audit-subscription-flow.cjs",
     "test:billing-periods": "node --no-warnings --experimental-strip-types scripts/test-billing-periods.mjs",
@@ -33,7 +33,11 @@
     "native:open:android": "npx cap open android",
     "native:open:ios": "npx cap open ios",
     "dev:turbopack": "next dev",
-    "dev:clean": "node scripts/clean-dev-cache.cjs && next dev --webpack"
+    "dev:clean": "node scripts/clean-dev-cache.cjs && next dev --webpack",
+    "audit:ai-scope": "node --no-warnings --experimental-strip-types scripts/audit-ai-scope.mjs",
+    "audit:timer": "node scripts/audit-rest-timer.cjs",
+    "audit:mobile-ui": "node scripts/audit-mobile-ui.cjs",
+    "audit:i18n": "node scripts/audit-i18n.cjs"
   },
   "dependencies": {
     "@capacitor-community/background-geolocation": "^1.2.26",

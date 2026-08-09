@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { JoggingRoutePoint } from "@/lib/jogging";
+import { useLanguage } from "@/components/language-provider";
 
 type JoggingRouteMapProps = {
   points: JoggingRoutePoint[];
@@ -243,7 +244,7 @@ function FitMateMascotFace({
             finish ? "bg-amber-500" : "bg-emerald-600"
           }`}
         >
-          {finish ? "✓" : "▶"}
+          {finish ? "Finish" : "Start"}
         </span>
       )}
     </span>
@@ -303,6 +304,7 @@ export default function JoggingRouteMap({
   showTiles = true,
   isLive = false,
 }: JoggingRouteMapProps) {
+  const { tr } = useLanguage();
   const hostRef = useRef<HTMLDivElement | null>(null);
   const [dimensions, setDimensions] = useState<MapDimensions>({
     width: 0,
@@ -537,7 +539,7 @@ export default function JoggingRouteMap({
 
       <div className="absolute right-3 top-3 z-20 hidden rounded-2xl border border-white/70 bg-white/86 px-3 py-2 text-right shadow-md backdrop-blur sm:block dark:border-white/10 dark:bg-slate-950/76">
         <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300">
-          Mode
+          {tr("Mode", "Mode")}
         </p>
         <p className="text-xs font-black text-teal-700 dark:text-teal-200">
           FitMate Map
@@ -548,7 +550,7 @@ export default function JoggingRouteMap({
         <span
           className="absolute z-10 -translate-x-1/2 -translate-y-1/2"
           style={{ left: start.x, top: start.y }}
-          aria-label="Titik mulai"
+          aria-label={tr("Titik mulai", "Start point")}
         >
           <FitMateRouteMarker />
         </span>
@@ -559,7 +561,7 @@ export default function JoggingRouteMap({
             isLive ? "animate-[pulse_1.8s_ease-in-out_infinite]" : ""
           }`}
           style={{ left: finish.x, top: finish.y }}
-          aria-label={isLive ? "Posisi saat ini" : "Titik akhir"}
+          aria-label={isLive ? tr("Posisi saat ini", "Current position") : tr("Titik akhir", "Finish point")}
         >
           <FitMateRouteMarker finish={!isLive} live={isLive} />
         </span>
@@ -572,10 +574,10 @@ export default function JoggingRouteMap({
               <FitMateMascotFace />
             </div>
             <p className="mt-3 text-base font-black text-slate-900 dark:text-white">
-              Rute akan muncul setelah GPS mendapatkan lokasi
+              {tr("Rute akan muncul setelah GPS mendapatkan lokasi", "Your route will appear once GPS finds your location")}
             </p>
             <p className="mt-1 text-sm font-semibold text-teal-700 dark:text-teal-200">
-              Setelah jogging dimulai, FitMate akan menampilkan track secara live
+              {tr("Setelah jogging dimulai, FitMate akan menampilkan rute secara langsung", "Once jogging starts, FitMate will show your route live")}
             </p>
           </div>
         </div>

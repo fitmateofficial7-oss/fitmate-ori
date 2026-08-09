@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { useLanguage } from "@/components/language-provider";
 import { supabase } from "@/lib/supabase";
+import { localizeStoredReadinessRecommendation } from "@/lib/prelaunch-fitness";
 
 type Readiness = {
   readiness_score: number;
@@ -23,7 +24,7 @@ function jakartaDate() {
 }
 
 export default function ReadinessBanner() {
-  const { tr } = useLanguage();
+  const { language, tr } = useLanguage();
   const [readiness, setReadiness] = useState<Readiness | null>(null);
   const [loaded, setLoaded] = useState(false);
 
@@ -91,7 +92,7 @@ export default function ReadinessBanner() {
               {tr("Kesiapan hari ini", "Today’s readiness")}
             </p>
             <p className="truncate text-xs text-green-800 dark:text-green-200/80">
-              {readiness.recommendation}
+              {localizeStoredReadinessRecommendation(readiness.recommendation, language)}
             </p>
           </div>
         </div>

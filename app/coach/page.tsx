@@ -13,8 +13,8 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import FitMateIcon from "@/components/fitmate-icon";
 import { useLanguage } from "@/components/language-provider";
-import LiveIcon from "@/components/live-icon";
 import { supabase } from "@/lib/supabase";
 
 type MacroTotals = {
@@ -670,15 +670,10 @@ export default function CoachPage() {
             onClick={() => router.push("/dashboard")}
             className="flex items-center gap-3 text-left"
           >
-            <LiveIcon
-              variant="wiggle"
-              className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-green-600 text-xl text-white shadow-lg shadow-green-500/20"
-            >
-              ✦
-            </LiveIcon>
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-600 text-white"><FitMateIcon name="message" className="h-5 w-5" /></span>
             <span>
               <span className="block text-xs font-black uppercase tracking-[0.18em] text-green-600">
-                FitMate AI
+                FitMate Coach
               </span>
               <span className="block font-black">
                 {tr(
@@ -711,14 +706,14 @@ export default function CoachPage() {
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-green-300">
                   {tr(
-                    "Tanya. Foto. Lanjut latihan.",
-                    "Ask. Snap. Keep moving."
+                    "FITNESS · NUTRISI · KESEHATAN",
+                    "FITNESS · NUTRITION · HEALTH"
                   )}
                 </p>
                 <h1 className="mt-2 text-2xl font-black">
                   {tr(
-                    "Butuh bantuan apa hari ini?",
-                    "How can FitMate help today?"
+                    "Apa yang ingin kamu cek?",
+                    "What do you want to check?"
                   )}
                 </h1>
               </div>
@@ -733,7 +728,7 @@ export default function CoachPage() {
                       : "text-slate-300 hover:text-white"
                   }`}
                 >
-                  <LiveIcon variant="float">💬</LiveIcon>{" "}
+                  <FitMateIcon name="message" className="mr-1 inline h-4 w-4" />
                   {tr("Konsultasi", "Consult")}
                   {usage &&
                     ` · ${usage.chat.remaining}/${usage.chat.limit}`}
@@ -747,7 +742,7 @@ export default function CoachPage() {
                       : "text-slate-300 hover:text-white"
                   }`}
                 >
-                  <LiveIcon variant="pop">📷</LiveIcon>{" "}
+                  <FitMateIcon name="camera" className="mr-1 inline h-4 w-4" />
                   {tr("Upload foto", "Upload photo")}
                   {usage &&
                     ` · ${usage.nutrition.remaining}/${usage.nutrition.limit}`}
@@ -782,12 +777,7 @@ export default function CoachPage() {
               </div>
             ) : messages.length === 0 ? (
               <div className="mx-auto flex min-h-80 max-w-xl flex-col items-center justify-center text-center">
-                <LiveIcon
-                  variant="wiggle"
-                  className="flex h-20 w-20 items-center justify-center rounded-[1.75rem] bg-gradient-to-br from-green-400 to-green-600 text-4xl shadow-xl shadow-green-500/20"
-                >
-                  🤝
-                </LiveIcon>
+                <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-green-600 text-white"><FitMateIcon name="coach" className="h-7 w-7" /></span>
                 <h2 className="mt-6 text-2xl font-black">
                   {tr(
                     "Hai! Aku FitMate Coach.",
@@ -796,8 +786,8 @@ export default function CoachPage() {
                 </h2>
                 <p className="mt-3 leading-7 text-slate-500">
                   {tr(
-                    "Tanyakan latihan, pemulihan, pola makan, atau unggah foto makanan untuk mendapatkan estimasi nutrisinya.",
-                    "Ask about training, recovery, or nutrition, or upload a meal photo for a nutrition estimate."
+                    "Tanya soal latihan, nutrisi, recovery, atau kesehatan.",
+                    "Ask about training, nutrition, recovery, or health. You can also scan a meal."
                   )}
                 </p>
                 <div className="mt-5 flex flex-wrap justify-center gap-2">
@@ -842,12 +832,7 @@ export default function CoachPage() {
                     }`}
                   >
                     {item.role === "assistant" && (
-                      <LiveIcon
-                        variant="wiggle"
-                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-green-500 to-green-600 text-white"
-                      >
-                        ✦
-                      </LiveIcon>
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-green-600 text-white"><FitMateIcon name="message" className="h-4 w-4" /></span>
                     )}
 
                     <div
@@ -883,12 +868,7 @@ export default function CoachPage() {
 
                 {submitting && (
                   <div className="flex items-center gap-3">
-                    <LiveIcon
-                      variant="pulse"
-                      className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-green-500 to-green-600 text-white"
-                    >
-                      ✦
-                    </LiveIcon>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-green-600 text-white"><FitMateIcon name="message" className="h-4 w-4" /></span>
                     <div className="flex gap-1 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
                       {[0, 1, 2].map((index) => (
                         <span
@@ -942,7 +922,7 @@ export default function CoachPage() {
                   maxLength={2_000}
                   placeholder={
                     chatLocked
-                      ? tr("🔒 Konsultasi terkunci · upgrade Premium", "🔒 Consultation locked · upgrade to Premium")
+                      ? tr("Konsultasi terkunci · upgrade Premium", "Consultation locked · upgrade to Premium")
                       : tr(
                           "Tanyakan latihan, nutrisi, atau pemulihan…",
                           "Ask about training, nutrition, or recovery…"
@@ -965,15 +945,15 @@ export default function CoachPage() {
                   }`}
                   aria-label={chatLocked ? tr("Buka Premium", "Open Premium") : tr("Kirim pesan", "Send message")}
                 >
-                  {chatLocked ? "🔒" : "↑"}
+                  {chatLocked ? <FitMateIcon name="lock" className="h-4 w-4" /> : <FitMateIcon name="chevron-up" className="h-4 w-4" />}
                 </button>
               </div>
               <p className="mt-2 text-center text-[11px] text-slate-400">
                 {usage?.chat.remaining === 0
                   ? usage.plan === "free"
                     ? tr(
-                        "Kuota gratis 1 kali konsultasi sudah digunakan. Upgrade Premium untuk 10 konsultasi per hari.",
-                        "Your one free lifetime consultation has been used. Upgrade to Premium for 10 consultations per day."
+                        "Kuota gratis habis. Premium memberi 10 konsultasi per hari.",
+                        "Free quota used. Premium gives 10 consultations per day."
                       )
                     : tr(
                         "Batas 10 konsultasi hari ini sudah habis dan direset pukul 00.00 WIB.",
@@ -981,12 +961,12 @@ export default function CoachPage() {
                       )
                   : usage?.plan === "free"
                     ? tr(
-                        "Paket Free menyediakan 1 konsultasi seumur hidup. FitMate bukan pengganti tenaga kesehatan.",
-                        "The Free plan includes 1 lifetime consultation. FitMate is not a substitute for a health professional."
+                        "Free: 1 konsultasi. FitMate bukan pengganti tenaga kesehatan.",
+                        "Free: 1 consultation. FitMate is not a substitute for a health professional."
                       )
                     : tr(
-                        "Maksimal 10 konsultasi per hari. FitMate bukan pengganti tenaga kesehatan.",
-                        "Maximum 10 consultations per day. FitMate is not a substitute for a health professional."
+                        "Maks. 10 konsultasi per hari.",
+                        "Maximum 10 consultations per day."
                       )}
               </p>
             </form>
@@ -1050,8 +1030,8 @@ export default function CoachPage() {
                         {usage?.nutrition.remaining === 0
                           ? usage.plan === "free"
                             ? tr(
-                                "🔒 Upgrade untuk scan lagi",
-                                "🔒 Upgrade to scan again"
+                                "Upgrade untuk scan lagi",
+                                "Upgrade to scan again"
                               )
                             : tr(
                                 "Token scan hari ini habis",
@@ -1060,8 +1040,8 @@ export default function CoachPage() {
                           : submitting
                           ? tr("Menganalisis…", "Analyzing…")
                           : tr(
-                              "✨ Cek makanan",
-                              "✨ Check meal"
+                              "Analisis makanan",
+                              "Analyze meal"
                             )}
                       </button>
                       <button
@@ -1109,8 +1089,8 @@ export default function CoachPage() {
                       : "border-green-200 bg-green-50/60 hover:border-green-400 hover:bg-green-50"
                   }`}
                 >
-                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-3xl shadow-sm transition group-hover:scale-110">
-                    {nutritionLocked ? "🔒" : "📸"}
+                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-slate-700 shadow-sm">
+                    <FitMateIcon name={nutritionLocked ? "lock" : "camera"} className="h-6 w-6" />
                   </span>
                   <span className="mt-4 font-black text-slate-900">
                     {nutritionLocked
@@ -1159,8 +1139,8 @@ export default function CoachPage() {
                 </h2>
                 <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">
                   {tr(
-                    "Premium membuka 10 konsultasi AI dan 10 scan makanan setiap hari seharga Rp49.000 per bulan.",
-                    "Premium unlocks 10 AI consultations and 10 meal scans every day for IDR 49,000 per month."
+                    "Premium: 10 konsultasi + 10 scan makanan per hari.",
+                    "Premium: 10 consultations + 10 meal scans per day."
                   )}
                 </p>
                 <Link
@@ -1236,7 +1216,7 @@ export default function CoachPage() {
                   className="flex w-full items-center justify-between rounded-xl bg-slate-50 px-3 py-3 text-left transition hover:bg-green-50 hover:text-green-700"
                 >
                   {item}
-                  <span>→</span>
+                  
                 </button>
               ))}
             </div>

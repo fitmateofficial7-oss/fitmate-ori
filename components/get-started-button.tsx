@@ -71,7 +71,7 @@ export default function GetStartedButton({
           role="status"
           className="fixed left-1/2 top-5 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 rounded-2xl border border-green-200 bg-white px-5 py-4 text-center text-sm font-bold text-green-800 shadow-2xl shadow-green-500/20"
         >
-          ✓ {notice}
+          {notice}
         </div>
       )}
     </>

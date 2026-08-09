@@ -71,7 +71,7 @@ export default function FitMateBrand({
               inverse ? "text-white" : "text-slate-950 dark:text-white"
             }`}
           >
-            FitMate<span className="text-green-500">AI</span>
+            FitMate
           </span>
           {showCompany && (
             <span
@@ -90,7 +90,7 @@ export default function FitMateBrand({
   );
 
   return href ? (
-    <Link href={href} aria-label="FitMate AI by Growsia" className="inline-flex">
+    <Link href={href} aria-label="FitMate by Growsia" className="inline-flex">
       {content}
     </Link>
   ) : (

@@ -69,7 +69,7 @@ function toLines(value: string[] | null | undefined) {
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { tr } = useLanguage();
+  const { language, tr } = useLanguage();
   const [userId, setUserId] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(true);
@@ -129,8 +129,8 @@ export default function SettingsPage() {
     if (profileResult.error) {
       setError(
         tr(
-          "Fitur keselamatan belum siap. Jalankan migrasi 202607280008_prelaunch_features.sql di Supabase.",
-          "Safety features are not ready. Run migration 202607280008_prelaunch_features.sql in Supabase."
+          "Fitur keselamatan belum siap di database.",
+          "Safety features are not ready in the database."
         )
       );
     } else if (profileResult.data) {
@@ -221,6 +221,8 @@ export default function SettingsPage() {
     setSaving(false);
   }
 
+  const deleteConfirmationText = language === "id" ? "HAPUS AKUN" : "DELETE ACCOUNT";
+
   async function enableNotifications() {
     if (!notificationSupported) {
       setError(tr("Browser ini tidak mendukung notifikasi.", "This browser does not support notifications."));
@@ -236,8 +238,11 @@ export default function SettingsPage() {
 
     if (permission === "granted") {
       const registration = await navigator.serviceWorker.ready;
-      await registration.showNotification("FitMate siap mengingatkan", {
-        body: "Jadwal latihanmu akan tampil saat aplikasi dibuka atau terpasang sebagai PWA.",
+      await registration.showNotification(tr("FitMate siap mengingatkan", "FitMate reminders are ready"), {
+        body: tr(
+          "Jadwal latihanmu akan tampil saat aplikasi dibuka atau terpasang sebagai PWA.",
+          "Your workout schedule can appear when FitMate is open or installed as a PWA."
+        ),
         icon: "/icons/icon-192.png",
         badge: "/icons/icon-192.png",
         data: { url: "/workout" },
@@ -279,7 +284,7 @@ export default function SettingsPage() {
   }
 
   async function deleteAccount() {
-    if (deleteText !== "HAPUS AKUN") return;
+    if (deleteText !== deleteConfirmationText) return;
     setDeleting(true);
     setError("");
     try {
@@ -290,7 +295,7 @@ export default function SettingsPage() {
           authorization: `Bearer ${token}`,
           "content-type": "application/json",
         },
-        body: JSON.stringify({ confirmation: deleteText, reason: deleteReason }),
+        body: JSON.stringify({ confirmation: "HAPUS AKUN", reason: deleteReason }),
       });
       const payload = (await response.json()) as { success?: boolean; error?: string };
       if (!response.ok || !payload.success) throw new Error(payload.error || "Deletion failed.");
@@ -311,7 +316,7 @@ export default function SettingsPage() {
       <header className="border-b border-slate-200 bg-white px-5 py-6 dark:border-white/10 dark:bg-slate-950 sm:px-8">
         <div className="mx-auto flex max-w-5xl flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-black uppercase tracking-[0.16em] text-green-600">FitMate Control</p>
+            <p className="text-sm font-black uppercase tracking-[0.16em] text-green-600">{tr("Pengaturan FitMate", "FitMate Settings")}</p>
             <h1 className="mt-2 text-3xl font-black">{tr("Keamanan & Pengaturan", "Safety & Settings")}</h1>
             <p className="mt-2 text-sm text-slate-500">{email}</p>
           </div>
@@ -330,11 +335,11 @@ export default function SettingsPage() {
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.16em] text-amber-600">FitMate Premium</p>
-              <h2 className="mt-2 text-xl font-black">{tr("Buka akses AI harian", "Unlock daily AI access")}</h2>
+              <h2 className="mt-2 text-xl font-black">{tr("FitMate Premium", "FitMate Premium")}</h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">
                 {tr(
-                  "Rp49.000/bulan untuk 10 konsultasi AI dan 10 scan makanan per hari, serta generate ulang program selama langganan aktif.",
-                  "Rp49,000/month for 10 AI consultations and 10 meal scans per day, plus workout-plan regeneration while subscribed."
+                  "10 konsultasi, 10 scan makanan per hari, dan generate ulang program.",
+                  "10 consultations, 10 meal scans per day, and workout-plan regeneration."
                 )}
               </p>
             </div>
@@ -347,14 +352,14 @@ export default function SettingsPage() {
         <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7">
           <h2 className="text-xl font-black">{tr("Cedera & keterbatasan", "Injuries & limitations")}</h2>
           <p className="mt-2 text-sm leading-6 text-slate-500">
-            {tr("Data ini digunakan untuk menghindari gerakan yang tidak sesuai. Satu item per baris.", "This data is used to avoid unsuitable movements. Enter one item per line.")}
+            {tr("Satu kondisi per baris.", "This data is used to avoid unsuitable movements. Enter one item per line.")}
           </p>
           <div className="mt-5 grid gap-4 md:grid-cols-2">
             {[
-              { label: tr("Riwayat cedera", "Injury history"), value: injuries, setter: setInjuries, placeholder: "Cedera bahu kanan 2024" },
-              { label: tr("Gerakan yang dibatasi", "Movement limitations"), value: limitations, setter: setLimitations, placeholder: "Hindari overhead press berat" },
-              { label: tr("Area yang sering nyeri", "Frequent pain areas"), value: painAreas, setter: setPainAreas, placeholder: "Lutut kiri" },
-              { label: tr("Alat yang tersedia", "Available equipment"), value: equipment, setter: setEquipment, placeholder: "Dumbbell\nCable machine" },
+              { label: tr("Riwayat cedera", "Injury history"), value: injuries, setter: setInjuries, placeholder: tr("Cedera bahu kanan 2024", "Right shoulder injury, 2024") },
+              { label: tr("Gerakan yang dibatasi", "Movement limitations"), value: limitations, setter: setLimitations, placeholder: tr("Hindari overhead press berat", "Avoid heavy overhead pressing") },
+              { label: tr("Area yang sering nyeri", "Frequent pain areas"), value: painAreas, setter: setPainAreas, placeholder: tr("Lutut kiri", "Left knee") },
+              { label: tr("Alat yang tersedia", "Available equipment"), value: equipment, setter: setEquipment, placeholder: tr("Dumbbell\nCable machine", "Dumbbells\nCable machine") },
             ].map((field) => (
               <label key={field.label} className="block">
                 <span className="text-sm font-bold">{field.label}</span>
@@ -370,7 +375,7 @@ export default function SettingsPage() {
           </div>
           <label className="mt-4 flex items-start gap-3 rounded-2xl bg-amber-50 p-4 text-sm text-amber-900 dark:bg-amber-500/10 dark:text-amber-100">
             <input type="checkbox" checked={medicalClearance} onChange={(event) => setMedicalClearance(event.target.checked)} className="mt-1" />
-            <span>{tr("Saya memiliki kondisi yang perlu persetujuan tenaga kesehatan sebelum latihan intensif.", "I have a condition that may require healthcare clearance before intensive exercise.")}</span>
+            <span>{tr("Saya perlu persetujuan tenaga kesehatan sebelum latihan intensif.", "I may need healthcare clearance before intensive exercise.")}</span>
           </label>
         </section>
 
@@ -469,8 +474,8 @@ export default function SettingsPage() {
               </h2>
               <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
                 {tr(
-                  "FitMate AI dikembangkan dan dikelola oleh PT Growsia Solusi Indonesia Maju.",
-                  "FitMate AI is developed and operated by PT Growsia Solusi Indonesia Maju."
+                  "FitMate dikelola PT Growsia Solusi Indonesia Maju.",
+                  "FitMate is developed and operated by PT Growsia Solusi Indonesia Maju."
                 )}
               </p>
               <div className="mt-4 flex flex-wrap gap-2 text-sm font-bold">
@@ -478,7 +483,7 @@ export default function SettingsPage() {
                   growsia.id
                 </a>
                 <span className="rounded-xl bg-slate-100 px-4 py-2 text-slate-600 dark:bg-white/10 dark:text-slate-300">
-                  FitMate AI v14.51
+                  FitMate v14.75
                 </span>
               </div>
             </div>
@@ -491,18 +496,19 @@ export default function SettingsPage() {
             <button type="button" onClick={exportData} disabled={exporting} className="rounded-2xl bg-slate-900 px-4 py-3 font-black text-white dark:bg-white dark:text-slate-950">
               {exporting ? tr("Mengekspor…", "Exporting…") : tr("Download data saya", "Download my data")}
             </button>
-            <Link href="/privacy" className="rounded-2xl bg-slate-100 px-4 py-3 text-center font-black dark:bg-white/10">Privacy Policy</Link>
-            <Link href="/terms" className="rounded-2xl bg-slate-100 px-4 py-3 text-center font-black dark:bg-white/10">Terms</Link>
+            <Link href="/privacy" className="rounded-2xl bg-slate-100 px-4 py-3 text-center font-black dark:bg-white/10">{tr("Kebijakan Privasi", "Privacy Policy")}</Link>
+            <Link href="/terms" className="rounded-2xl bg-slate-100 px-4 py-3 text-center font-black dark:bg-white/10">{tr("Ketentuan", "Terms")}</Link>
             <Link href="/subscription-terms" className="rounded-2xl bg-slate-100 px-4 py-3 text-center font-black dark:bg-white/10">{tr("Ketentuan Langganan", "Subscription Terms")}</Link>
             <Link href="/refund" className="rounded-2xl bg-slate-100 px-4 py-3 text-center font-black dark:bg-white/10">{tr("Pembatalan & Refund", "Cancellation & Refund")}</Link>
           </div>
 
           <div className="mt-7 rounded-2xl border border-rose-200 bg-rose-50 p-5 text-rose-950 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-100">
             <h3 className="font-black">{tr("Hapus akun permanen", "Permanently delete account")}</h3>
-            <p className="mt-2 text-sm leading-6">{tr("Tindakan ini menghapus akun Supabase dan data FitMate terkait. Tidak dapat dibatalkan.", "This deletes your Supabase account and related FitMate data. It cannot be undone.")}</p>
+            <p className="mt-2 text-sm leading-6">{tr("Akun dan data FitMate akan dihapus permanen.", "Your FitMate account and data will be deleted permanently.")}</p>
             <textarea value={deleteReason} onChange={(event) => setDeleteReason(event.target.value)} placeholder={tr("Alasan (opsional)", "Reason (optional)")} rows={2} className="mt-4 w-full rounded-xl border border-rose-200 bg-white px-3 py-2 text-slate-900" />
-            <input value={deleteText} onChange={(event) => setDeleteText(event.target.value)} placeholder="HAPUS AKUN" className="mt-3 w-full rounded-xl border border-rose-200 bg-white px-3 py-2 text-slate-900" />
-            <button type="button" onClick={deleteAccount} disabled={deleteText !== "HAPUS AKUN" || deleting} className="mt-3 w-full rounded-xl bg-rose-600 py-3 font-black text-white disabled:opacity-40">
+            <p className="mt-3 text-xs font-semibold">{tr(`Ketik ${deleteConfirmationText} untuk konfirmasi.`, `Type ${deleteConfirmationText} to confirm.`)}</p>
+            <input value={deleteText} onChange={(event) => setDeleteText(event.target.value)} placeholder={deleteConfirmationText} className="mt-3 w-full rounded-xl border border-rose-200 bg-white px-3 py-2 text-slate-900" />
+            <button type="button" onClick={deleteAccount} disabled={deleteText !== deleteConfirmationText || deleting} className="mt-3 w-full rounded-xl bg-rose-600 py-3 font-black text-white disabled:opacity-40">
               {deleting ? tr("Menghapus…", "Deleting…") : tr("Hapus akun saya", "Delete my account")}
             </button>
           </div>

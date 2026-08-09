@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import FitMateBrand from "@/components/fitmate-brand";
+import FitMateIcon from "@/components/fitmate-icon";
 import { useLanguage } from "@/components/language-provider";
-import LiveIcon from "@/components/live-icon";
 import { supabase } from "@/lib/supabase";
 
 export default function LoginPage() {
@@ -38,7 +38,7 @@ export default function LoginPage() {
       if (noticeType === "account-exists") {
         setNotice(
           tr(
-            "Akun dengan email tersebut sudah tersedia. Silakan login untuk melanjutkan.",
+            "Email ini sudah terdaftar. Silakan login.",
             "An account with this email already exists. Please log in to continue."
           )
         );
@@ -90,7 +90,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { error } =
+      const { data, error } =
         await supabase.auth.signInWithPassword({
           email: email.trim().toLowerCase(),
           password,
@@ -103,11 +103,32 @@ export default function LoginPage() {
       const redirect = new URLSearchParams(
         window.location.search
       ).get("redirect");
-      const destination =
+
+      if (
         redirect?.startsWith("/") &&
         !redirect.startsWith("//")
-          ? redirect
-          : "/dashboard";
+      ) {
+        window.location.assign(redirect);
+        return;
+      }
+
+      let destination = "/dashboard";
+      const token = data.session?.access_token;
+
+      if (token) {
+        try {
+          const adminResponse = await fetch("/api/admin/session", {
+            headers: { Authorization: `Bearer ${token}` },
+            cache: "no-store",
+          });
+          const adminResult = await adminResponse.json();
+          if (adminResponse.ok && adminResult.isAdmin) {
+            destination = "/admin/users";
+          }
+        } catch (adminCheckError) {
+          console.warn("Admin redirect check failed:", adminCheckError);
+        }
+      }
 
       window.location.assign(destination);
     } catch (error) {
@@ -181,7 +202,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white p-4 sm:p-6 lg:p-8">
+    <main className="fitmate-auth-page min-h-screen bg-white p-4 sm:p-6 lg:p-8">
       <div className="mx-auto grid min-h-[calc(100vh-2rem)] max-w-6xl overflow-hidden rounded-[2.25rem] border border-white bg-white shadow-2xl shadow-slate-200/70 sm:min-h-[calc(100vh-3rem)] lg:grid-cols-[1.1fr_.9fr]">
         <section className="flex items-center justify-center p-6 sm:p-10 lg:p-14">
           <div className="w-full max-w-md">
@@ -195,8 +216,8 @@ export default function LoginPage() {
             </h1>
             <p className="mt-3 leading-7 text-slate-500">
               {tr(
-                "Workout plan, AI coach, dan seluruh riwayatmu sudah menunggu.",
-                "Your workout plan, AI coach, and full history are ready."
+                "Rencana latihan, Coach, dan riwayat progresmu siap dilanjutkan.",
+                "Your training plan, Coach, and progress history are ready."
               )}
             </p>
 
@@ -205,7 +226,7 @@ export default function LoginPage() {
                 role="status"
                 className="mt-6 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold leading-6 text-green-800"
               >
-                ✓ {notice}
+                {notice}
               </div>
             )}
 
@@ -232,7 +253,7 @@ export default function LoginPage() {
                   </p>
                   <p className="mt-1 text-sm leading-6 text-green-700">
                     {tr(
-                      "Masukkan email akun. Kami akan mengirim tautan aman untuk membuat kata sandi baru.",
+                      "Masukkan email untuk menerima tautan reset.",
                       "Enter your account email. We will send a secure link to create a new password."
                     )}
                   </p>
@@ -264,8 +285,8 @@ export default function LoginPage() {
                     className="rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold leading-6 text-green-800"
                   >
                     {tr(
-                      "Jika email terdaftar, tautan reset sudah dikirim. Periksa Inbox dan folder Spam.",
-                      "If the email is registered, a reset link has been sent. Check your inbox and spam folder."
+                      "Jika terdaftar, tautan reset sudah dikirim.",
+                      "If registered, a reset link has been sent."
                     )}
                   </div>
                 )}
@@ -282,8 +303,8 @@ export default function LoginPage() {
                         "Sending link…"
                       )
                     : tr(
-                        "Kirim tautan reset →",
-                        "Send reset link →"
+                        "Kirim tautan reset",
+                        "Send reset link"
                       )}
                 </button>
 
@@ -296,7 +317,7 @@ export default function LoginPage() {
                   }}
                   className="w-full rounded-2xl border border-slate-200 bg-white py-3 text-sm font-black text-slate-600 transition hover:bg-slate-50"
                 >
-                  ← {tr("Kembali ke login", "Back to login")}
+                  {tr("Kembali ke login", "Back to login")}
                 </button>
               </form>
             ) : (
@@ -386,8 +407,8 @@ export default function LoginPage() {
                 {loading
                   ? tr("Sedang login…", "Logging in…")
                   : tr(
-                      "Login & lanjutkan →",
-                      "Log in & continue →"
+                      "Masuk",
+                      "Sign in"
                     )}
               </button>
             </form>
@@ -421,12 +442,9 @@ export default function LoginPage() {
           </div>
 
           <div className="relative">
-            <LiveIcon
-              variant="wiggle"
-              className="flex h-16 w-16 items-center justify-center rounded-[1.4rem] bg-white text-3xl shadow-xl"
-            >
-              👋
-            </LiveIcon>
+            <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 text-white">
+              <FitMateIcon name="activity" className="h-6 w-6" />
+            </span>
             <h2 className="mt-7 text-5xl font-black leading-tight tracking-tight">
               {tr(
                 "Senang melihatmu kembali.",
@@ -435,7 +453,7 @@ export default function LoginPage() {
             </h2>
             <p className="mt-5 max-w-md text-lg leading-8 text-green-50">
               {tr(
-                "Sedikit progres setiap hari tetaplah progres. Mari lanjut dari tempat terakhir kamu berhenti.",
+                "Lanjutkan progresmu hari ini.",
                 "A little progress every day still counts. Let’s continue where you left off."
               )}
             </p>
@@ -447,8 +465,8 @@ export default function LoginPage() {
             </p>
             <p className="mt-3 text-lg font-bold leading-7">
               {tr(
-                "“Konsistensi yang realistis lebih kuat daripada motivasi yang hanya datang sesekali.”",
-                "“Realistic consistency is stronger than motivation that only appears occasionally.”"
+                "“Konsisten lebih penting daripada sempurna.”",
+                "“Consistency matters more than perfection.”"
               )}
             </p>
           </div>

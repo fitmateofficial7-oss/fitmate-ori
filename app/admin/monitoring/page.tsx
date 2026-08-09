@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import AdminNavigation from "@/components/admin-navigation";
 import LiveIcon from "@/components/live-icon";
 import { useLanguage } from "@/components/language-provider";
 import { supabase } from "@/lib/supabase";
@@ -113,7 +114,7 @@ function MetricCard({
 
 export default function MonitoringPage() {
   const router = useRouter();
-  const { tr } = useLanguage();
+  const { language, tr } = useLanguage();
   const [data, setData] =
     useState<MonitoringData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -154,12 +155,11 @@ export default function MonitoringPage() {
 
       if (!response.ok || !result.success) {
         throw new Error(
-          "error" in result && result.error
-            ? result.error
-            : tr(
-                "Monitoring belum dapat dimuat.",
-                "Monitoring could not be loaded."
-              )
+          language === "en"
+            ? "Monitoring could not be loaded."
+            : "error" in result && result.error
+              ? result.error
+              : "Monitoring belum dapat dimuat."
         );
       }
 
@@ -177,7 +177,7 @@ export default function MonitoringPage() {
     } finally {
       setLoading(false);
     }
-  }, [router, tr]);
+  }, [language, router, tr]);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -217,16 +217,14 @@ export default function MonitoringPage() {
   });
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 pb-16 pt-8 text-slate-900 sm:px-6">
+    <main className="fitmate-app-page min-h-screen bg-slate-50 px-4 pb-16 pt-8 text-slate-900 sm:px-6">
       <div className="mx-auto max-w-7xl">
         <header className="rounded-[2rem] border border-green-100 bg-white p-6 shadow-sm sm:p-8">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="flex items-center gap-3">
                 <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-600 text-xl text-white">
-                  <LiveIcon variant="tick" active>
-                    ◌
-                  </LiveIcon>
+                  <span className="text-xs font-bold">FM</span>
                 </span>
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.2em] text-green-600">
@@ -242,18 +240,19 @@ export default function MonitoringPage() {
               </div>
               <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-600">
                 {tr(
-                  "Lihat error aplikasi, aktivitas latihan, penggunaan AI, token, dan estimasi biaya dalam satu halaman.",
-                  "Review app errors, workout activity, AI usage, tokens, and estimated cost in one place."
+                  "Ringkasan aplikasi, penggunaan AI, dan biaya.",
+                  "App health, AI usage, and cost summary."
                 )}
               </p>
             </div>
 
             <div className="flex flex-wrap gap-2">
+              <AdminNavigation />
               <Link
                 href="/dashboard"
-                className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-black text-slate-600 transition hover:bg-slate-50"
+                className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
               >
-                ← {tr("Dashboard", "Dashboard")}
+                {tr("Buka aplikasi", "Open app")}
               </Link>
               <button
                 type="button"
@@ -298,8 +297,8 @@ export default function MonitoringPage() {
             <p className="mt-2 text-sm leading-6">{error}</p>
             <p className="mt-3 text-xs font-semibold">
               {tr(
-                "Pastikan migration monitoring sudah dijalankan dan FITMATE_ADMIN_EMAILS berisi email akun admin.",
-                "Make sure the monitoring migration has been applied and FITMATE_ADMIN_EMAILS contains the admin account email."
+                "Periksa migration monitoring dan email admin.",
+                "Check the monitoring migration and admin email."
               )}
             </p>
           </section>
@@ -328,10 +327,10 @@ export default function MonitoringPage() {
                 }
               />
               <MetricCard
-                icon="✦"
+                icon="Model"
                 label={tr(
-                  "Permintaan AI · 7 hari",
-                  "AI requests · 7 days"
+                  "Permintaan model · 7 hari",
+                  "Model requests · 7 days"
                 )}
                 value={number.format(
                   data.summary.aiRequests7d
@@ -345,8 +344,8 @@ export default function MonitoringPage() {
               <MetricCard
                 icon="$"
                 label={tr(
-                  "Estimasi biaya AI",
-                  "Estimated AI cost"
+                  "Estimasi biaya model",
+                  "Estimated model cost"
                 )}
                 value={
                   data.pricingConfigured
@@ -370,7 +369,7 @@ export default function MonitoringPage() {
                 tone="amber"
               />
               <MetricCard
-                icon="●"
+                icon={tr("Aktif", "Live")}
                 label={tr(
                   "Pengguna aktif · 7 hari",
                   "Active users · 7 days"
@@ -391,7 +390,7 @@ export default function MonitoringPage() {
 
             <section className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <MetricCard
-                icon="✦"
+                icon="Model"
                 label={tr("Premium aktif", "Active Premium")}
                 value={number.format(data.summary.activePremiumSubscriptions)}
                 note={tr(
@@ -441,10 +440,8 @@ export default function MonitoringPage() {
                     </h2>
                   </div>
                   <div className="flex gap-3 text-[11px] font-bold text-slate-500">
-                    <span>● {tr("Event", "Events")}</span>
-                    <span className="text-rose-600">
-                      ● {tr("Error", "Errors")}
-                    </span>
+                    <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-slate-400" />{tr("Event", "Events")}</span>
+                    <span className="inline-flex items-center gap-1.5 text-rose-600"><span className="h-2 w-2 rounded-full bg-rose-500" />{tr("Error", "Errors")}</span>
                   </div>
                 </div>
 
@@ -505,7 +502,7 @@ export default function MonitoringPage() {
                   )}
                 </p>
                 <h2 className="mt-2 text-xl font-black">
-                  AI Coach
+                  Coach
                 </h2>
 
                 <div className="mt-6 space-y-4">
@@ -644,17 +641,17 @@ export default function MonitoringPage() {
                     {
                       key: "vercel",
                       label: "Vercel Logs",
-                      icon: "▲",
+                      icon: "Log",
                     },
                     {
                       key: "supabase",
                       label: "Supabase Logs",
-                      icon: "⚡",
+                      icon: "DB",
                     },
                     {
                       key: "openai",
                       label: "OpenAI Usage",
-                      icon: "✦",
+                      icon: "Model",
                     },
                     {
                       key: "sentry",
@@ -680,7 +677,7 @@ export default function MonitoringPage() {
                         {item.icon}
                       </LiveIcon>
                       <p className="mt-3 text-sm font-black text-slate-800 group-hover:text-green-800">
-                        {item.label} ↗
+                        {item.label}
                       </p>
                     </a>
                   ))}

@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import FitMateBrand from "@/components/fitmate-brand";
+import FitMateIcon, { type FitMateIconName } from "@/components/fitmate-icon";
 import { useLanguage } from "@/components/language-provider";
-import LiveIcon from "@/components/live-icon";
 import { supabase } from "@/lib/supabase";
 
 type FormData = {
@@ -38,7 +38,7 @@ const STEPS = [
 
 const GOAL_OPTIONS = [
   {
-    icon: "💪",
+    icon: "dumbbell" as FitMateIconName,
     value: "Membentuk Otot",
     id: "Membentuk Otot",
     en: "Build Muscle",
@@ -46,7 +46,7 @@ const GOAL_OPTIONS = [
     descriptionEn: "Build muscle mass and overall strength.",
   },
   {
-    icon: "🔥",
+    icon: "activity" as FitMateIconName,
     value: "Mengurangi Lemak",
     id: "Mengurangi Lemak",
     en: "Lose Fat",
@@ -54,7 +54,7 @@ const GOAL_OPTIONS = [
     descriptionEn: "Reduce fat while preserving muscle mass.",
   },
   {
-    icon: "⚡",
+    icon: "energy" as FitMateIconName,
     value: "Menambah Kekuatan",
     id: "Menambah Kekuatan",
     en: "Gain Strength",
@@ -62,7 +62,7 @@ const GOAL_OPTIONS = [
     descriptionEn: "Improve strength and performance.",
   },
   {
-    icon: "🏃",
+    icon: "run" as FitMateIconName,
     value: "Menjaga Kebugaran",
     id: "Menjaga Kebugaran",
     en: "Stay Fit",
@@ -536,7 +536,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white px-4 py-8 sm:px-6 sm:py-12">
+    <main className="fitmate-app-page min-h-screen bg-white px-4 py-8 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-2xl">
         <div className="text-center">
           <FitMateBrand href="/" size="lg" showCompany centered className="mx-auto" />
@@ -632,16 +632,9 @@ export default function OnboardingPage() {
                       }`}
                     >
                       <div className="text-lg font-semibold">
-                        <LiveIcon
-                          variant={
-                            option.value === "Mengurangi Lemak"
-                              ? "wiggle"
-                              : "pulse"
-                          }
-                          className="mr-2"
-                        >
-                          {option.icon}
-                        </LiveIcon>
+                        <span className="mr-3 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-700 align-middle dark:bg-slate-800 dark:text-slate-200">
+                          <FitMateIcon name={option.icon} className="h-4.5 w-4.5" />
+                        </span>
                         {tr(option.id, option.en)}
                       </div>
 
@@ -901,8 +894,8 @@ export default function OnboardingPage() {
 
               <p className="mt-1 text-sm leading-6 text-yellow-700">
                 {tr(
-                  "Mengubah profil akan menghapus rencana aktif. Setelah disimpan, buat rencana baru agar sesuai dengan data terbaru.",
-                  "Changing your profile removes the active plan. After saving, create a new plan using the latest information."
+                  "Mengubah profil akan mereset rencana aktif.",
+                  "Changing your profile resets the active plan."
                 )}
               </p>
             </div>

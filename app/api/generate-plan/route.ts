@@ -1802,10 +1802,16 @@ Return ONLY valid JSON.
               ? "PREMIUM_WEEKLY_LIMIT_REACHED"
               : "PREMIUM_REQUIRED",
           error: inProgress
-            ? "Pembuatan program lain masih berlangsung. Tunggu hingga proses tersebut selesai."
+            ? responseLanguage === "en"
+              ? "Another workout plan is still being generated. Wait for it to finish."
+              : "Pembuatan program lain masih berlangsung. Tunggu hingga proses tersebut selesai."
             : premiumWeeklyLimitReached
-              ? "Batas 10 generate program Premium minggu ini sudah digunakan. Kuota akan tersedia kembali Senin pukul 00.00 WIB."
-              : "Dua kuota generate gratis seumur hidup sudah digunakan. Berlangganan FitMate Premium untuk membuat program baru.",
+              ? responseLanguage === "en"
+                ? "You have used all 10 Premium plan generations for this week. The quota resets Monday at 00:00 WIB."
+                : "Batas 10 generate program Premium minggu ini sudah digunakan. Kuota akan tersedia kembali Senin pukul 00.00 WIB."
+              : responseLanguage === "en"
+                ? "Both lifetime Free plan generations have been used. Upgrade to FitMate Premium to create a new plan."
+                : "Dua kuota generate gratis seumur hidup sudah digunakan. Berlangganan FitMate Premium untuk membuat program baru.",
           upgradeUrl:
             inProgress || premiumWeeklyLimitReached ? null : "/premium",
           billing,
@@ -1943,10 +1949,24 @@ Return ONLY valid JSON.
           : "Rencana Latihan Personal"
       );
 
+    const goalLabel =
+      responseLanguage === "en"
+        ? ({
+            "Membentuk Otot": "Build Muscle",
+            "Mengurangi Lemak": "Lose Fat",
+            "Menambah Kekuatan": "Gain Strength",
+            "Menjaga Kebugaran": "Stay Fit",
+          } as Record<string, string>)[goal] || goal
+        : goal;
+    const difficultyLabel =
+      responseLanguage === "en"
+        ? ({ easy: "beginner-friendly", medium: "intermediate", hard: "advanced" } as Record<string, string>)[difficulty] || difficulty
+        : difficulty;
+
     const planDescription =
       responseLanguage === "en"
-        ? `Personalized ${difficulty} workout plan for ${goal}.`
-        : `Rencana latihan personal tingkat ${difficulty} untuk tujuan ${goal}.`;
+        ? `Personalized ${difficultyLabel} workout plan for ${goalLabel}.`
+        : `Rencana latihan personal tingkat ${difficultyLabel} untuk tujuan ${goalLabel}.`;
 
     // ==================================================
     // SAVE PLAN + CONSUME QUOTA ATOMICALLY

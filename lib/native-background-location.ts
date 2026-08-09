@@ -106,11 +106,16 @@ export async function startNativeBackgroundLocation(
 
   await requestAndroidNotificationPermission(context.platform);
 
+  const english =
+    typeof window !== "undefined" &&
+    window.localStorage.getItem("fitmate_language") === "en";
+
   return context.plugin.addWatcher(
     {
-      backgroundTitle: "FitMate Jogging aktif",
-      backgroundMessage:
-        "FitMate sedang merekam rute lari. Ketuk notifikasi untuk kembali.",
+      backgroundTitle: english ? "FitMate Jogging is active" : "FitMate Jogging aktif",
+      backgroundMessage: english
+        ? "FitMate is recording your route. Tap to return."
+        : "FitMate sedang merekam rute lari. Ketuk notifikasi untuk kembali.",
       requestPermissions: true,
       stale: false,
       // Three metres keeps the route responsive while reducing GPS noise and

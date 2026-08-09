@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import FitMateIcon from "@/components/fitmate-icon";
 import { useLanguage } from "@/components/language-provider";
 import PremiumFeatureGate from "@/components/premium-feature-gate";
 import { calculateNutritionTargets } from "@/lib/prelaunch-fitness";
@@ -65,12 +66,27 @@ function jakartaDay(value = new Date()) {
   }).format(value);
 }
 
-function formatTime(value: string) {
-  return new Intl.DateTimeFormat("id-ID", {
+function formatTime(value: string, language: "id" | "en") {
+  return new Intl.DateTimeFormat(language === "id" ? "id-ID" : "en-US", {
     hour: "2-digit",
     minute: "2-digit",
     timeZone: "Asia/Jakarta",
   }).format(new Date(value));
+}
+
+function mealTypeLabel(value: string, language: "id" | "en") {
+  const labels: Record<string, [string, string]> = {
+    breakfast: ["Sarapan", "Breakfast"],
+    lunch: ["Makan siang", "Lunch"],
+    dinner: ["Makan malam", "Dinner"],
+    snack: ["Camilan", "Snack"],
+    pre_workout: ["Sebelum latihan", "Pre-workout"],
+    post_workout: ["Setelah latihan", "Post-workout"],
+    meal: ["Makanan", "Meal"],
+    meal_scan: ["Hasil scan", "Meal scan"],
+  };
+  const pair = labels[value];
+  return pair ? (language === "id" ? pair[0] : pair[1]) : value.replaceAll("_", " ");
 }
 
 type FoodHealthInput = {
@@ -194,7 +210,7 @@ function getHealthScoreTone(score: number) {
 
 export default function NutritionPage() {
   const router = useRouter();
-  const { tr } = useLanguage();
+  const { language, tr } = useLanguage();
   const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -275,13 +291,13 @@ export default function NutritionPage() {
     if (remaining.protein >= 30) {
       suggestions.push({
         title: tr("Protein masih kurang", "Protein is still low"),
-        detail: tr("Coba 150 g ayam/ikan, tahu-tempe, atau yogurt tinggi protein. Sesuaikan porsinya dengan sisa kalori.", "Try 150 g chicken/fish, tofu-tempeh, or high-protein yogurt. Adjust the serving to your remaining calories."),
+        detail: tr("Pilih sumber protein sesuai sisa targetmu.", "Choose a protein source that fits your remaining target."),
       });
     }
     if (remaining.carbs >= 50 && remaining.calories >= 250) {
       suggestions.push({
         title: tr("Tambahkan energi latihan", "Add training energy"),
-        detail: tr("Pilih nasi, kentang, oatmeal, atau buah sebagai sumber karbohidrat yang mudah diukur.", "Choose rice, potatoes, oats, or fruit as an easy-to-measure carbohydrate source."),
+        detail: tr("Pilih sumber karbo yang mudah diukur.", "Choose an easy-to-measure carb source."),
       });
     }
     if (remaining.fiber >= 8) {
@@ -293,7 +309,7 @@ export default function NutritionPage() {
     if (suggestions.length === 0) {
       suggestions.push({
         title: tr("Target hampir tercapai", "Targets are nearly met"),
-        detail: tr("Pilih makanan sederhana sesuai rasa lapar dan hindari memaksa makan hanya untuk mengejar angka.", "Choose a simple meal based on hunger and avoid forcing food only to chase numbers."),
+        detail: tr("Pilih makanan sesuai rasa lapar dan targetmu.", "Choose food based on hunger and your target."),
       });
     }
     return suggestions.slice(0, 3);
@@ -436,8 +452,8 @@ export default function NutritionPage() {
     <PremiumFeatureGate
       featureNameId="Nutrisi khusus Premium"
       featureNameEn="Premium nutrition tracking"
-      descriptionId="Buka jurnal makanan, target makro, ringkasan nutrisi, dan rekomendasi harian dengan FitMate Premium."
-      descriptionEn="Unlock the food journal, macro targets, nutrition summaries, and daily recommendations with FitMate Premium."
+      descriptionId="Jurnal, target makro, dan ringkasan nutrisi tersedia di Premium."
+      descriptionEn="Food journal, macro targets, and nutrition summaries are available with Premium."
     >
       <main className="fitmate-app-page min-h-screen bg-slate-50 pb-40 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       <header className="border-b border-slate-200/80 bg-white/90 px-4 py-4 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/90 sm:px-6">
@@ -540,8 +556,8 @@ export default function NutritionPage() {
 
             {primarySuggestion && (
               <div className="mt-4 flex items-start gap-3 rounded-2xl bg-green-50 p-4 dark:bg-green-400/10">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-600 text-white" aria-hidden="true">
-                  ✦
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-green-600 text-white" aria-hidden="true">
+                  <FitMateIcon name="food" className="h-4 w-4" />
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="font-black text-green-900 dark:text-green-100">
@@ -576,8 +592,8 @@ export default function NutritionPage() {
                 : "border-slate-200 bg-white dark:border-white/10 dark:bg-white/5"
             }`}
           >
-            <span className="block text-lg font-black">＋</span>
-            <span className="mt-1 block font-black">
+            <FitMateIcon name="food" className="h-5 w-5" />
+            <span className="mt-2 block font-black">
               {editingId ? tr("Edit makanan", "Edit food") : tr("Tambah makanan", "Add food")}
             </span>
           </button>
@@ -590,8 +606,8 @@ export default function NutritionPage() {
                 : "border-slate-200 bg-white dark:border-white/10 dark:bg-white/5"
             }`}
           >
-            <span className="block text-lg font-black">◎</span>
-            <span className="mt-1 block font-black">{tr("Atur target", "Set targets")}</span>
+            <FitMateIcon name="chart" className="h-5 w-5" />
+            <span className="mt-2 block font-black">{tr("Atur target", "Set targets")}</span>
           </button>
         </section>
 
@@ -620,13 +636,13 @@ export default function NutritionPage() {
                 onChange={(event) => setForm((previous) => ({ ...previous, mealType: event.target.value }))}
                 className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-slate-900 dark:border-white/10 dark:bg-slate-900 dark:text-white"
               >
-                <option value="breakfast">Breakfast</option>
-                <option value="lunch">Lunch</option>
-                <option value="dinner">Dinner</option>
-                <option value="snack">Snack</option>
-                <option value="pre_workout">Pre-workout</option>
-                <option value="post_workout">Post-workout</option>
-                <option value="meal">Meal</option>
+                <option value="breakfast">{tr("Sarapan", "Breakfast")}</option>
+                <option value="lunch">{tr("Makan siang", "Lunch")}</option>
+                <option value="dinner">{tr("Makan malam", "Dinner")}</option>
+                <option value="snack">{tr("Camilan", "Snack")}</option>
+                <option value="pre_workout">{tr("Sebelum latihan", "Pre-workout")}</option>
+                <option value="post_workout">{tr("Setelah latihan", "Post-workout")}</option>
+                <option value="meal">{tr("Makanan", "Meal")}</option>
               </select>
               <input
                 value={form.foodName}
@@ -681,8 +697,8 @@ export default function NutritionPage() {
                   </p>
                   <p className="mt-1 text-xs opacity-80">
                     {tr(
-                      "Estimasi dari nama makanan dan data makro. Nilai 10 berarti pilihan sangat sehat.",
-                      "Estimated from the food name and macros. A score of 10 means a very healthy choice."
+                      "Skor berdasarkan estimasi makanan dan makro.",
+                      "Score based on estimated food and macros."
                     )}
                   </p>
                 </div>
@@ -786,8 +802,8 @@ export default function NutritionPage() {
                     <div className="flex flex-wrap items-center gap-2">
                       <h3 className="min-w-0 truncate font-black">{entry.food_name}</h3>
                       {entry.source === "ai_scan" && (
-                        <span className="rounded-full bg-violet-100 px-2 py-0.5 text-[10px] font-black text-violet-700 dark:bg-violet-400/10 dark:text-violet-200">
-                          AI
+                        <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                          {tr("Hasil scan", "Scan result")}
                         </span>
                       )}
                       <span
@@ -803,7 +819,7 @@ export default function NutritionPage() {
                       </span>
                     </div>
                     <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                      {formatTime(entry.logged_at)} · {entry.meal_type}
+                      {formatTime(entry.logged_at, language)} · {mealTypeLabel(entry.meal_type, language)}
                       {entry.serving_description ? ` · ${entry.serving_description}` : ""}
                     </p>
                     <p className="mt-2 text-sm font-bold text-green-700 dark:text-green-300">

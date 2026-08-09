@@ -18,6 +18,21 @@ const officialSources = [
   },
 ];
 
+const officialSourcesEn = [
+  {
+    label: "Law No. 27 of 2022 on Personal Data Protection",
+    href: "https://peraturan.bpk.go.id/Details/229798/uu-no-27-tahun-2022",
+  },
+  {
+    label: "Government Regulation No. 71 of 2019 on Electronic Systems and Transactions",
+    href: "https://peraturan.bpk.go.id/Details/122030/pp-no-71-tahun-2019",
+  },
+  {
+    label: "Government Regulation No. 80 of 2019 on Electronic Commerce",
+    href: "https://peraturan.bpk.go.id/Details/126143/pp-no-80-tahun-2019",
+  },
+];
+
 const copyId: LegalDocumentCopy = {
   title: "Kebijakan Privasi",
   summary:
@@ -27,7 +42,7 @@ const copyId: LegalDocumentCopy = {
     {
       heading: "Pengendali data",
       paragraphs: [
-        "PT Growsia Solusi Indonesia Maju mengoperasikan FitMate AI dan bertindak sebagai pengendali data pribadi untuk pemrosesan yang dijelaskan dalam kebijakan ini.",
+        "PT Growsia Solusi Indonesia Maju mengoperasikan FitMate dan bertindak sebagai pengendali data pribadi untuk pemrosesan yang dijelaskan dalam kebijakan ini.",
       ],
     },
     {
@@ -115,7 +130,7 @@ const copyEn: LegalDocumentCopy = {
     {
       heading: "Data controller",
       paragraphs: [
-        "PT Growsia Solusi Indonesia Maju operates FitMate AI and acts as the personal-data controller for the processing described in this policy.",
+        "PT Growsia Solusi Indonesia Maju operates FitMate and acts as the personal-data controller for the processing described in this policy.",
       ],
     },
     {
@@ -188,7 +203,7 @@ const copyEn: LegalDocumentCopy = {
     },
   ],
   sourcesTitle: "Official regulatory references",
-  sources: officialSources,
+  sources: officialSourcesEn,
   contactTitle: "Privacy requests",
   contactText: "Send requests for access, correction, deletion, or privacy questions to FitMate support.",
   backLabel: "Back to Settings",

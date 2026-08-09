@@ -3,7 +3,6 @@
 import { usePathname } from "next/navigation";
 
 import { useLanguage } from "@/components/language-provider";
-import LiveIcon from "@/components/live-icon";
 
 const APP_ROUTES = [
   "/dashboard",
@@ -15,6 +14,8 @@ const APP_ROUTES = [
   "/nutrition",
   "/settings",
   "/motivation",
+  "/jogging",
+  "/premium",
 ];
 
 export default function LanguageToggle() {
@@ -25,6 +26,11 @@ export default function LanguageToggle() {
       pathname === route ||
       pathname.startsWith(`${route}/`)
   );
+
+  if (isAppPage) {
+    return null;
+  }
+
   const isWorkoutPage =
     pathname === "/workout" ||
     pathname.startsWith("/workout/");
@@ -39,9 +45,7 @@ export default function LanguageToggle() {
           : "bottom-4 sm:bottom-5"
       }`}
     >
-      <LiveIcon variant="float" active>
-        🌐
-      </LiveIcon>
+      <span className="text-xs font-semibold text-slate-400" aria-hidden="true">ID/EN</span>
       <span className="sr-only">
         {tr("Pilih bahasa", "Choose language")}
       </span>

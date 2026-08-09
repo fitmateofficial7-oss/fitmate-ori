@@ -244,3 +244,85 @@ export function calculateNutritionTargets({
     fiberG: Math.max(25, Math.round(calories / 1000) * 14),
   };
 }
+
+
+const READINESS_TRANSLATIONS = [
+  {
+    id: "Nyeri yang kamu laporkan cukup tinggi. Jangan lanjutkan latihan yang memicu nyeri dan pertimbangkan pemeriksaan tenaga kesehatan.",
+    en: "Your reported pain is high. Do not continue movements that trigger pain and consider evaluation by a healthcare professional.",
+  },
+  {
+    id: "Fokus pemulihan hari ini. Pilih mobilitas ringan, jalan santai, atau latihan teknik dengan beban sangat ringan.",
+    en: "Prioritize recovery today. Choose light mobility, an easy walk, or technique practice with very light loads.",
+  },
+  {
+    id: "Kondisi cukup, tetapi belum optimal. Kurangi sekitar 20% set dan hindari latihan sampai gagal.",
+    en: "You are ready enough to train, but not at your best. Reduce sets by about 20% and avoid training to failure.",
+  },
+  {
+    id: "Kondisimu siap untuk latihan normal. Tetap gunakan teknik yang stabil dan hentikan gerakan jika terasa sakit.",
+    en: "You are ready for a normal session. Keep your technique stable and stop any movement that causes pain.",
+  },
+] as const;
+
+const PROGRESSION_TRANSLATIONS = [
+  {
+    id: "Belum ada set kerja yang cukup untuk membuat rekomendasi.",
+    en: "There are not enough working sets to make a recommendation yet.",
+  },
+  {
+    id: "Beberapa set kerja berada di bawah target dengan cadangan repetisi rendah. Gunakan sesi deload: kurangi sekitar 10% beban dan satu set sebelum membangun kembali progres.",
+    en: "Several working sets fell below target with little reserve. Use a deload session: reduce load by about 10% and remove one set before building progress again.",
+  },
+  {
+    id: "Repetisi atau cadangan repetisi belum stabil. Turunkan sedikit beban dan prioritaskan teknik sebelum menaikkan progres.",
+    en: "Reps or reps-in-reserve were not stable. Reduce the load slightly and prioritize technique before progressing.",
+  },
+  {
+    id: "Beban sudah sesuai. Pertahankan sampai seluruh set mencapai batas atas repetisi dengan teknik yang konsisten.",
+    en: "The current load is appropriate. Keep it until every set reaches the top of the rep range with consistent form.",
+  },
+] as const;
+
+function localizeStoredPair(
+  value: string,
+  language: "id" | "en",
+  pairs: readonly { id: string; en: string }[]
+) {
+  const normalized = value.trim();
+  const match = pairs.find(
+    (item) => item.id === normalized || item.en === normalized
+  );
+  return match ? (language === "en" ? match.en : match.id) : value;
+}
+
+export function localizeStoredReadinessRecommendation(
+  value: string,
+  language: "id" | "en"
+) {
+  return localizeStoredPair(value, language, READINESS_TRANSLATIONS);
+}
+
+export function localizeStoredProgressionReason(
+  value: string,
+  language: "id" | "en"
+) {
+  const direct = localizeStoredPair(value, language, PROGRESSION_TRANSLATIONS);
+  if (direct !== value) return direct;
+
+  const idMatch = value.match(
+    /^Semua set mencapai batas atas repetisi dengan cadangan yang cukup\. Estimasi 1RM terbaik sekitar ([0-9.,]+) kg\.$/
+  );
+  if (idMatch && language === "en") {
+    return `All working sets reached the top of the rep range with enough reserve. Best estimated 1RM is about ${idMatch[1]} kg.`;
+  }
+
+  const enMatch = value.match(
+    /^All working sets reached the top of the rep range with enough reserve\. Best estimated 1RM is about ([0-9.,]+) kg\.$/
+  );
+  if (enMatch && language === "id") {
+    return `Semua set mencapai batas atas repetisi dengan cadangan yang cukup. Estimasi 1RM terbaik sekitar ${enMatch[1]} kg.`;
+  }
+
+  return value;
+}

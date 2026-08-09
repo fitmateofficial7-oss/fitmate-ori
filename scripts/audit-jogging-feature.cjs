@@ -123,8 +123,10 @@ assert(
   "Jogging must start and stop the native background watcher when available."
 );
 assert(
-  nativeLocation.includes('backgroundTitle: "FitMate Jogging aktif"') &&
-    nativeLocation.includes("backgroundMessage") &&
+  nativeLocation.includes("backgroundTitle:") &&
+    nativeLocation.includes("FitMate Jogging aktif") &&
+    nativeLocation.includes("FitMate Jogging is active") &&
+    nativeLocation.includes("backgroundMessage:") &&
     nativeLocation.includes("distanceFilter: 3") &&
     nativeLocation.includes("@capacitor/local-notifications"),
   "Native background tracking must use a visible notification and a distance filter."

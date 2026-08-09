@@ -12,6 +12,7 @@ import {
 } from "react";
 
 import FitMateBrand from "@/components/fitmate-brand";
+import FitMateIcon from "@/components/fitmate-icon";
 import JoggingRouteMap from "@/components/jogging-route-map";
 import { useLanguage } from "@/components/language-provider";
 import {
@@ -83,16 +84,22 @@ type NavigatorWithWakeLock = Navigator & {
 const DRAFT_KEY_PREFIX = "fitmate_jogging_draft_";
 const HISTORY_KEY_PREFIX = "fitmate_jogging_history_";
 
-function suggestedTitle() {
+function suggestedTitle(language: "id" | "en") {
   const hour = new Date().getHours();
+  if (language === "en") {
+    if (hour < 10) return "Morning Jog";
+    if (hour < 15) return "Midday Jog";
+    if (hour < 19) return "Evening Jog";
+    return "Night Jog";
+  }
   if (hour < 10) return "Jogging Pagi";
   if (hour < 15) return "Jogging Siang";
   if (hour < 19) return "Jogging Sore";
   return "Jogging Malam";
 }
 
-function sessionDateLabel(value: string) {
-  return new Intl.DateTimeFormat("id-ID", {
+function sessionDateLabel(value: string, language: "id" | "en") {
+  return new Intl.DateTimeFormat(language === "id" ? "id-ID" : "en-US", {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -100,6 +107,21 @@ function sessionDateLabel(value: string) {
     hour: "2-digit",
     minute: "2-digit",
   }).format(new Date(value));
+}
+
+function localizeJoggingTitle(value: string, language: "id" | "en") {
+  const titles: Record<string, [string, string]> = {
+    "jogging pagi": ["Jogging Pagi", "Morning Jog"],
+    "morning jog": ["Jogging Pagi", "Morning Jog"],
+    "jogging siang": ["Jogging Siang", "Midday Jog"],
+    "midday jog": ["Jogging Siang", "Midday Jog"],
+    "jogging sore": ["Jogging Sore", "Evening Jog"],
+    "evening jog": ["Jogging Sore", "Evening Jog"],
+    "jogging malam": ["Jogging Malam", "Night Jog"],
+    "night jog": ["Jogging Malam", "Night Jog"],
+  };
+  const pair = titles[value.trim().toLowerCase()];
+  return pair ? (language === "id" ? pair[0] : pair[1]) : value;
 }
 
 function numberValue(value: string, fallback: number) {
@@ -201,6 +223,7 @@ function updateShareLayerScale(
 }
 
 function ShareRoutePreview({ points }: { points: JoggingRoutePoint[] }) {
+  const { tr } = useLanguage();
   const route = useMemo(() => {
     if (points.length < 2) return "";
     const latitudes = points.map((point) => point.latitude);
@@ -235,7 +258,7 @@ function ShareRoutePreview({ points }: { points: JoggingRoutePoint[] }) {
     <svg
       viewBox="0 0 100 100"
       className="h-full w-full overflow-visible drop-shadow-[0_8px_14px_rgba(56,242,141,0.45)]"
-      aria-label="Preview rute jogging"
+      aria-label={tr("Preview rute jogging", "Jogging route preview")}
     >
       {route ? (
         <>
@@ -285,7 +308,7 @@ function ShareRoutePreview({ points }: { points: JoggingRoutePoint[] }) {
           fontSize="6"
           fontWeight="800"
         >
-          Rute GPS belum tersedia
+          {tr("Rute GPS belum tersedia", "GPS route not available yet")}
         </text>
       )}
     </svg>
@@ -294,7 +317,7 @@ function ShareRoutePreview({ points }: { points: JoggingRoutePoint[] }) {
 
 export default function JoggingPage() {
   const router = useRouter();
-  const { tr } = useLanguage();
+  const { language, tr } = useLanguage();
   const [userId, setUserId] = useState("");
   const [status, setStatus] = useState<TrackingStatus>("idle");
   const [points, setPoints] = useState<JoggingRoutePoint[]>([]);
@@ -542,7 +565,7 @@ export default function JoggingPage() {
       setGpsMessage(
         denied
           ? tr(
-              "Izin lokasi background belum diberikan. Buka pengaturan lokasi FitMate.",
+              "Aktifkan lokasi latar belakang di pengaturan.",
               "Background location permission is not granted. Open FitMate location settings."
             )
           : error.message ||
@@ -892,8 +915,8 @@ export default function JoggingPage() {
       if (result.error) {
         setSaveMessage(
           tr(
-            "Aktivitas tersimpan di perangkat. Jalankan migrasi jogging untuk sinkronisasi Supabase.",
-            "Activity is saved on this device. Run the jogging migration to sync with Supabase."
+            "Aktivitas tersimpan lokal. Sinkronisasi belum aktif.",
+            "Activity saved locally. Sync is not ready."
           )
         );
       } else {
@@ -930,7 +953,7 @@ export default function JoggingPage() {
     const session: JoggingSession = {
       id: crypto.randomUUID(),
       user_id: userId,
-      title: suggestedTitle(),
+      title: suggestedTitle(language),
       started_at: new Date(
         startedAtRef.current ?? endedAt
       ).toISOString(),
@@ -956,7 +979,7 @@ export default function JoggingPage() {
     setSaving(true);
     await persistSession(session);
     setSaving(false);
-  }, [persistSession, releaseScreenWakeLock, stopGpsWatch, userId, weightKg]);
+  }, [language, persistSession, releaseScreenWakeLock, stopGpsWatch, userId, weightKg]);
 
   const finishedStats: JoggingStats | null = useMemo(() => {
     if (!finishedSession) return null;
@@ -1073,12 +1096,13 @@ export default function JoggingPage() {
 
       try {
         const baseOptions = {
-          title: finishedSession.title,
-          dateLabel: sessionDateLabel(finishedSession.started_at),
+          title: localizeJoggingTitle(finishedSession.title, language),
+          dateLabel: sessionDateLabel(finishedSession.started_at, language),
           stats: finishedStats,
           points: finishedSession.route_points,
           mediaUrl: shareMode === "media" ? shareMediaUrl : null,
           layout: shareLayout,
+          language,
         };
 
         let blob: Blob;
@@ -1113,14 +1137,14 @@ export default function JoggingPage() {
           (!navigator.canShare || navigator.canShare({ files: [file] }))
         ) {
           await navigator.share({
-            title: finishedSession.title,
+            title: localizeJoggingTitle(finishedSession.title, language),
             text: tr(
               `Jogging ${(finishedStats.distanceMeters / 1000).toFixed(
                 2
-              )} km bersama FitMate AI`,
+              )} km bersama FitMate`,
               `${(finishedStats.distanceMeters / 1000).toFixed(
                 2
-              )} km jogging with FitMate AI`
+              )} km jogging with FitMate`
             ),
             files: [file],
           });
@@ -1148,8 +1172,8 @@ export default function JoggingPage() {
           setSaveMessage(
             unsupported
               ? tr(
-                  "Browser ini belum mendukung ekspor video berlapis. Coba melalui aplikasi Android/iOS FitMate atau gunakan foto.",
-                  "This browser does not support layered video export. Try the FitMate Android/iOS app or use a photo."
+                  "Ekspor video belum didukung. Gunakan foto atau aplikasi FitMate.",
+                  "Video export is not supported. Use a photo or the FitMate app."
                 )
               : tr(
                   "Gagal membuat file aktivitas. Coba lagi.",
@@ -1168,6 +1192,7 @@ export default function JoggingPage() {
       shareMediaKind,
       shareMediaUrl,
       shareMode,
+      language,
       tr,
     ]
   );
@@ -1188,7 +1213,7 @@ export default function JoggingPage() {
   const activeStats = finishedStats ?? stats;
 
   return (
-    <main className="min-h-screen scroll-pb-40 bg-[radial-gradient(circle_at_top_left,rgba(110,231,183,0.24),transparent_34%),linear-gradient(180deg,#f8fffb,#eefbf3_45%,#f8fafc)] pb-44 text-slate-950 sm:pb-36 dark:bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.16),transparent_32%),linear-gradient(180deg,#06110c,#081810_55%,#020617)] dark:text-white">
+    <main className="fitmate-app-page min-h-screen scroll-pb-40 bg-[radial-gradient(circle_at_top_left,rgba(110,231,183,0.24),transparent_34%),linear-gradient(180deg,#f8fffb,#eefbf3_45%,#f8fafc)] pb-44 text-slate-950 sm:pb-36 dark:bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.16),transparent_32%),linear-gradient(180deg,#06110c,#081810_55%,#020617)] dark:text-white">
       <header className="sticky top-0 z-40 border-b border-emerald-100/80 bg-white/88 px-4 py-3 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/85">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
           <FitMateBrand href="/dashboard" size="sm" showCompany />
@@ -1213,26 +1238,26 @@ export default function JoggingPage() {
               </h1>
               <p className="mt-4 max-w-2xl font-semibold leading-7 text-emerald-50/85">
                 {tr(
-                  "Mulai dari titik GPS, lihat garis perjalanan secara langsung, lalu buat kartu aktivitas dengan track atau foto kamu sendiri untuk dibagikan.",
-                  "Start from your GPS point, follow the live route line, then create an activity card with the track or your own photo to share."
+                  "Rekam rute, pace, jarak, dan aktivitas lari dari HP.",
+                  "Track your route, then create a share card."
                 )}
               </p>
             </div>
             <div className="grid grid-cols-4 gap-2 rounded-3xl bg-white/10 p-3 backdrop-blur lg:grid-cols-2 lg:gap-3 lg:p-4">
               <div className="rounded-2xl bg-white/10 p-3 lg:p-4">
-                <p className="text-2xl">📍</p>
+                <FitMateIcon name="location" className="h-5 w-5" />
                 <p className="mt-1 text-xs font-black sm:text-sm lg:mt-2 lg:text-base">Live GPS</p>
               </div>
               <div className="rounded-2xl bg-white/10 p-3 lg:p-4">
-                <p className="text-2xl">⚡</p>
+                <FitMateIcon name="energy" className="h-5 w-5" />
                 <p className="mt-1 text-xs font-black sm:text-sm lg:mt-2 lg:text-base">Pace & km</p>
               </div>
               <div className="rounded-2xl bg-white/10 p-3 lg:p-4">
-                <p className="text-2xl">🔥</p>
-                <p className="mt-1 text-xs font-black sm:text-sm lg:mt-2 lg:text-base">Kalori</p>
+                <FitMateIcon name="activity" className="h-5 w-5" />
+                <p className="mt-1 text-xs font-black sm:text-sm lg:mt-2 lg:text-base">{tr("Kalori", "Calories")}</p>
               </div>
               <div className="rounded-2xl bg-white/10 p-3 lg:p-4">
-                <p className="text-2xl">📤</p>
+                <FitMateIcon name="share" className="h-5 w-5" />
                 <p className="mt-1 text-xs font-black sm:text-sm lg:mt-2 lg:text-base">Share card</p>
               </div>
             </div>
@@ -1304,12 +1329,12 @@ export default function JoggingPage() {
                 <p className="mt-1 text-sm font-semibold text-slate-500 dark:text-slate-400">
                   {nativeBackgroundReady
                     ? tr(
-                        "Rute tetap direkam ketika aplikasi diminimalkan atau layar mati. Force-stop tetap dapat menghentikan sesi.",
-                        "The route continues when the app is minimized or the screen is off. Force-stop can still end the session."
+                        "Rute tetap direkam saat layar mati. Force-stop menghentikan sesi.",
+                        "Tracking continues with the screen off. Force-stop ends the session."
                       )
                     : tr(
-                        "Garis rute diperbarui otomatis. Pada browser/PWA, biarkan FitMate terbuka agar tracking tetap andal.",
-                        "The route line updates automatically. In a browser/PWA, keep FitMate open for reliable tracking."
+                        "Rute diperbarui otomatis.",
+                        "The route updates automatically."
                       )}
                 </p>
                 {nativeBackgroundReady && (
@@ -1349,9 +1374,12 @@ export default function JoggingPage() {
                   onClick={startSession}
                   className="rounded-2xl bg-emerald-600 px-6 py-4 font-black text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-500 sm:col-span-2 lg:col-span-4"
                 >
-                  ▶ {nativeBackgroundReady
-                    ? tr("Mulai jogging background", "Start background jogging")
-                    : tr("Mulai jogging", "Start jogging")}
+                  <span className="inline-flex items-center justify-center gap-2">
+                    <FitMateIcon name="play" className="h-5 w-5" />
+                    {nativeBackgroundReady
+                      ? tr("Mulai jogging background", "Start background jogging")
+                      : tr("Mulai jogging", "Start jogging")}
+                  </span>
                 </button>
               )}
               {status === "tracking" && (
@@ -1361,14 +1389,14 @@ export default function JoggingPage() {
                     onClick={pauseSession}
                     className="rounded-2xl bg-amber-400 px-6 py-4 font-black text-slate-950"
                   >
-                    ⏸ {tr("Jeda", "Pause")}
+                    <span className="inline-flex items-center justify-center gap-2"><FitMateIcon name="pause" className="h-5 w-5" />{tr("Jeda", "Pause")}</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => void finishSession()}
                     className="rounded-2xl bg-rose-600 px-6 py-4 font-black text-white"
                   >
-                    ■ {tr("Selesai", "Finish")}
+                    <span className="inline-flex items-center justify-center gap-2"><FitMateIcon name="stop" className="h-5 w-5" />{tr("Selesai", "Finish")}</span>
                   </button>
                 </>
               )}
@@ -1379,14 +1407,14 @@ export default function JoggingPage() {
                     onClick={resumeSession}
                     className="rounded-2xl bg-emerald-600 px-6 py-4 font-black text-white"
                   >
-                    ▶ {tr("Lanjutkan", "Resume")}
+                    <span className="inline-flex items-center justify-center gap-2"><FitMateIcon name="play" className="h-5 w-5" />{tr("Lanjutkan", "Resume")}</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => void finishSession()}
                     className="rounded-2xl bg-rose-600 px-6 py-4 font-black text-white"
                   >
-                    ■ {tr("Selesai", "Finish")}
+                    <span className="inline-flex items-center justify-center gap-2"><FitMateIcon name="stop" className="h-5 w-5" />{tr("Selesai", "Finish")}</span>
                   </button>
                 </>
               )}
@@ -1397,7 +1425,7 @@ export default function JoggingPage() {
                     onClick={resetSession}
                     className="rounded-2xl border border-slate-200 bg-white px-6 py-4 font-black text-slate-700 dark:border-white/10 dark:bg-slate-900 dark:text-white"
                   >
-                    ＋ {tr("Aktivitas baru", "New activity")}
+                    {tr("Aktivitas baru", "New activity")}
                   </button>
                   <button
                     type="button"
@@ -1413,7 +1441,7 @@ export default function JoggingPage() {
                     disabled={shareBusy}
                     className="rounded-2xl bg-emerald-600 px-6 py-4 font-black text-white disabled:opacity-60 sm:col-span-2"
                   >
-                    ↗ {tr("Bagikan aktivitas", "Share activity")}
+                    {tr("Bagikan aktivitas", "Share activity")}
                   </button>
                 </>
               )}
@@ -1443,8 +1471,8 @@ export default function JoggingPage() {
               </h2>
               <p className="mt-2 text-sm font-semibold leading-6 text-slate-500 dark:text-slate-400">
                 {tr(
-                  "Pilih elemen, atur ukurannya, lalu tarik bebas ke posisi mana pun pada preview. Garis hijau selalu mengikuti track GPS asli pengguna.",
-                  "Select an element, resize it, then drag it freely anywhere on the preview. The green line always follows the user's real GPS track."
+                  "Pilih, ubah ukuran, lalu tarik elemen ke posisi yang diinginkan.",
+                  "Select, resize, and drag elements on the preview."
                 )}
               </p>
 
@@ -1458,7 +1486,7 @@ export default function JoggingPage() {
                       : "bg-slate-100 text-slate-700 dark:bg-white/10 dark:text-slate-200"
                   }`}
                 >
-                  🗺 Track FitMate
+                  Track FitMate
                 </button>
                 <button
                   type="button"
@@ -1469,7 +1497,7 @@ export default function JoggingPage() {
                       : "bg-slate-100 text-slate-700 dark:bg-white/10 dark:text-slate-200"
                   }`}
                 >
-                  🎬 Foto / Video
+                  {tr("Foto / Video", "Photo / Video")}
                 </button>
               </div>
 
@@ -1483,7 +1511,7 @@ export default function JoggingPage() {
                       setShareMediaFile(event.target.files?.[0] ?? null)
                     }
                   />
-                  <span className="text-3xl">🎥</span>
+                  <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-white text-emerald-700 shadow-sm"><FitMateIcon name="video" className="h-5 w-5" /></span>
                   <p className="mt-2 font-black">
                     {shareMediaFile
                       ? shareMediaFile.name
@@ -1529,9 +1557,9 @@ export default function JoggingPage() {
                 <div className="grid grid-cols-2 gap-2">
                   {([
                     { key: "metrics", icon: "123", label: tr("Statistik", "Statistics") },
-                    { key: "route", icon: "⌁", label: tr("Garis rute", "Route line") },
+                    { key: "route", icon: "R", label: tr("Garis rute", "Route line") },
                     { key: "brand", icon: "F", label: "Logo FitMate" },
-                    { key: "details", icon: "⋯", label: tr("Detail bawah", "Bottom details") },
+                    { key: "details", icon: "D", label: tr("Detail bawah", "Bottom details") },
                   ] as const).map((item) => (
                     <button
                       key={item.key}
@@ -1586,15 +1614,14 @@ export default function JoggingPage() {
                       className="grid h-11 w-11 place-items-center rounded-xl border border-slate-200 text-xl font-black dark:border-white/10"
                       aria-label={tr("Perbesar elemen", "Make element larger")}
                     >
-                      ＋
                     </button>
                   </div>
                 </div>
 
                 <p className="rounded-2xl bg-emerald-50 px-3 py-2 text-xs font-bold leading-5 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-200">
                   {tr(
-                    "Semua elemen dapat dipindahkan ke atas, bawah, kiri, atau kanan. Posisi dan ukuran pada hasil download akan sama dengan preview.",
-                    "Every element can be moved up, down, left, or right. The downloaded result keeps the same position and size as the preview."
+                    "Posisi dan ukuran hasil akan mengikuti preview.",
+                    "The exported result follows the preview."
                   )}
                 </p>
               </div>
@@ -1614,7 +1641,7 @@ export default function JoggingPage() {
                   disabled={shareBusy}
                   className="rounded-2xl bg-emerald-600 px-5 py-4 font-black text-white shadow-lg shadow-emerald-600/20 disabled:opacity-60"
                 >
-                  ↗ {tr("Bagikan Story", "Share Story")}
+                  {tr("Bagikan Story", "Share Story")}
                 </button>
               </div>
             </div>
@@ -1764,7 +1791,7 @@ export default function JoggingPage() {
                   }}
                 >
                   <span>{Math.round(finishedStats.caloriesKcal)} KCAL</span>
-                  <span>{finishedStats.averageSpeedKmh.toFixed(1)} KM/J</span>
+                  <span>{finishedStats.averageSpeedKmh.toFixed(1)} {language === "id" ? "KM/J" : "KM/H"}</span>
                   <span>{Math.round(finishedStats.elevationGainMeters)} M ELEV</span>
                 </button>
 
@@ -1775,8 +1802,8 @@ export default function JoggingPage() {
               </div>
               <p className="mt-3 text-center text-xs font-bold text-slate-500 dark:text-slate-400">
                 {tr(
-                  "Pilih elemen untuk mengubah ukuran, lalu tekan dan tarik bebas ke posisi yang diinginkan",
-                  "Select an element to resize it, then press and drag it freely to the desired position"
+                  "Pilih elemen, ubah ukuran, lalu tarik posisinya",
+                  "Select, resize, then drag the element"
                 )}
               </p>
             </div>
@@ -1818,7 +1845,7 @@ export default function JoggingPage() {
               href="/progress"
               className="text-sm font-black text-emerald-700 dark:text-emerald-300"
             >
-              {tr("Lihat progres lainnya →", "See more progress →")}
+              {tr("Lihat progres lainnya", "See more progress")}
             </Link>
           </div>
 
@@ -1828,7 +1855,7 @@ export default function JoggingPage() {
             </p>
           ) : history.length === 0 ? (
             <div className="mt-5 rounded-3xl bg-slate-50 p-6 text-center dark:bg-white/5">
-              <p className="text-3xl">🏃</p>
+              <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-white text-slate-600"><FitMateIcon name="run" className="h-5 w-5" /></span>
               <p className="mt-1 text-xs font-black sm:text-sm lg:mt-2 lg:text-base">
                 {tr(
                   "Belum ada aktivitas jogging",
@@ -1851,9 +1878,9 @@ export default function JoggingPage() {
                     className="h-40 sm:h-44"
                   />
                   <div className="p-4">
-                    <p className="font-black">{session.title}</p>
+                    <p className="font-black">{localizeJoggingTitle(session.title, language)}</p>
                     <p className="mt-1 text-xs font-semibold text-slate-500 dark:text-slate-400">
-                      {sessionDateLabel(session.started_at)}
+                      {sessionDateLabel(session.started_at, language)}
                     </p>
                     <div className="mt-3 flex flex-wrap gap-2 text-sm font-black">
                       <span className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-200">
@@ -1879,8 +1906,8 @@ export default function JoggingPage() {
           </p>
           <p className="mt-1">
             {tr(
-              "Jangan mengoperasikan layar saat menyeberang atau berada di jalan ramai. Rute GPS adalah data sensitif; bagikan kartu hanya kepada orang yang kamu percaya. Kalori merupakan estimasi dan bukan pengukuran medis.",
-              "Do not operate the screen while crossing or running on busy roads. GPS routes are sensitive data; share cards only with people you trust. Calories are estimates and not medical measurements."
+              "Fokus pada jalan. Bagikan rute GPS dengan hati-hati. Kalori hanya estimasi.",
+              "Stay focused on the road. Share GPS routes carefully. Calories are estimates."
             )}
           </p>
         </section>

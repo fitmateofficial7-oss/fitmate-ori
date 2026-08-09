@@ -11,9 +11,16 @@ import { useRouter } from "next/navigation";
 
 import CompanySignature from "@/components/company-signature";
 import FitMateBrand from "@/components/fitmate-brand";
+import FitMateIcon from "@/components/fitmate-icon";
 import { useLanguage } from "@/components/language-provider";
-import LiveIcon from "@/components/live-icon";
 import { supabase } from "@/lib/supabase";
+import {
+  localizeExperience,
+  localizeGoal,
+  localizeTrainingDays,
+  localizeWorkoutSessionName,
+  localizeWorkoutStatus,
+} from "@/lib/fitness-i18n";
 
 // ======================================================
 // TYPES
@@ -958,24 +965,19 @@ export default function DashboardPage() {
   // GOAL
   // ======================================================
 
-  const currentGoal =
-    profile?.goal || tr("Belum diatur", "Not set");
+  const currentGoal = localizeGoal(profile?.goal, language);
 
   // ======================================================
   // EXPERIENCE
   // ======================================================
 
-  const experience =
-    profile?.experience ||
-    tr("Belum diatur", "Not set");
+  const experience = localizeExperience(profile?.experience, language);
 
   // ======================================================
   // TRAINING DAYS
   // ======================================================
 
-  const trainingDays =
-    profile?.training_days ||
-    tr("Belum diatur", "Not set");
+  const trainingDays = localizeTrainingDays(profile?.training_days, language);
 
   // ======================================================
   // AI INSIGHTS
@@ -985,8 +987,8 @@ export default function DashboardPage() {
     useMemo(() => {
       if (totalWorkouts === 0) {
         return tr(
-          "Anda belum menyelesaikan latihan pertama. Mulai latihan hari ini dan bangun kebiasaan secara bertahap.",
-          "You have not completed your first workout yet. Start today and build your routine gradually."
+          "Belum ada latihan selesai. Mulai latihan hari ini.",
+          "No completed workout yet. Start today."
         );
       }
 
@@ -1130,9 +1132,7 @@ export default function DashboardPage() {
     return (
       <main className="fitmate-app-page flex min-h-screen items-center justify-center bg-white px-6">
         <div className="text-center">
-          <LiveIcon variant="pulse" className="text-6xl">
-            🤖
-          </LiveIcon>
+          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-green-50 text-green-700"><FitMateIcon name="activity" className="h-6 w-6" /></span>
 
           <h1 className="mt-6 text-2xl font-bold text-gray-900">
             {tr("Menyiapkan Beranda", "Preparing Dashboard")}
@@ -1160,9 +1160,7 @@ export default function DashboardPage() {
     return (
       <main className="fitmate-app-page flex min-h-screen items-center justify-center bg-white px-6">
         <div className="w-full max-w-md rounded-3xl bg-white p-8 text-center shadow-sm">
-          <LiveIcon variant="wiggle" className="text-6xl">
-            😕
-          </LiveIcon>
+          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-rose-50 text-rose-600"><FitMateIcon name="x" className="h-6 w-6" /></span>
 
           <h1 className="mt-6 text-2xl font-bold text-gray-900">
             {tr(
@@ -1216,7 +1214,7 @@ export default function DashboardPage() {
               }
               className="hidden rounded-xl bg-green-50 px-4 py-2 text-sm font-bold text-green-700 transition hover:bg-green-100 sm:block"
             >
-              ✦ AI Coach
+              Coach
             </button>
 
             <button
@@ -1310,23 +1308,22 @@ export default function DashboardPage() {
               <div>
 
                 <p className="font-semibold text-green-100">
-                  {tr("RINGKASAN HARI INI", "TODAY’S SUMMARY")}
+                  {tr("Hari ini", "Today")}
                 </p>
 
                 <h1 className="mt-3 flex items-center gap-3 text-4xl font-bold md:text-5xl">
-                  {tr("Selamat datang!", "Welcome!")}
-                  <LiveIcon variant="wiggle">👋</LiveIcon>
+                  {tr("Ringkasan latihan", "Training overview")}
                 </h1>
 
                 <p className="mt-4 max-w-2xl text-green-50">
                   {userEmail
                     ? tr(
-                        "Lihat rencana, mulai latihan, dan pantau perkembangan Anda di satu tempat.",
+                        "Latihan dan progresmu dalam satu tempat.",
                         "View your plan, start a workout, and track progress in one place."
                       )
                     : tr(
-                        "Mulai perjalanan latihan Anda bersama FitMate AI.",
-                        "Start your fitness journey with FitMate AI."
+                        "Mulai perjalanan latihan Anda bersama FitMate.",
+                        "Start your fitness journey with FitMate."
                       )}
                 </p>
 
@@ -1355,7 +1352,7 @@ export default function DashboardPage() {
                   }
                   className="rounded-xl border border-green-300 px-6 py-3 font-bold text-white transition hover:bg-green-700"
                 >
-                  {tr("Lihat Rencana", "View Plan")}
+                  {tr("Lihat Rencana", "Lihat rencana")}
                 </button>
 
                 <button
@@ -1365,15 +1362,15 @@ export default function DashboardPage() {
                       "/coach"
                     )
                   }
-                  className="rounded-xl border border-white/30 bg-white/10 px-6 py-3 font-bold text-white backdrop-blur transition hover:bg-white/20"
+                  className="hidden rounded-xl border border-white/30 bg-white/10 px-6 py-3 font-bold text-white backdrop-blur transition hover:bg-white/20 sm:inline-flex"
                 >
-                  {tr("Tanya AI Coach", "Ask AI Coach")}
+                  {tr("Tanya Coach", "Ask Coach")}
                 </button>
 
                 <button
                   type="button"
                   onClick={() => router.push("/jogging")}
-                  className="rounded-xl border border-emerald-200 bg-emerald-300 px-6 py-3 font-bold text-emerald-950 transition hover:bg-emerald-200"
+                  className="hidden rounded-xl border border-emerald-200 bg-emerald-300 px-6 py-3 font-bold text-emerald-950 transition hover:bg-emerald-200 sm:inline-flex"
                 >
                   {tr("Mulai Jogging", "Start Jogging")}
                 </button>
@@ -1412,12 +1409,7 @@ export default function DashboardPage() {
 
                 </div>
 
-                <LiveIcon
-                  variant="pulse"
-                  className="flex h-14 w-14 items-center justify-center rounded-2xl bg-green-100 text-2xl"
-                >
-                  💪
-                </LiveIcon>
+                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-green-700"><FitMateIcon name="dumbbell" className="h-5 w-5" /></span>
 
               </div>
 
@@ -1448,12 +1440,7 @@ export default function DashboardPage() {
 
                 </div>
 
-                <LiveIcon
-                  variant="wiggle"
-                  className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-2xl"
-                >
-                  🔥
-                </LiveIcon>
+                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100 text-orange-700"><FitMateIcon name="energy" className="h-5 w-5" /></span>
 
               </div>
 
@@ -1486,12 +1473,7 @@ export default function DashboardPage() {
 
                 </div>
 
-                <LiveIcon
-                  variant="float"
-                  className="flex h-14 w-14 items-center justify-center rounded-2xl bg-green-100 text-2xl"
-                >
-                  ⚖️
-                </LiveIcon>
+                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-green-700"><FitMateIcon name="scale" className="h-5 w-5" /></span>
 
               </div>
 
@@ -1522,12 +1504,7 @@ export default function DashboardPage() {
 
                 </div>
 
-                <LiveIcon
-                  variant="pop"
-                  className="flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 text-2xl"
-                >
-                  📈
-                </LiveIcon>
+                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100 text-purple-700"><FitMateIcon name="chart" className="h-5 w-5" /></span>
 
               </div>
 
@@ -1578,7 +1555,7 @@ export default function DashboardPage() {
                 }
                 className="rounded-xl border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
               >
-                {tr("Lihat Rencana", "View Plan")}
+                {tr("Lihat Rencana", "Lihat rencana")}
               </button>
 
             </div>
@@ -1649,7 +1626,7 @@ export default function DashboardPage() {
                 </h2>
 
                 <p className="mt-2 text-gray-400">
-                  {activeSession.workout_name}
+                  {localizeWorkoutSessionName(activeSession.workout_name, activeSession.workout_day, language)}
                 </p>
 
                 <p className="mt-4 text-sm text-gray-400">
@@ -1786,7 +1763,7 @@ export default function DashboardPage() {
 
           <p className="mt-6 text-sm text-gray-500">
             {tr(
-              "Grafik ini menampilkan sesi latihan yang selesai selama 7 hari terakhir.",
+              "Sesi selesai dalam 7 hari terakhir.",
               "This chart shows completed workout sessions over the last 7 days."
             )}
           </p>
@@ -1807,12 +1784,7 @@ export default function DashboardPage() {
 
               <div className="flex items-start gap-4">
 
-                <LiveIcon
-                  variant="float"
-                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-green-100 text-2xl"
-                >
-                  📈
-                </LiveIcon>
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-green-100 text-green-700"><FitMateIcon name="chart" className="h-5 w-5" /></span>
 
                 <div>
 
@@ -1832,7 +1804,7 @@ export default function DashboardPage() {
 
                   <p className="mt-2 max-w-2xl text-gray-500">
                     {tr(
-                      "Beban bersifat opsional dan dicatat per gerakan saat latihan ditandai selesai.",
+                      "Beban dicatat per gerakan.",
                       "Load is optional and recorded per exercise when you mark it complete."
                     )}
                   </p>
@@ -2042,12 +2014,7 @@ export default function DashboardPage() {
               </>
             ) : (
               <div className="mt-8 rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center">
-                <LiveIcon
-                  variant="wiggle"
-                  className="text-4xl"
-                >
-                  🏋️
-                </LiveIcon>
+                <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-white text-slate-500"><FitMateIcon name="dumbbell" className="h-5 w-5" /></span>
 
                 <h3 className="mt-4 font-bold text-gray-900">
                   {tr(
@@ -2058,8 +2025,8 @@ export default function DashboardPage() {
 
                 <p className="mx-auto mt-2 max-w-xl text-sm text-gray-500">
                   {tr(
-                    "Saat latihan, isi kolom Beban (opsional), lalu tandai gerakan selesai. Grafik akan muncul otomatis di sini.",
-                    "During a workout, enter the optional Load and mark the exercise complete. Your chart will appear here automatically."
+                    "Catat beban saat latihan untuk melihat grafik.",
+                    "Log your load during workouts to see the chart."
                   )}
                 </p>
               </div>
@@ -2580,9 +2547,7 @@ export default function DashboardPage() {
 
               <div className="mt-8 rounded-2xl border border-dashed border-gray-200 p-8 text-center">
 
-                <LiveIcon variant="float" className="text-4xl">
-                  ⚖️
-                </LiveIcon>
+                <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-500"><FitMateIcon name="scale" className="h-5 w-5" /></span>
 
                 <h3 className="mt-4 font-bold">
                   Start Tracking Your Weight
@@ -2590,8 +2555,8 @@ export default function DashboardPage() {
 
                 <p className="mx-auto mt-2 max-w-xl text-sm text-gray-500">
                   {tr(
-                    "Masukkan berat Anda di atas. Setiap pengukuran disimpan agar FitMate dapat membandingkan progres.",
-                    "Enter your current weight above. Each measurement is saved so FitMate can compare your progress."
+                    "Catat berat untuk melihat perubahannya.",
+                    "Log your weight to track changes."
                   )}
                 </p>
 
@@ -2630,21 +2595,16 @@ export default function DashboardPage() {
 
             <div className="flex flex-col gap-6 md:flex-row md:items-start">
 
-              <LiveIcon
-                variant="wiggle"
-                className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-green-600 text-3xl"
-              >
-                🤖
-              </LiveIcon>
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-green-600 text-white"><FitMateIcon name="activity" className="h-6 w-6" /></span>
 
               <div>
 
                 <p className="text-sm font-semibold uppercase text-green-400">
-                  FitMate AI Insights
+                  {tr("Ringkasan FitMate", "FitMate Summary")}
                 </p>
 
                 <h2 className="mt-2 text-2xl font-bold">
-                  Your Personal Fitness Insight
+                  {tr("Insight Fitness Pribadi", "Your Personal Fitness Insight")}
                 </h2>
 
                 <p className="mt-4 max-w-3xl leading-7 text-gray-300">
@@ -2660,7 +2620,7 @@ export default function DashboardPage() {
               <div className="rounded-2xl bg-white/5 p-5">
 
                 <p className="text-sm text-gray-400">
-                  Goal
+                  {tr("Tujuan", "Goal")}
                 </p>
 
                 <p className="mt-2 font-bold">
@@ -2672,15 +2632,11 @@ export default function DashboardPage() {
               <div className="rounded-2xl bg-white/5 p-5">
 
                 <p className="text-sm text-gray-400">
-                  Current Streak
+                  {tr("Streak Saat Ini", "Current Streak")}
                 </p>
 
                 <p className="mt-2 font-bold">
-                  {workoutStreak} day
-                  {workoutStreak ===
-                  1
-                    ? ""
-                    : "s"}
+                  {workoutStreak} {language === "id" ? "hari" : `day${workoutStreak === 1 ? "" : "s"}`}
                 </p>
 
               </div>
@@ -2719,7 +2675,7 @@ export default function DashboardPage() {
             <div>
 
               <p className="text-sm font-semibold uppercase text-green-600">
-                History
+                {tr("Riwayat", "History")}
               </p>
 
               <h2 className="mt-2 text-2xl font-bold">
@@ -2749,9 +2705,7 @@ export default function DashboardPage() {
 
               <div className="p-10 text-center">
 
-                <div className="text-5xl">
-                  📅
-                </div>
+                <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-500"><FitMateIcon name="list" className="h-5 w-5" /></div>
 
                 <h3 className="mt-4 font-bold">
                   {tr(
@@ -2832,13 +2786,15 @@ export default function DashboardPage() {
                             <div>
 
                               <h3 className="font-bold text-gray-900">
-                                {
-                                  session.workout_name
-                                }
+                                {localizeWorkoutSessionName(
+                                  session.workout_name,
+                                  session.workout_day,
+                                  language
+                                )}
                               </h3>
 
                               <p className="mt-1 text-sm text-gray-500">
-                                Day{" "}
+                                {tr("Hari", "Day")}{" "}
                                 {
                                   session.workout_day
                                 }
@@ -2895,13 +2851,9 @@ export default function DashboardPage() {
                                   : "bg-gray-100 text-gray-600"
                               }`}
                             >
-                              {session.status ===
-                                "completed" ||
-                              Boolean(
-                                session.completed_at
-                              )
-                                ? "completed"
-                                : session.status}
+                              {session.status === "completed" || Boolean(session.completed_at)
+                                ? tr("Selesai", "Completed")
+                                : localizeWorkoutStatus(session.status, language)}
                             </span>
 
                           </div>
@@ -2935,9 +2887,7 @@ export default function DashboardPage() {
               onClick={() => router.push("/jogging")}
               className="rounded-3xl bg-gradient-to-br from-emerald-600 to-teal-800 p-6 text-left text-white shadow-xl shadow-emerald-600/15 transition hover:-translate-y-1 hover:shadow-2xl"
             >
-              <LiveIcon variant="pulse" className="text-3xl">
-                🏃
-              </LiveIcon>
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/15"><FitMateIcon name="run" className="h-5 w-5" /></span>
               <div className="mt-4 flex items-center gap-2">
                 <h3 className="text-xl font-bold">
                   {tr("Jogging GPS", "GPS Jogging")}
@@ -2953,7 +2903,7 @@ export default function DashboardPage() {
                 )}
               </p>
               <p className="mt-4 font-semibold text-emerald-100">
-                {tr("Mulai merekam →", "Start tracking →")}
+                {tr("Mulai merekam", "Start tracking")}
               </p>
             </button>
 
@@ -2967,20 +2917,21 @@ export default function DashboardPage() {
               className="rounded-3xl bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
 
-              <LiveIcon variant="tick" className="text-3xl">
-                📋
-              </LiveIcon>
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-700"><FitMateIcon name="list" className="h-5 w-5" /></span>
 
               <h3 className="mt-4 text-xl font-bold">
                 {tr("Rencana Latihan Saya", "My Workout Plan")}
               </h3>
 
               <p className="mt-2 text-sm text-gray-500">
-                View your personalized AI-generated workout plan.
+                {tr(
+                  "Lihat rencana latihanmu.",
+                  "See the workout plan matched to your profile and goals."
+                )}
               </p>
 
               <p className="mt-4 font-semibold text-green-600">
-                View Plan →
+                {tr("Lihat rencana", "View plan")}
               </p>
 
             </button>
@@ -2995,27 +2946,24 @@ export default function DashboardPage() {
               className="rounded-3xl bg-gradient-to-br from-slate-950 to-green-950 p-6 text-left text-white shadow-xl shadow-slate-300/50 transition hover:-translate-y-1 hover:shadow-2xl"
             >
 
-              <LiveIcon
-                variant="wiggle"
-                className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-400 text-2xl text-slate-950"
-              >
-                ✦
-              </LiveIcon>
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-400 text-slate-950"><FitMateIcon name="message" className="h-5 w-5" /></span>
 
               <h3 className="mt-4 text-xl font-bold">
                 {tr(
-                  "AI Coach & Scan Makanan",
-                  "AI Coach & Meal Scan"
+                  "Coach & Analisis Makanan",
+                  "Coach & Meal Analysis"
                 )}
               </h3>
 
               <p className="mt-2 text-sm leading-6 text-slate-300">
-                Konsultasi latihan atau upload foto makanan
-                untuk estimasi nutrisi.
+                {tr(
+                  "Konsultasi latihan atau unggah foto makanan untuk estimasi nutrisi.",
+                  "Ask about training or upload a meal photo for a nutrition estimate."
+                )}
               </p>
 
               <p className="mt-4 font-semibold text-green-300">
-                Ask FitMate →
+                Ask FitMate
               </p>
 
             </button>
@@ -3030,9 +2978,7 @@ export default function DashboardPage() {
               className="rounded-3xl bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
 
-              <LiveIcon variant="pulse" className="text-3xl">
-                🏋️
-              </LiveIcon>
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-700"><FitMateIcon name="dumbbell" className="h-5 w-5" /></span>
 
               <h3 className="mt-4 text-xl font-bold">
                 {tr("Mulai Latihan", "Start Workout")}
@@ -3043,7 +2989,7 @@ export default function DashboardPage() {
               </p>
 
               <p className="mt-4 font-semibold text-green-600">
-                {tr("Buka Latihan →", "Go to Workout →")}
+                {tr("Buka Latihan", "Go to Workout")}
               </p>
 
             </button>
@@ -3058,20 +3004,21 @@ export default function DashboardPage() {
               className="rounded-3xl bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
 
-              <LiveIcon variant="wiggle" className="text-3xl">
-                🤖
-              </LiveIcon>
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-700"><FitMateIcon name="activity" className="h-5 w-5" /></span>
 
               <h3 className="mt-4 text-xl font-bold">
-                Generate New Plan
+                {tr("Buat Rencana Baru", "Create New Plan")}
               </h3>
 
               <p className="mt-2 text-sm text-gray-500">
-                Create a new personalized workout plan with FitMate AI.
+                {tr(
+                  "Buat rencana latihan baru sesuai profil Anda.",
+                  "Create a new workout plan based on your profile."
+                )}
               </p>
 
               <p className="mt-4 font-semibold text-green-600">
-                Generate Plan →
+                {tr("Buat Rencana", "Create Plan")}
               </p>
 
             </button>

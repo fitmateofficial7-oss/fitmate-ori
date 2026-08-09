@@ -18,16 +18,31 @@ const officialSources = [
   },
 ];
 
+const officialSourcesEn = [
+  {
+    label: "Law No. 8 of 1999 on Consumer Protection",
+    href: "https://peraturan.bpk.go.id/Details/45288/uu-no-8-tahun-1999",
+  },
+  {
+    label: "Government Regulation No. 71 of 2019 on Electronic Systems and Transactions",
+    href: "https://peraturan.bpk.go.id/Details/122030/pp-no-71-tahun-2019",
+  },
+  {
+    label: "Government Regulation No. 80 of 2019 on Electronic Commerce",
+    href: "https://peraturan.bpk.go.id/Details/126143/pp-no-80-tahun-2019",
+  },
+];
+
 const copyId: LegalDocumentCopy = {
   title: "Ketentuan Penggunaan",
   summary:
-    "Ketentuan ini mengatur penggunaan FitMate AI, tanggung jawab pengguna, batasan panduan AI, dan hubungan pengguna dengan PT Growsia Solusi Indonesia Maju.",
+    "Ketentuan ini mengatur penggunaan FitMate, tanggung jawab pengguna, batasan panduan berbasis AI, dan hubungan pengguna dengan PT Growsia Solusi Indonesia Maju.",
   updatedLabel: "Berlaku sejak",
   sections: [
     {
       heading: "Operator dan penerimaan ketentuan",
       paragraphs: [
-        "FitMate AI dikembangkan dan dioperasikan oleh PT Growsia Solusi Indonesia Maju. Dengan membuat akun atau menggunakan FitMate, pengguna menyatakan telah membaca dan menyetujui Ketentuan Penggunaan serta Kebijakan Privasi yang berlaku.",
+        "FitMate dikembangkan dan dioperasikan oleh PT Growsia Solusi Indonesia Maju. Dengan membuat akun atau menggunakan FitMate, pengguna menyatakan telah membaca dan menyetujui Ketentuan Penggunaan serta Kebijakan Privasi yang berlaku.",
       ],
     },
     {
@@ -40,7 +55,7 @@ const copyId: LegalDocumentCopy = {
     {
       heading: "Batasan AI dan panduan visual",
       paragraphs: [
-        "Rencana latihan, jawaban AI, estimasi nutrisi, kalori, dan animasi gerakan 3D dapat tidak lengkap atau tidak akurat. Hasil harus ditinjau dengan pertimbangan pengguna dan tidak boleh menjadi satu-satunya dasar keputusan medis atau keselamatan.",
+        "Rencana latihan, jawaban AI, estimasi nutrisi, kalori, dan panduan gerakan 2D dapat tidak lengkap atau tidak akurat. Hasil harus ditinjau dengan pertimbangan pengguna dan tidak boleh menjadi satu-satunya dasar keputusan medis atau keselamatan.",
       ],
     },
     {
@@ -95,13 +110,13 @@ const copyId: LegalDocumentCopy = {
 const copyEn: LegalDocumentCopy = {
   title: "Terms of Use",
   summary:
-    "These terms govern the use of FitMate AI, user responsibilities, AI limitations, and the relationship between users and PT Growsia Solusi Indonesia Maju.",
+    "These terms govern the use of FitMate, user responsibilities, AI-assisted guidance limitations, and the relationship between users and PT Growsia Solusi Indonesia Maju.",
   updatedLabel: "Effective date",
   sections: [
     {
       heading: "Operator and acceptance",
       paragraphs: [
-        "FitMate AI is developed and operated by PT Growsia Solusi Indonesia Maju. By creating an account or using FitMate, you confirm that you have read and accepted the current Terms of Use and Privacy Policy.",
+        "FitMate is developed and operated by PT Growsia Solusi Indonesia Maju. By creating an account or using FitMate, you confirm that you have read and accepted the current Terms of Use and Privacy Policy.",
       ],
     },
     {
@@ -114,7 +129,7 @@ const copyEn: LegalDocumentCopy = {
     {
       heading: "AI and visual-guide limitations",
       paragraphs: [
-        "Workout plans, AI answers, nutrition or calorie estimates, and 3D movement animations may be incomplete or inaccurate. Results require user judgment and must not be the sole basis for medical or safety decisions.",
+        "Workout plans, AI answers, nutrition or calorie estimates, and 2D movement guides may be incomplete or inaccurate. Results require user judgment and must not be the sole basis for medical or safety decisions.",
       ],
     },
     {
@@ -160,7 +175,7 @@ const copyEn: LegalDocumentCopy = {
     },
   ],
   sourcesTitle: "Official regulatory references",
-  sources: officialSources,
+  sources: officialSourcesEn,
   contactTitle: "Contact",
   contactText: "Questions about these terms or the service may be sent to FitMate support.",
   backLabel: "Back to Settings",

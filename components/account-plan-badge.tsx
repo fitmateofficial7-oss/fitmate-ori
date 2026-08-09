@@ -90,7 +90,7 @@ export default function AccountPlanBadge() {
         premium ? "is-premium" : "is-free"
       }`}
     >
-      <span aria-hidden="true">{premium ? "✦" : "●"}</span>
+      <span className="h-1.5 w-1.5 rounded-full bg-current opacity-70" aria-hidden="true" />
       <span>{label}</span>
     </Link>
   );

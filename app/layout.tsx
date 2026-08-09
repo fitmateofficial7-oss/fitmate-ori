@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import FloatingBubbleMenu from "@/components/floating-bubble-menu";
 import ClientMonitoring from "@/components/client-monitoring";
 import PwaManager from "@/components/pwa-manager";
+import RestTimerNotificationManager from "@/components/rest-timer-notification-manager";
 import LanguageProvider from "@/components/language-provider";
 import LanguageToggle from "@/components/language-toggle";
 import ThemeToggle from "@/components/theme-toggle";
@@ -33,13 +34,13 @@ const themeBootstrap = `
 `;
 
 export const metadata: Metadata = {
-  applicationName: "FitMate AI",
+  applicationName: "FitMate",
   title: {
-    default: "FitMate AI by Growsia",
-    template: "%s | FitMate AI",
+    default: "FitMate by Growsia",
+    template: "%s | FitMate",
   },
   description:
-    "AI fitness coach untuk workout, jogging GPS, konsultasi, analisis makanan, panduan gerakan 2D, dan progress tracking.",
+    "Fitness app for workouts, GPS jogging, Coach consultations, meal analysis, 2D exercise guides, and progress tracking.",
   creator: "PT Growsia Solusi Indonesia Maju",
   publisher: "PT Growsia Solusi Indonesia Maju",
   authors: [{ name: "PT Growsia Solusi Indonesia Maju" }],
@@ -53,7 +54,7 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    title: "FitMate AI by Growsia",
+    title: "FitMate by Growsia",
     statusBarStyle: "default",
   },
 };
@@ -87,6 +88,7 @@ export default function RootLayout({
         <LanguageProvider>
           <ClientMonitoring />
           <PwaManager />
+          <RestTimerNotificationManager />
           {children}
           <FloatingBubbleMenu />
           <ThemeToggle />

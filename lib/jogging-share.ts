@@ -38,6 +38,7 @@ type ShareCardOptions = {
   points: JoggingRoutePoint[];
   mediaUrl?: string | null;
   layout?: JoggingShareLayout;
+  language?: "id" | "en";
 };
 
 type ShareVideoResult = {
@@ -323,7 +324,8 @@ function drawRoute(
   points: JoggingRoutePoint[],
   centerX: number,
   centerY: number,
-  routeScale: number
+  routeScale: number,
+  language: "id" | "en" = "id"
 ) {
   const width = 500 * routeScale;
   const height = 430 * routeScale;
@@ -339,7 +341,11 @@ function drawRoute(
     context.textAlign = "center";
     context.fillStyle = "rgba(255,255,255,0.78)";
     context.font = "800 25px Arial";
-    context.fillText("Rute GPS belum tersedia", centerX, centerY);
+    context.fillText(
+      language === "id" ? "Rute GPS belum tersedia" : "GPS route not available yet",
+      centerX,
+      centerY
+    );
     context.textAlign = "left";
     return;
   }
@@ -465,12 +471,13 @@ function drawBottomDetails(
   stats: JoggingStats,
   centerX: number,
   centerY: number,
-  elementScale: number
+  elementScale: number,
+  language: "id" | "en" = "id"
 ) {
   const labels = [
     `${Math.round(stats.caloriesKcal)} KCAL`,
-    `${stats.averageSpeedKmh.toFixed(1)} KM/J`,
-    `ELEVASI ${Math.round(stats.elevationGainMeters)} M`,
+    `${stats.averageSpeedKmh.toFixed(1)} ${language === "id" ? "KM/J" : "KM/H"}`,
+    `${language === "id" ? "ELEVASI" : "ELEVATION"} ${Math.round(stats.elevationGainMeters)} M`,
   ];
 
   context.save();
@@ -544,7 +551,14 @@ function drawShareFrame({
     metricsY,
     layout.metricsScale
   );
-  drawRoute(context, options.points, routeX, routeY, layout.routeScale);
+  drawRoute(
+    context,
+    options.points,
+    routeX,
+    routeY,
+    layout.routeScale,
+    options.language
+  );
   drawBrand(
     context,
     logo,
@@ -559,7 +573,8 @@ function drawShareFrame({
     options.stats,
     detailsX,
     detailsY,
-    layout.detailsScale
+    layout.detailsScale,
+    options.language
   );
   drawCornerGuides(context);
 }

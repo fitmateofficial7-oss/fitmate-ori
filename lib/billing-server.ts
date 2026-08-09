@@ -171,6 +171,12 @@ export async function getBillingStatus(
           cancelAtPeriodEnd: Boolean(subscription.cancel_at_period_end),
           checkoutUrl: subscription.checkout_url,
           paymentMode: getPremiumPaymentMode(subscription.metadata),
+          accessSource:
+            subscription.metadata?.source === "admin_manual" ||
+            subscription.metadata?.granted_manually === true ||
+            subscription.metadata?.subscription_source === "manual"
+              ? "manual"
+              : "xendit",
         }
       : null,
     generation: {

@@ -5,8 +5,8 @@ import { useState } from "react";
 import Link from "next/link";
 
 import FitMateBrand from "@/components/fitmate-brand";
+import FitMateIcon, { type FitMateIconName } from "@/components/fitmate-icon";
 import { useLanguage } from "@/components/language-provider";
-import LiveIcon from "@/components/live-icon";
 import {
   FITMATE_AI_PROCESSING_VERSION,
   FITMATE_PRIVACY_VERSION,
@@ -53,7 +53,7 @@ export default function RegisterPage() {
     if (!acceptedLegal) {
       setErrorMessage(
         tr(
-          "Setujui Ketentuan, Kebijakan Privasi, dan pemrosesan AI untuk membuat akun.",
+          "Setujui ketentuan dan privasi untuk membuat akun.",
           "Agree to the Terms, Privacy Policy, and AI processing to create an account."
         )
       );
@@ -149,7 +149,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white p-4 sm:p-6 lg:p-8">
+    <main className="fitmate-auth-page min-h-screen bg-white p-4 sm:p-6 lg:p-8">
       <div className="mx-auto grid min-h-[calc(100vh-2rem)] max-w-6xl overflow-hidden rounded-[2.25rem] border border-white bg-white shadow-2xl shadow-slate-200/70 sm:min-h-[calc(100vh-3rem)] lg:grid-cols-[.9fr_1.1fr]">
         <section className="relative hidden overflow-hidden bg-gradient-to-br from-green-500 via-green-600 to-green-700 p-10 text-white lg:flex lg:flex-col lg:justify-between">
           <div className="absolute -left-32 -top-24 h-80 w-80 rounded-full bg-green-400/25 blur-3xl" />
@@ -169,34 +169,25 @@ export default function RegisterPage() {
             </h1>
             <p className="mt-5 max-w-md text-lg leading-8 text-slate-300">
               {tr(
-                "Plan personal, AI coach, meal scan, dan panduan gerakan—siap membantu setiap langkah.",
-                "A personal plan, AI coach, meal scan, and exercise guides are ready for every step."
+                "Latihan, Coach, nutrisi, dan panduan gerakan.",
+                "Workout, Coach, nutrition, and exercise guides."
               )}
             </p>
           </div>
 
           <div className="relative grid grid-cols-3 gap-3">
-            {[
-              ["✦", "AI Coach"],
-              ["📷", "Meal Scan"],
-              ["◉", "2D Guide"],
-            ].map(([icon, label]) => (
+            {([
+              ["message", "Coach"],
+              ["camera", "Meal Scan"],
+              ["dumbbell", "2D Guide"],
+            ] as Array<[FitMateIconName, string]>).map(([icon, label]) => (
               <div
                 key={label}
                 className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"
               >
-                <LiveIcon
-                  variant={
-                    label === "AI Coach"
-                      ? "wiggle"
-                      : label === "Meal Scan"
-                        ? "pop"
-                        : "float"
-                  }
-                  className="text-2xl"
-                >
-                  {icon}
-                </LiveIcon>
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-white">
+                  <FitMateIcon name={icon} className="h-4 w-4" />
+                </span>
                 <p className="mt-3 text-sm font-bold">
                   {label}
                 </p>
@@ -217,7 +208,7 @@ export default function RegisterPage() {
             </h2>
             <p className="mt-3 leading-7 text-slate-500">
               {tr(
-                "Hanya perlu satu menit. Setelah itu kami akan menyesuaikan FitMate untukmu.",
+                "Isi profil singkat untuk mulai.",
                 "It only takes a minute. Then FitMate will adapt to you."
               )}
             </p>
@@ -319,8 +310,8 @@ export default function RegisterPage() {
                 {loading
                   ? tr("Membuat akun…", "Creating account…")
                   : tr(
-                      "Buat akun & lanjutkan →",
-                      "Create account & continue →"
+                      "Buat akun & lanjutkan",
+                      "Create account & continue"
                     )}
               </button>
             </form>

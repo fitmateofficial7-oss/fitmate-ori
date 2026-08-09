@@ -20,6 +20,21 @@ const officialSources = [
   },
 ];
 
+const officialSourcesEn = [
+  {
+    label: "Law No. 8 of 1999 on Consumer Protection",
+    href: "https://peraturan.bpk.go.id/Details/45288/uu-no-8-tahun-1999",
+  },
+  {
+    label: "Government Regulation No. 80 of 2019 on Electronic Commerce",
+    href: "https://peraturan.bpk.go.id/Details/126143/pp-no-80-tahun-2019",
+  },
+  {
+    label: "Xendit card dispute guide for recurring transactions",
+    href: "https://docs.xendit.co/docs/cards-5",
+  },
+];
+
 const copyId: LegalDocumentCopy = {
   title: "Ketentuan Langganan Premium",
   summary:
@@ -164,7 +179,7 @@ const copyEn: LegalDocumentCopy = {
     },
   ],
   sourcesTitle: "Official references",
-  sources: officialSources,
+  sources: officialSourcesEn,
   contactTitle: "Subscription support",
   contactText: "For payment issues, include the account email, date, amount, and transaction ID without sending passwords, PINs, OTPs, or secret keys.",
   backLabel: "Back to Premium",

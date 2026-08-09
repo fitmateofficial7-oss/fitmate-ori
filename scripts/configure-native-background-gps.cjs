@@ -39,6 +39,7 @@ function configureAndroid() {
     "android.permission.FOREGROUND_SERVICE",
     "android.permission.FOREGROUND_SERVICE_LOCATION",
     "android.permission.POST_NOTIFICATIONS",
+    "android.permission.SCHEDULE_EXACT_ALARM",
   ];
 
   for (const permission of permissions) {
@@ -89,7 +90,7 @@ function configureAndroid() {
     write(stringsPath, strings);
   }
 
-  console.log("Android background-GPS configuration applied.");
+  console.log("Android background-GPS and timer notification configuration applied.");
   return true;
 }
 

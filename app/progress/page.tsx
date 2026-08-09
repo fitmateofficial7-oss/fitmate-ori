@@ -6,8 +6,13 @@ import { useRouter } from "next/navigation";
 
 import { useLanguage } from "@/components/language-provider";
 import PremiumFeatureGate from "@/components/premium-feature-gate";
-import { calculateReadiness, estimateOneRepMax } from "@/lib/prelaunch-fitness";
+import {
+  calculateReadiness,
+  estimateOneRepMax,
+  localizeStoredProgressionReason,
+} from "@/lib/prelaunch-fitness";
 import { getExerciseGuide } from "@/lib/exercise-guides";
+import { localizeWorkoutSessionName } from "@/lib/fitness-i18n";
 import { supabase } from "@/lib/supabase";
 
 type ReadinessLog = {
@@ -51,6 +56,7 @@ type ProgressPhoto = {
 type WorkoutSession = {
   id: string | number;
   workout_name: string;
+  workout_day: number;
   status: string;
   started_at: string;
   completed_at: string | null;
@@ -135,8 +141,8 @@ function dateKey(value: string | Date) {
   }).format(typeof value === "string" ? new Date(value) : value);
 }
 
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat("id-ID", {
+function formatDate(value: string, language: "id" | "en") {
+  return new Intl.DateTimeFormat(language === "id" ? "id-ID" : "en-US", {
     day: "numeric",
     month: "short",
     year: "numeric",
@@ -164,7 +170,7 @@ function actionStyle(action: Recommendation["action"]) {
 
 export default function ProgressPage() {
   const router = useRouter();
-  const { tr } = useLanguage();
+  const { language, tr } = useLanguage();
   const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -204,14 +210,14 @@ export default function ProgressPage() {
         supabase.from("readiness_logs").select("*").eq("user_id", user.id).order("log_date", { ascending: false }).limit(30),
         supabase.from("body_measurements").select("*").eq("user_id", user.id).order("measured_at", { ascending: false }).limit(50),
         supabase.from("progress_photos").select("*").eq("user_id", user.id).order("captured_at", { ascending: false }).limit(30),
-        supabase.from("workout_sessions").select("id, workout_name, status, started_at, completed_at").eq("user_id", user.id).gte("started_at", since).order("started_at", { ascending: false }),
+        supabase.from("workout_sessions").select("id, workout_name, workout_day, status, started_at, completed_at").eq("user_id", user.id).gte("started_at", since).order("started_at", { ascending: false }),
         supabase.from("workout_set_logs").select("id, exercise_name, set_type, load_kg, reps, completed, created_at").eq("user_id", user.id).gte("created_at", since).order("created_at", { ascending: false }).limit(3000),
         supabase.from("adaptive_recommendations").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20),
       ]);
 
     const migrationError = [readinessResult, measurementResult, photoResult, setResult, recommendationResult].find((result) => result.error)?.error;
     if (migrationError) {
-      setError(tr("Jalankan migrasi 202607280008_prelaunch_features.sql di Supabase terlebih dahulu.", "Run migration 202607280008_prelaunch_features.sql in Supabase first."));
+      setError(tr("Fitur progres belum siap di database.", "Run migration 202607280008_prelaunch_features.sql in Supabase first."));
     }
 
     setReadiness((readinessResult.data || []) as ReadinessLog[]);
@@ -451,8 +457,8 @@ export default function ProgressPage() {
     <PremiumFeatureGate
       featureNameId="Progres khusus Premium"
       featureNameEn="Premium progress tracking"
-      descriptionId="Buka analisis progres, readiness, pengukuran tubuh, foto progres, dan rekomendasi adaptif dengan FitMate Premium."
-      descriptionEn="Unlock progress analytics, readiness, body measurements, progress photos, and adaptive recommendations with FitMate Premium."
+      descriptionId="Analisis progres, readiness, pengukuran tubuh, foto progres, dan rekomendasi adaptif tersedia di FitMate Premium."
+      descriptionEn="Progress analytics, readiness, body measurements, progress photos, and adaptive recommendations are available with FitMate Premium."
     >
       <main className="fitmate-app-page min-h-screen bg-slate-50 pb-32 text-slate-900 dark:bg-slate-950 dark:text-white">
       <header className="border-b border-slate-200/80 bg-white/90 px-4 py-4 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/90 sm:px-6">
@@ -473,7 +479,7 @@ export default function ProgressPage() {
           {[
             { label: tr("Workout 7 hari", "7-day workouts"), value: weekly.workouts },
             { label: tr("Set kerja", "Working sets"), value: weekly.sets },
-            { label: tr("Volume", "Volume"), value: `${Math.round(weekly.volume).toLocaleString("id-ID")} kg` },
+            { label: tr("Volume", "Volume"), value: `${Math.round(weekly.volume).toLocaleString(language === "id" ? "id-ID" : "en-US")} kg` },
             { label: tr("Gerakan aktif", "Active exercises"), value: weekly.exerciseCount },
           ].map((stat) => (
             <div key={stat.label} className="rounded-[1.7rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5">
@@ -550,7 +556,7 @@ export default function ProgressPage() {
             <h2 className="text-2xl font-black">{tr("28 hari terakhir", "Last 28 days")}</h2>
             <div className="mt-5 grid grid-cols-7 gap-2">
               {calendarDays.map((day) => (
-                <div key={day.key} title={`${day.key}${day.session ? ` · ${day.session.workout_name}` : ""}`} className={`aspect-square rounded-lg border ${day.session?.status === "completed" ? "border-green-500 bg-green-500" : day.session ? "border-amber-400 bg-amber-300" : "border-slate-200 bg-slate-50 dark:border-white/10 dark:bg-white/5"}`}>
+                <div key={day.key} title={`${day.key}${day.session ? ` · ${localizeWorkoutSessionName(day.session.workout_name, day.session.workout_day, language)}` : ""}`} className={`aspect-square rounded-lg border ${day.session?.status === "completed" ? "border-green-500 bg-green-500" : day.session ? "border-amber-400 bg-amber-300" : "border-slate-200 bg-slate-50 dark:border-white/10 dark:bg-white/5"}`}>
                   <span className={`flex h-full items-center justify-center text-[10px] font-black ${day.session ? "text-white" : "text-slate-400"}`}>{day.date.getDate()}</span>
                 </div>
               ))}
@@ -561,7 +567,7 @@ export default function ProgressPage() {
                 {exerciseVolume.length === 0 && <p className="text-sm text-slate-500">{tr("Catat set latihan untuk melihat statistik.", "Log workout sets to see statistics.")}</p>}
                 {exerciseVolume.map(([name, volume], index) => {
                   const max = exerciseVolume[0]?.[1] || 1;
-                  return <div key={name}><div className="flex justify-between gap-3 text-xs font-bold"><span className="truncate">{name}</span><span>{Math.round(volume).toLocaleString("id-ID")} kg</span></div><div className="mt-1.5 h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-white/10"><div className="h-full rounded-full bg-green-500" style={{ width: `${Math.max(6, volume / max * 100)}%` }} /></div>{index === 0 && <p className="mt-1 text-[10px] text-green-600">Top volume</p>}</div>;
+                  return <div key={name}><div className="flex justify-between gap-3 text-xs font-bold"><span className="truncate">{name}</span><span>{Math.round(volume).toLocaleString(language === "id" ? "id-ID" : "en-US")} kg</span></div><div className="mt-1.5 h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-white/10"><div className="h-full rounded-full bg-green-500" style={{ width: `${Math.max(6, volume / max * 100)}%` }} /></div>{index === 0 && <p className="mt-1 text-[10px] text-green-600">{tr("Volume tertinggi", "Top volume")}</p>}</div>;
                 })}
               </div>
             </div>
@@ -571,11 +577,11 @@ export default function ProgressPage() {
         <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7">
           <h2 className="text-2xl font-black">{tr("Rekomendasi sesi berikutnya", "Next-session recommendations")}</h2>
           <div className="mt-5 grid gap-3 md:grid-cols-2">
-            {recommendations.length === 0 && <p className="text-sm text-slate-500">{tr("Selesaikan set latihan untuk membuat rekomendasi progressive overload.", "Complete workout sets to generate progressive-overload recommendations.")}</p>}
+            {recommendations.length === 0 && <p className="text-sm text-slate-500">{tr("Selesaikan latihan untuk mendapat rekomendasi beban.", "Complete workout sets to generate progressive-overload recommendations.")}</p>}
             {recommendations.slice(0, 8).map((item) => (
               <article key={item.id} className="rounded-2xl border border-slate-200 p-4 dark:border-white/10">
                 <div className="flex flex-wrap items-start justify-between gap-2"><h3 className="font-black">{item.exercise_name}</h3><span className={`rounded-full px-2.5 py-1 text-[11px] font-black uppercase ${actionStyle(item.action)}`}>{item.action}</span></div>
-                <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.reason}</p>
+                <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{localizeStoredProgressionReason(item.reason, language)}</p>
                 <p className="mt-3 text-xs font-bold text-green-600">{item.recommended_load_kg != null ? `${item.recommended_load_kg} kg · ` : ""}{item.recommended_reps_min || 0}–{item.recommended_reps_max || 0} reps</p>
               </article>
             ))}
@@ -593,7 +599,7 @@ export default function ProgressPage() {
             <textarea value={measurementForm.notes} onChange={(event) => setMeasurementForm((previous) => ({ ...previous, notes: event.target.value }))} placeholder={tr("Catatan", "Notes")} rows={2} className="mt-3 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-white/10 dark:bg-slate-900" />
             <button type="button" onClick={saveMeasurement} disabled={saving} className="mt-4 w-full rounded-2xl bg-slate-900 py-3 font-black text-white dark:bg-white dark:text-slate-950">{tr("Simpan pengukuran", "Save measurement")}</button>
             <div className="mt-5 space-y-2">
-              {measurements.slice(0, 5).map((item) => <div key={item.id} className="flex flex-wrap justify-between gap-2 rounded-xl bg-slate-50 p-3 text-xs dark:bg-white/5"><span className="font-bold">{formatDate(item.measured_at)}</span><span>{item.weight_kg ? `${item.weight_kg} kg` : ""} {item.waist_cm ? `· ${item.waist_cm} cm waist` : ""}</span></div>)}
+              {measurements.slice(0, 5).map((item) => <div key={item.id} className="flex flex-wrap justify-between gap-2 rounded-xl bg-slate-50 p-3 text-xs dark:bg-white/5"><span className="font-bold">{formatDate(item.measured_at, language)}</span><span>{item.weight_kg ? `${item.weight_kg} kg` : ""} {item.waist_cm ? `· ${item.waist_cm} cm waist` : ""}</span></div>)}
             </div>
           </div>
 
@@ -607,7 +613,7 @@ export default function ProgressPage() {
             <input value={photoNote} onChange={(event) => setPhotoNote(event.target.value)} placeholder={tr("Catatan foto", "Photo note")} className="mt-3 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 dark:border-white/10 dark:bg-slate-900" />
             <button type="button" onClick={uploadPhoto} disabled={!photoFile || saving} className="mt-4 w-full rounded-2xl bg-green-600 py-3 font-black text-white disabled:opacity-40">{tr("Upload foto", "Upload photo")}</button>
             <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {photos.slice(0, 9).map((photo) => <figure key={photo.id} className="group relative overflow-hidden rounded-2xl bg-slate-100 dark:bg-white/5">{photo.signed_url ? <Image src={photo.signed_url} alt={`${photo.pose} progress`} width={360} height={480} unoptimized className="aspect-[3/4] w-full object-cover" /> : <div className="aspect-[3/4]" />}<figcaption className="p-2 text-[10px] font-bold">{photo.pose} · {formatDate(photo.captured_at)}</figcaption><button type="button" onClick={() => deletePhoto(photo)} className="absolute right-2 top-2 rounded-full bg-black/70 px-2 py-1 text-xs font-black text-white opacity-100 sm:opacity-0 sm:group-hover:opacity-100">×</button></figure>)}
+              {photos.slice(0, 9).map((photo) => <figure key={photo.id} className="group relative overflow-hidden rounded-2xl bg-slate-100 dark:bg-white/5">{photo.signed_url ? <Image src={photo.signed_url} alt={`${photo.pose} progress`} width={360} height={480} unoptimized className="aspect-[3/4] w-full object-cover" /> : <div className="aspect-[3/4]" />}<figcaption className="p-2 text-[10px] font-bold">{photo.pose} · {formatDate(photo.captured_at, language)}</figcaption><button type="button" onClick={() => deletePhoto(photo)} className="absolute right-2 top-2 rounded-full bg-black/70 px-2 py-1 text-xs font-black text-white opacity-100 sm:opacity-0 sm:group-hover:opacity-100">×</button></figure>)}
             </div>
           </div>
         </section>

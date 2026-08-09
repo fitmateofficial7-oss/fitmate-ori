@@ -17,7 +17,7 @@ const workout = read("app/workout/page.tsx");
 const exercisesPage = read("app/exercises/page.tsx");
 const dashboard = read("app/dashboard/page.tsx");
 const threeDGuide = read("components/exercise-3d-guide.tsx");
-const threeDCanvas = read("components/simple-exercise-3d-canvas.tsx");
+const twoDScene = read("components/exercise-2d-scene.tsx");
 const threeDPreview = read("components/exercise-3d-preview.tsx");
 const coachApi = read("app/api/coach/route.ts");
 const coachPage = read("app/coach/page.tsx");
@@ -95,30 +95,23 @@ assert(
 assert(
   exercisesPage.includes("<Exercise3DPreview") &&
     exercisesPage.includes("<Exercise3DGuide") &&
-    !exercisesPage.includes(">🏋️<"),
-  "The exercise library must use the lightweight 3D preview and the full 3D guide."
+    threeDPreview.includes("Exercise2DScene"),
+  "The exercise library must use the lightweight 2D preview and full 2D guide."
 );
 assert(
-  threeDGuide.includes("SimpleExercise3DCanvas") &&
-    threeDGuide.includes('["animation"') &&
-    threeDGuide.includes('["start"') &&
-    threeDGuide.includes('["finish"'),
-  "Every exercise guide must expose animation, start, and finish 3D modes."
+  threeDGuide.includes("getExerciseSplitAsset") &&
+    threeDGuide.includes("stepSrcs") &&
+    threeDGuide.includes("musclesSrc") &&
+    threeDGuide.includes("tipsSrc") &&
+    threeDGuide.includes("mistakesSrc"),
+  "Every exercise guide must expose split step, target-muscle, tip, and mistake assets."
 );
 assert(
-  threeDCanvas.includes('getContext("webgl"') &&
-    threeDCanvas.includes("drawCharacter") &&
-    threeDCanvas.includes("drawEquipment") &&
-    threeDCanvas.includes("pointerdown") &&
-    threeDCanvas.includes("wheel"),
-  "The 3D canvas must render the character and equipment together with rotate and zoom controls."
-);
-assert(
-  threeDPreview.includes("3D") &&
-    !threeDCanvas.includes("GLTFLoader") &&
-    !threeDCanvas.includes("FBXLoader") &&
-    !threeDCanvas.includes('from "three"'),
-  "The simple character must avoid external model files and heavyweight 3D dependencies."
+  twoDScene.includes("drawCharacter") &&
+    twoDScene.includes("drawEquipment") &&
+    twoDScene.includes("drawMuscleHighlights") &&
+    twoDScene.includes("drawMotionArrow"),
+  "The 2D fallback scene must keep the character, equipment, muscle highlights, and movement direction together."
 );
 assert(
   generatePlanApi.includes("getCanonicalExerciseName") &&
@@ -188,12 +181,17 @@ assert(
   "Mutating E2E tests must be staging-only and cover core workout and AI flows."
 );
 
+const emojiPattern = /[\u{1F000}-\u{1FAFF}\u2600-\u27BF]/u;
 for (const page of pages) {
   assert(
-    read(page).includes("LiveIcon"),
-    `${page} must include live icon motion.`
+    !emojiPattern.test(read(page)),
+    `${page} must not use decorative emoji in the product UI.`
   );
 }
+assert(
+  read("components/fitmate-icon.tsx").includes("export default function FitMateIcon"),
+  "FitMate must use the shared line-icon system for product UI."
+);
 
 console.log(
   JSON.stringify(
@@ -205,9 +203,10 @@ console.log(
         0
       ),
       messagesPerMood: moodCounts,
-      pagesWithLiveIcons: pages.length,
+      emojiFreePages: pages.length,
+      sharedLineIconSystem: true,
       exerciseSpecificExplorePreviews: true,
-      procedural3DExerciseGuides: true,
+      split2DExerciseGuides: true,
       muscleMatchedSubstitutions: true,
       optionalExerciseLoad: true,
       dashboardLoadChart: true,
@@ -218,10 +217,9 @@ console.log(
       freePlanGenerationLifetimeLimit: 2,
       premiumMonthlyPriceIdr: 49000,
       canonicalGeneratedExerciseNames: true,
-      guideViews: ["animation", "start", "finish"],
-      cameraViews: ["front", "side", "back", "drag-360"],
-      webglRenderer: true,
-      externalModelFiles: false,
+      guideViews: ["steps", "target-muscles", "important-tips", "common-mistakes"],
+      splitGuideAssets: true,
+      procedural2DFallback: true,
       passwordRecovery: true,
       monitoringDashboard: true,
       stagingE2EGuard: true,

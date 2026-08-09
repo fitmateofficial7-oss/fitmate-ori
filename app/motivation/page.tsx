@@ -3,235 +3,54 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
+import FitMateIcon from "@/components/fitmate-icon";
 import { useLanguage } from "@/components/language-provider";
-import LiveIcon from "@/components/live-icon";
 
 type Mood = "lazy" | "tired" | "ready";
 
 type Motivation = {
   mood: Mood;
-  emoji: string;
   id: string;
   en: string;
 };
 
 const MOTIVATIONS: Motivation[] = [
-  {
-    mood: "lazy",
-    emoji: "🛋️",
-    id: "Sofa memang setia, tapi ototmu juga sedang menunggu kabar.",
-    en: "The sofa is loyal, but your muscles are waiting to hear from you.",
-  },
-  {
-    mood: "lazy",
-    emoji: "🦥",
-    id: "Tidak perlu langsung hebat. Pakai sepatu dulu—sisanya biar momentum yang bekerja.",
-    en: "You do not need to be amazing yet. Put your shoes on first and let momentum do the rest.",
-  },
-  {
-    mood: "lazy",
-    emoji: "🥔",
-    id: "Mode kentang boleh, asal setelah ini kentangnya pergi latihan.",
-    en: "Potato mode is allowed, as long as this potato trains afterward.",
-  },
-  {
-    mood: "lazy",
-    emoji: "🚪",
-    id: "Target hari ini sederhana: datang. Latihan bagus sering dimulai dari sekadar melewati pintu gym.",
-    en: "Today's goal is simple: show up. Great workouts often start by walking through the gym door.",
-  },
-  {
-    mood: "lazy",
-    emoji: "🤏",
-    id: "Lakukan versi kecilnya. Sepuluh menit tetap lebih kuat daripada nol menit.",
-    en: "Do the small version. Ten minutes is still stronger than zero minutes.",
-  },
-  {
-    mood: "lazy",
-    emoji: "👟",
-    id: "Kalau motivasi belum datang, jemput dia sambil pakai sepatu.",
-    en: "If motivation has not arrived, go meet it while putting on your shoes.",
-  },
-  {
-    mood: "lazy",
-    emoji: "🧠",
-    id: "Otakmu bilang nanti. Jadwalmu bilang sekarang. Kita dengarkan yang lebih disiplin.",
-    en: "Your brain says later. Your schedule says now. Let us trust the disciplined one.",
-  },
-  {
-    mood: "lazy",
-    emoji: "⏳",
-    id: "Mulai dua menit saja. Biasanya tubuhmu akan minta lanjut sendiri.",
-    en: "Start with two minutes. Your body will usually ask to keep going.",
-  },
-  {
-    mood: "lazy",
-    emoji: "🪜",
-    id: "Tidak perlu melompat jauh. Naik satu anak tangga latihan hari ini.",
-    en: "You do not need a huge leap. Climb one training step today.",
-  },
-  {
-    mood: "lazy",
-    emoji: "🎧",
-    id: "Putar satu lagu favorit, lalu selesaikan pemanasan sebelum lagunya habis.",
-    en: "Play one favorite song and finish the warm-up before it ends.",
-  },
-  {
-    mood: "lazy",
-    emoji: "📍",
-    id: "Hari ini bukan soal performa sempurna. Cukup hadir di titik mulai.",
-    en: "Today is not about perfect performance. Just arrive at the starting point.",
-  },
-  {
-    mood: "lazy",
-    emoji: "🧩",
-    id: "Satu sesi kecil tetap menjadi bagian penting dari hasil besarmu.",
-    en: "One small session is still an important piece of your bigger result.",
-  },
-  {
-    mood: "tired",
-    emoji: "🔋",
-    id: "Capek bukan gagal. Atur beban, jaga teknik, lalu kumpulkan satu kemenangan kecil.",
-    en: "Tired is not failure. Adjust the load, protect your form, and collect one small win.",
-  },
-  {
-    mood: "tired",
-    emoji: "🐢",
-    id: "Pelan tetap bergerak. Bahkan kura-kura punya hari latihan.",
-    en: "Slow is still moving. Even turtles have training days.",
-  },
-  {
-    mood: "tired",
-    emoji: "🌱",
-    id: "Tubuhmu tidak meminta sempurna; tubuhmu meminta konsisten dan cukup istirahat.",
-    en: "Your body is not asking for perfection; it is asking for consistency and enough rest.",
-  },
-  {
-    mood: "tired",
-    emoji: "🧃",
-    id: "Minum, tarik napas, dan cek kondisi. Latihan cerdas juga tahu kapan harus mengurangi tempo.",
-    en: "Hydrate, breathe, and check in. Smart training also knows when to lower the pace.",
-  },
-  {
-    mood: "tired",
-    emoji: "🌙",
-    id: "Kalau tubuh benar-benar butuh pulih, istirahat adalah bagian program—bukan bolos.",
-    en: "If your body truly needs recovery, rest is part of the program—not skipping it.",
-  },
-  {
-    mood: "tired",
-    emoji: "💧",
-    id: "Coba minum dulu. Kadang pahlawan latihan hanya sedang kurang cairan.",
-    en: "Drink some water first. Sometimes the workout hero is simply under-hydrated.",
-  },
-  {
-    mood: "tired",
-    emoji: "🫁",
-    id: "Ambil tiga napas panjang. Kita mulai setelah tubuhmu merasa didengarkan.",
-    en: "Take three deep breaths. We begin after your body feels heard.",
-  },
-  {
-    mood: "tired",
-    emoji: "🎚️",
-    id: "Turunkan beban, bukan semangat. Sesi ringan tetap sesi yang sah.",
-    en: "Lower the load, not your spirit. A light session still counts.",
-  },
-  {
-    mood: "tired",
-    emoji: "🛡️",
-    id: "Teknik yang aman hari ini lebih berharga daripada ego yang berat.",
-    en: "Safe technique today is worth more than a heavy ego.",
-  },
-  {
-    mood: "tired",
-    emoji: "🧘",
-    id: "Kalau tenaga tipis, pilih mobilitas dan pemulihan. Tubuh tetap mendapat manfaat.",
-    en: "If energy is low, choose mobility and recovery. Your body still benefits.",
-  },
-  {
-    mood: "tired",
-    emoji: "🍌",
-    id: "Cek makan dan tidurmu. Kadang performa hanya meminta bahan bakar yang cukup.",
-    en: "Check your food and sleep. Sometimes performance only needs enough fuel.",
-  },
-  {
-    mood: "tired",
-    emoji: "🧭",
-    id: "Dengarkan sinyal tubuh, lalu pilih arah yang membuatmu bisa latihan lagi besok.",
-    en: "Listen to your body and choose the path that lets you train again tomorrow.",
-  },
-  {
-    mood: "ready",
-    emoji: "🔥",
-    id: "Energi sudah hadir. Sekarang ubah niat menjadi satu set pertama.",
-    en: "The energy is here. Turn intention into your first set.",
-  },
-  {
-    mood: "ready",
-    emoji: "🚀",
-    id: "Tidak harus memecahkan rekor hari ini. Cukup buktikan bahwa kamu datang lagi.",
-    en: "You do not need to break a record today. Just prove that you showed up again.",
-  },
-  {
-    mood: "ready",
-    emoji: "🦁",
-    id: "Teknik rapi, napas teratur, ego disimpan. Ayo latihan.",
-    en: "Clean form, steady breathing, ego parked. Let's train.",
-  },
-  {
-    mood: "ready",
-    emoji: "⚡",
-    id: "Versi masa depanmu sedang memberi tepuk tangan dari jauh. Jangan bikin dia menunggu.",
-    en: "Your future self is cheering from a distance. Do not keep them waiting.",
-  },
-  {
-    mood: "ready",
-    emoji: "🏆",
-    id: "Kemenangan hari ini bukan angka terbesar—melainkan keputusan untuk tetap hadir.",
-    en: "Today's win is not the biggest number—it is the decision to keep showing up.",
-  },
-  {
-    mood: "ready",
-    emoji: "🎯",
-    id: "Pilih satu target teknik hari ini dan buat setiap repetisi mengarah ke sana.",
-    en: "Pick one technique goal today and make every repetition move toward it.",
-  },
-  {
-    mood: "ready",
-    emoji: "🏁",
-    id: "Pemanasan adalah garis start, bukan formalitas. Ayo mulai dengan rapi.",
-    en: "The warm-up is the starting line, not a formality. Begin with purpose.",
-  },
-  {
-    mood: "ready",
-    emoji: "🧱",
-    id: "Set demi set adalah batu bata. Hari ini kita bangun tubuh yang lebih kuat.",
-    en: "Set by set is brick by brick. Today we build a stronger body.",
-  },
-  {
-    mood: "ready",
-    emoji: "🦾",
-    id: "Kuat itu bukan terburu-buru. Kuat itu mengontrol beban dari awal sampai akhir.",
-    en: "Strength is not rushing. Strength is controlling the load from start to finish.",
-  },
-  {
-    mood: "ready",
-    emoji: "📈",
-    id: "Tidak perlu naik drastis. Progres kecil yang tercatat tetap progres nyata.",
-    en: "You do not need a huge jump. Small recorded progress is still real progress.",
-  },
-  {
-    mood: "ready",
-    emoji: "🔔",
-    id: "Waktunya tiba: fokus aktif, notifikasi lain nanti saja.",
-    en: "It is time: focus on, other notifications can wait.",
-  },
-  {
-    mood: "ready",
-    emoji: "🌟",
-    id: "Datang dengan energi, pulang dengan bangga. Jaga teknik dan nikmati prosesnya.",
-    en: "Arrive with energy, leave with pride. Protect your form and enjoy the process.",
-  },
+  { mood: "lazy", id: "Tidak perlu menunggu motivasi penuh. Mulai dari pemanasan lima menit.", en: "You do not need full motivation. Start with a five-minute warm-up." },
+  { mood: "lazy", id: "Target hari ini cukup sederhana: datang dan mulai gerakan pertama.", en: "Keep today simple: show up and start the first movement." },
+  { mood: "lazy", id: "Kalau sesi penuh terasa berat, kerjakan versi singkatnya. Konsistensi tetap dihitung.", en: "If a full session feels heavy, do a shorter version. Consistency still counts." },
+  { mood: "lazy", id: "Jangan pikirkan seluruh latihan sekaligus. Fokus pada satu set berikutnya.", en: "Do not think about the whole workout at once. Focus on the next set." },
+  { mood: "lazy", id: "Persiapkan sepatu, air minum, dan mulai. Biasanya momentum datang setelah bergerak.", en: "Get your shoes and water ready, then start. Momentum usually follows movement." },
+  { mood: "lazy", id: "Mulai dari satu gerakan yang paling mudah. Setelah itu, nilai lagi apakah kamu ingin lanjut.", en: "Start with the easiest movement. Then decide whether you want to continue." },
+  { mood: "lazy", id: "Buat target yang kecil dan jelas: pemanasan, satu latihan utama, lalu lihat kondisimu.", en: "Set a small, clear target: warm up, do one main exercise, then reassess." },
+  { mood: "lazy", id: "Sesi yang tidak sempurna tetap lebih berguna daripada terus menunda.", en: "An imperfect session is still more useful than another delay." },
+  { mood: "lazy", id: "Kurangi keputusan sebelum latihan. Siapkan perlengkapan dan ikuti rencana yang sudah ada.", en: "Reduce decisions before training. Prepare your gear and follow the plan you already have." },
+  { mood: "lazy", id: "Beri dirimu sepuluh menit untuk mulai. Kamu boleh menyesuaikan sesi setelah itu.", en: "Give yourself ten minutes to begin. You can adjust the session after that." },
+  { mood: "lazy", id: "Hari ini tidak harus menjadi sesi terbaik. Cukup jaga kebiasaan tetap berjalan.", en: "Today does not need to be your best session. Just keep the habit moving." },
+  { mood: "lazy", id: "Pilih satu alasan praktis untuk latihan hari ini, lalu mulai sebelum terlalu banyak berpikir.", en: "Choose one practical reason to train today, then start before overthinking it." },
+  { mood: "tired", id: "Kalau energi turun, kurangi beban dan jaga teknik. Latihan ringan tetap berguna.", en: "If energy is low, reduce the load and keep your form clean. A light session still helps." },
+  { mood: "tired", id: "Cek tidur, makan, dan hidrasi sebelum memaksa intensitas tinggi.", en: "Check sleep, food, and hydration before pushing high intensity." },
+  { mood: "tired", id: "Hari pemulihan juga bagian dari program. Dengarkan kondisi tubuhmu hari ini.", en: "Recovery days are part of the program too. Pay attention to how your body feels today." },
+  { mood: "tired", id: "Mulai dengan mobilitas dan pemanasan. Putuskan intensitas setelah tubuh terasa lebih siap.", en: "Start with mobility and a warm-up. Decide the intensity after your body feels more ready." },
+  { mood: "tired", id: "Tidak perlu mengejar angka. Selesaikan sesi dengan kontrol dan pulang dalam kondisi lebih baik.", en: "You do not need to chase numbers. Finish with control and leave feeling better." },
+  { mood: "tired", id: "Kalau pemanasan terasa berat, pertimbangkan sesi pendek atau recovery aktif.", en: "If the warm-up feels unusually hard, consider a shorter session or active recovery." },
+  { mood: "tired", id: "Turunkan volume sebelum menurunkan kualitas gerakan. Beberapa set yang rapi sudah cukup.", en: "Reduce volume before movement quality. A few clean sets can be enough." },
+  { mood: "tired", id: "Jaga jeda antar set sedikit lebih panjang bila napas dan fokus belum pulih.", en: "Take slightly longer rests if your breathing and focus have not recovered." },
+  { mood: "tired", id: "Pilih gerakan yang familiar hari ini agar energi tidak habis untuk mencoba terlalu banyak hal baru.", en: "Choose familiar movements today so your energy is not spent learning too many new things." },
+  { mood: "tired", id: "Kalau badan terasa tidak biasa, prioritaskan pemulihan daripada memaksakan target latihan.", en: "If your body feels unusually off, prioritize recovery instead of forcing the workout target." },
+  { mood: "tired", id: "Selesaikan bagian yang paling penting dulu. Aksesori bisa dikurangi bila energi tidak cukup.", en: "Do the most important work first. Accessories can be reduced if energy is limited." },
+  { mood: "tired", id: "Hari dengan energi rendah tetap bisa produktif kalau intensitasnya disesuaikan dengan kondisi.", en: "A low-energy day can still be productive when intensity matches your condition." },
+  { mood: "ready", id: "Energi sudah ada. Pilih target utama hari ini dan jaga setiap repetisi tetap rapi.", en: "The energy is there. Pick one main target and keep every repetition clean." },
+  { mood: "ready", id: "Mulai kuat, tapi tetap terukur. Teknik yang konsisten lebih penting dari ego.", en: "Start strong, but stay measured. Consistent technique matters more than ego." },
+  { mood: "ready", id: "Catat beban dan repetisi hari ini. Progres kecil lebih mudah terlihat kalau tercatat.", en: "Log today's load and reps. Small progress is easier to see when it is recorded." },
+  { mood: "ready", id: "Fokus pada set berikutnya, bukan seluruh sesi. Satu pekerjaan pada satu waktu.", en: "Focus on the next set, not the entire session. One job at a time." },
+  { mood: "ready", id: "Pakai energi hari ini untuk kualitas gerakan, bukan sekadar menambah beban.", en: "Use today's energy for movement quality, not just heavier weight." },
+  { mood: "ready", id: "Tentukan satu indikator progres hari ini: repetisi, beban, tempo, atau teknik.", en: "Choose one progress marker today: reps, load, tempo, or technique." },
+  { mood: "ready", id: "Simpan tenaga untuk set utama. Pemanasan harus menyiapkan tubuh, bukan menghabiskan energi.", en: "Save energy for your main sets. Warm-ups should prepare you, not drain you." },
+  { mood: "ready", id: "Kalau performa terasa bagus, naikkan tantangan secara kecil dan tetap terkendali.", en: "If performance feels good, increase the challenge in a small, controlled step." },
+  { mood: "ready", id: "Jaga standar teknik yang sama dari repetisi pertama sampai terakhir.", en: "Keep the same technique standard from the first rep to the last." },
+  { mood: "ready", id: "Gunakan jeda antar set untuk memulihkan napas dan menyiapkan set berikutnya.", en: "Use rest periods to recover your breathing and prepare for the next set." },
+  { mood: "ready", id: "Selesaikan latihan dengan catatan singkat agar sesi berikutnya lebih mudah direncanakan.", en: "Finish with a short note so the next session is easier to plan." },
+  { mood: "ready", id: "Energi tinggi tidak berarti harus terburu-buru. Pertahankan tempo yang membuat setiap set tetap berkualitas.", en: "High energy does not mean rushing. Keep a pace that preserves set quality." },
 ];
 
 const BOOST_LIMIT = 10;
@@ -246,30 +65,10 @@ function getJakartaDateKey() {
   }).format(new Date());
 }
 
-const MOODS: Array<{
-  value: Mood;
-  emoji: string;
-  id: string;
-  en: string;
-}> = [
-  {
-    value: "lazy",
-    emoji: "🥱",
-    id: "Lagi mager",
-    en: "Feeling lazy",
-  },
-  {
-    value: "tired",
-    emoji: "😮‍💨",
-    id: "Lagi capek",
-    en: "Feeling tired",
-  },
-  {
-    value: "ready",
-    emoji: "😤",
-    id: "Siap gas",
-    en: "Ready to go",
-  },
+const MOODS: Array<{ value: Mood; id: string; en: string; descriptionId: string; descriptionEn: string }> = [
+  { value: "lazy", id: "Sulit mulai", en: "Hard to start", descriptionId: "Butuh dorongan ringan", descriptionEn: "Need a gentle push" },
+  { value: "tired", id: "Energi rendah", en: "Low energy", descriptionId: "Atur ritme dan pemulihan", descriptionEn: "Manage pace and recovery" },
+  { value: "ready", id: "Siap latihan", en: "Ready to train", descriptionId: "Fokus dan mulai sesi", descriptionEn: "Focus and begin" },
 ];
 
 export default function MotivationPage() {
@@ -277,94 +76,55 @@ export default function MotivationPage() {
   const [mood, setMood] = useState<Mood>("ready");
   const [quoteIndex, setQuoteIndex] = useState(0);
   const [boosts, setBoosts] = useState(0);
-  const [shownQuoteIds, setShownQuoteIds] = useState<
-    Set<string>
-  >(() => new Set([MOTIVATIONS.find((item) => item.mood === "ready")!.id]));
+  const [shownQuoteIds, setShownQuoteIds] = useState<Set<string>>(
+    () => new Set([MOTIVATIONS.find((item) => item.mood === "ready")!.id])
+  );
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
       try {
-        const raw = window.localStorage.getItem(
-          BOOST_STORAGE_KEY
-        );
+        const raw = window.localStorage.getItem(BOOST_STORAGE_KEY);
         const saved = raw
-          ? (JSON.parse(raw) as {
-              date?: string;
-              count?: number;
-              shown?: string[];
-            })
+          ? (JSON.parse(raw) as { date?: string; count?: number; shown?: string[] })
           : null;
 
         if (saved?.date === getJakartaDateKey()) {
-          setBoosts(
-            Math.min(
-              BOOST_LIMIT,
-              Math.max(0, Math.round(saved.count || 0))
-            )
-          );
-          if (Array.isArray(saved.shown)) {
-            setShownQuoteIds(new Set(saved.shown));
-          }
+          setBoosts(Math.min(BOOST_LIMIT, Math.max(0, Math.round(saved.count || 0))));
+          if (Array.isArray(saved.shown)) setShownQuoteIds(new Set(saved.shown));
         } else {
           window.localStorage.removeItem(BOOST_STORAGE_KEY);
         }
       } catch {
-        try {
-          window.localStorage.removeItem(BOOST_STORAGE_KEY);
-        } catch {
-          // Storage can be unavailable in strict privacy modes.
-        }
+        try { window.localStorage.removeItem(BOOST_STORAGE_KEY); } catch {}
       }
     });
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-    };
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   const matchingQuotes = useMemo(
     () => MOTIVATIONS.filter((item) => item.mood === mood),
     [mood]
   );
-  const quote =
-    matchingQuotes[quoteIndex % matchingQuotes.length];
+  const quote = matchingQuotes[quoteIndex % matchingQuotes.length];
   const quoteText = language === "en" ? quote.en : quote.id;
 
   const chooseMood = (nextMood: Mood) => {
-    const nextQuotes = MOTIVATIONS.filter(
-      (item) => item.mood === nextMood
-    );
-    const nextQuote =
-      nextQuotes.find((item) => !shownQuoteIds.has(item.id)) ||
-      nextQuotes[0];
-
+    const nextQuotes = MOTIVATIONS.filter((item) => item.mood === nextMood);
+    const nextQuote = nextQuotes.find((item) => !shownQuoteIds.has(item.id)) || nextQuotes[0];
     setMood(nextMood);
     setQuoteIndex(nextQuotes.indexOf(nextQuote));
-    setShownQuoteIds((current) => {
-      const updated = new Set(current);
-      updated.add(nextQuote.id);
-      return updated;
-    });
+    setShownQuoteIds((current) => new Set([...current, nextQuote.id]));
     setCopied(false);
   };
 
   const boostMe = () => {
-    if (boosts >= BOOST_LIMIT) {
-      return;
-    }
-
-    const unseenQuotes = matchingQuotes.filter(
-      (item) => !shownQuoteIds.has(item.id)
-    );
-    const candidates =
-      unseenQuotes.length > 0
-        ? unseenQuotes
-        : matchingQuotes.filter((item) => item.id !== quote.id);
-    const nextQuote =
-      candidates[
-        Math.floor(Math.random() * candidates.length)
-      ] || quote;
+    if (boosts >= BOOST_LIMIT) return;
+    const unseenQuotes = matchingQuotes.filter((item) => !shownQuoteIds.has(item.id));
+    const candidates = unseenQuotes.length
+      ? unseenQuotes
+      : matchingQuotes.filter((item) => item.id !== quote.id);
+    const nextQuote = candidates[Math.floor(Math.random() * candidates.length)] || quote;
     const nextShown = new Set(shownQuoteIds);
     nextShown.add(nextQuote.id);
     const nextBoosts = boosts + 1;
@@ -374,27 +134,16 @@ export default function MotivationPage() {
     setBoosts(nextBoosts);
     window.localStorage.setItem(
       BOOST_STORAGE_KEY,
-      JSON.stringify({
-        date: getJakartaDateKey(),
-        count: nextBoosts,
-        shown: [...nextShown],
-      })
+      JSON.stringify({ date: getJakartaDateKey(), count: nextBoosts, shown: [...nextShown] })
     );
     setCopied(false);
   };
 
   const shareQuote = async () => {
-    const text = `"${quoteText}" — FitMate AI`;
-
+    const text = `"${quoteText}" — FitMate`;
     try {
       if (navigator.share) {
-        await navigator.share({
-          title: tr(
-            "Semangat dari FitMate",
-            "A boost from FitMate"
-          ),
-          text,
-        });
+        await navigator.share({ title: tr("Catatan dari FitMate", "A note from FitMate"), text });
       } else {
         await navigator.clipboard.writeText(text);
       }
@@ -405,42 +154,24 @@ export default function MotivationPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white pb-32 text-slate-900">
-      <section className="overflow-hidden px-4 py-8 sm:px-6 sm:py-12">
-        <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-green-500 via-green-600 to-emerald-700 px-6 py-10 text-white shadow-2xl shadow-green-500/20 sm:px-10 sm:py-14">
-          <div className="pointer-events-none absolute -right-16 -top-20 h-72 w-72 rounded-full bg-yellow-300/25 blur-3xl" />
-          <div className="pointer-events-none absolute -bottom-24 -left-20 h-72 w-72 rounded-full bg-teal-950/30 blur-3xl" />
-
-          <div className="relative grid items-center gap-8 md:grid-cols-[1fr_220px]">
+    <main className="fitmate-app-page min-h-screen bg-slate-50 pb-32 text-slate-950 dark:bg-[#07110c] dark:text-slate-100">
+      <section className="px-4 py-8 sm:px-6 sm:py-12">
+        <div className="mx-auto max-w-5xl rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#0b1511] sm:p-10">
+          <div className="flex max-w-3xl items-start gap-4">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-300">
+              <FitMateIcon name="activity" className="h-5 w-5" />
+            </span>
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.2em] text-green-100">
-                {tr(
-                  "FITMATE MOOD BOOSTER",
-                  "FITMATE MOOD BOOSTER"
-                )}
-              </p>
-              <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
-                {tr(
-                  "Butuh sedikit dorongan?",
-                  "Need a little boost?"
-                )}
+              <p className="text-sm font-semibold text-green-700 dark:text-green-300">{tr("Persiapan latihan", "Workout prep")}</p>
+              <h1 className="mt-1 text-3xl font-bold tracking-tight sm:text-4xl">
+                {tr("Sesuaikan sesi dengan kondisimu hari ini", "Match the session to how you feel today")}
               </h1>
-              <p className="mt-4 max-w-2xl leading-7 text-green-50">
+              <p className="mt-3 leading-7 text-slate-500 dark:text-slate-400">
                 {tr(
-                  "Pilih suasana hati Anda. FitMate akan memberi semangat yang jujur, ringan, dan sedikit usil.",
-                  "Choose your mood. FitMate will give you an honest, lighthearted, slightly cheeky boost."
+                  "Pilih kondisimu hari ini.",
+                  "Choose how you feel today for a short note before training."
                 )}
               </p>
-            </div>
-
-            <div className="mx-auto flex h-44 w-44 rotate-3 items-center justify-center rounded-[2.25rem] border border-white/30 bg-white/15 text-8xl shadow-2xl backdrop-blur sm:h-48 sm:w-48">
-              <LiveIcon
-                variant="float"
-                active
-                className="text-8xl"
-              >
-                {quote.emoji}
-              </LiveIcon>
             </div>
           </div>
         </div>
@@ -448,142 +179,79 @@ export default function MotivationPage() {
 
       <section className="px-4 sm:px-6">
         <div className="mx-auto max-w-5xl">
-          <div className="grid grid-cols-3 gap-2 rounded-[1.5rem] border border-slate-200 bg-white p-2 shadow-sm">
+          <div className="grid gap-3 sm:grid-cols-3">
             {MOODS.map((item) => {
               const active = mood === item.value;
-
               return (
                 <button
                   type="button"
                   key={item.value}
                   onClick={() => chooseMood(item.value)}
-                  className={`rounded-[1.1rem] px-2 py-3 text-xs font-black transition sm:text-sm ${
+                  className={`rounded-2xl border p-4 text-left transition ${
                     active
-                      ? "bg-green-600 text-white shadow-lg shadow-green-600/20"
-                      : "text-slate-600 hover:bg-green-50 hover:text-green-700"
+                      ? "border-green-500 bg-green-50 shadow-sm dark:bg-green-950/30"
+                      : "border-slate-200 bg-white hover:border-slate-300 dark:border-slate-800 dark:bg-[#0b1511]"
                   }`}
                 >
-                  <LiveIcon
-                    variant="pop"
-                    active={active}
-                    className="mr-1 sm:mr-2"
-                  >
-                    {item.emoji}
-                  </LiveIcon>
-                  {tr(item.id, item.en)}
+                  <p className={`font-semibold ${active ? "text-green-800 dark:text-green-200" : ""}`}>{tr(item.id, item.en)}</p>
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{tr(item.descriptionId, item.descriptionEn)}</p>
                 </button>
               );
             })}
           </div>
 
-          <div className="mt-6 rounded-[2rem] border border-green-100 bg-green-50 p-6 text-center shadow-xl shadow-green-100/70 sm:p-10">
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-green-700">
-              {tr("PESAN UNTUKMU", "A MESSAGE FOR YOU")}
-            </p>
-            <blockquote className="mx-auto mt-5 max-w-3xl text-2xl font-black leading-relaxed text-slate-900 sm:text-3xl">
-              “{quoteText}”
+          <div className="mt-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#0b1511] sm:p-9">
+            <div className="flex items-center justify-between gap-4">
+              <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">{tr("Catatan untuk sesi ini", "Note for this session")}</p>
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                {BOOST_LIMIT - boosts} {tr("tersisa", "left")}
+              </span>
+            </div>
+            <blockquote className="mt-5 max-w-3xl text-2xl font-semibold leading-relaxed tracking-tight sm:text-3xl">
+              {quoteText}
             </blockquote>
 
-            <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <button
                 type="button"
                 onClick={boostMe}
                 disabled={boosts >= BOOST_LIMIT}
-                className="rounded-2xl bg-green-600 px-6 py-4 font-black text-white shadow-lg shadow-green-600/20 transition hover:-translate-y-1 hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-slate-400 disabled:shadow-none"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-950 px-5 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40 dark:bg-white dark:text-slate-950"
               >
-                <LiveIcon
-                  variant="pop"
-                  active={boosts < BOOST_LIMIT}
-                  className="mr-2"
-                >
-                  🎲
-                </LiveIcon>
+                <FitMateIcon name="activity" className="h-4 w-4" />
                 {boosts >= BOOST_LIMIT
-                  ? tr(
-                      "Batas hari ini tercapai",
-                      "Daily limit reached"
-                    )
-                  : tr(
-                      "Kasih semangat lagi",
-                      "Give me another boost"
-                    )}
+                  ? tr("Batas hari ini tercapai", "Daily limit reached")
+                  : tr("Tampilkan catatan lain", "Show another note")}
               </button>
               <button
                 type="button"
                 onClick={() => void shareQuote()}
-                className="rounded-2xl border border-slate-200 bg-white px-6 py-4 font-black text-slate-700 transition hover:-translate-y-1 hover:border-green-400"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 font-semibold text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
               >
-                {copied
-                  ? tr("✓ Sudah dibagikan", "✓ Shared")
-                  : tr("Bagikan semangat", "Share this boost")}
+                <FitMateIcon name={copied ? "check" : "share"} className="h-4 w-4" />
+                {copied ? tr("Sudah dibagikan", "Shared") : tr("Bagikan", "Share")}
               </button>
             </div>
-
-            <p className="mt-5 text-xs font-bold text-green-700">
-              {boosts >= BOOST_LIMIT
-                ? tr(
-                    "Kamu sudah memakai 10 Boost hari ini. Kembali lagi besok untuk pesan baru.",
-                    "You have used all 10 Boosts today. Come back tomorrow for new messages."
-                  )
-                : tr(
-                    `Sisa ${BOOST_LIMIT - boosts} dari 10 Boost hari ini.`,
-                    `${BOOST_LIMIT - boosts} of 10 Boosts remaining today.`
-                  )}
-            </p>
           </div>
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <Link
-              href="/workout"
-              className="group rounded-[1.75rem] bg-slate-950 p-6 text-white shadow-xl transition hover:-translate-y-1"
-            >
-              <LiveIcon
-                variant="pulse"
-                className="text-3xl"
-              >
-                🏋️
-              </LiveIcon>
-              <h2 className="mt-4 text-xl font-black">
-                {tr(
-                  "Oke, saya latihan sekarang",
-                  "Okay, I will train now"
-                )}
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-slate-300">
-                {tr(
-                  "Buka rencana latihan dan mulai dari gerakan pertama.",
-                  "Open your workout plan and begin with the first exercise."
-                )}
-              </p>
-              <p className="mt-4 font-black text-green-400">
-                {tr("Mulai latihan →", "Start workout →")}
+          <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            <Link href="/workout" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-green-300 dark:border-slate-800 dark:bg-[#0b1511]">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-300">
+                <FitMateIcon name="dumbbell" className="h-5 w-5" />
+              </span>
+              <h2 className="mt-4 text-lg font-semibold">{tr("Mulai latihan", "Start workout")}</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
+                {tr("Buka sesi hari ini dan mulai dari gerakan pertama.", "Open today's session and begin with the first exercise.")}
               </p>
             </Link>
 
-            <Link
-              href="/coach"
-              className="group rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-lg transition hover:-translate-y-1 hover:border-green-300"
-            >
-              <LiveIcon
-                variant="wiggle"
-                className="text-3xl"
-              >
-                🤝
-              </LiveIcon>
-              <h2 className="mt-4 text-xl font-black">
-                {tr(
-                  "Masih butuh teman bicara?",
-                  "Still need someone to talk to?"
-                )}
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-slate-500">
-                {tr(
-                  "Tanyakan hambatan latihan atau pola pemulihan kepada FitMate Coach.",
-                  "Ask FitMate Coach about training obstacles or recovery."
-                )}
-              </p>
-              <p className="mt-4 font-black text-green-600">
-                {tr("Buka Coach →", "Open Coach →")}
+            <Link href="/coach" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-green-300 dark:border-slate-800 dark:bg-[#0b1511]">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                <FitMateIcon name="message" className="h-5 w-5" />
+              </span>
+              <h2 className="mt-4 text-lg font-semibold">{tr("Tanya Coach", "Ask Coach")}</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
+                {tr("Bahas kendala latihan, recovery, atau penyesuaian program.", "Discuss training, recovery, or program adjustments.")}
               </p>
             </Link>
           </div>
