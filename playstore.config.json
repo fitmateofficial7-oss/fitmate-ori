@@ -1,0 +1,17 @@
+{
+  "appName": "FitMate",
+  "androidPackageName": "com.growsia.fitmate",
+  "release": {
+    "versionCode": 1,
+    "versionName": "1.0.0"
+  },
+  "android": {
+    "minimumSdk": 24,
+    "currentCapacitorMajor": 7,
+    "currentSupportedTargetSdk": 35,
+    "playRequiredTargetSdkFrom2026-08-31": 36,
+    "desiredPlayTargetSdk": 36
+  },
+  "status": "android-versioning-prepared-capacitor8-migration-required",
+  "nextStage": "capacitor-8-migration-and-background-location-plugin-decision"
+}

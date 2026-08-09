@@ -1,6 +1,6 @@
 {
   "name": "fitmate-ai",
-  "version": "1.4.76",
+  "version": "1.4.78",
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
@@ -27,9 +27,9 @@
     "audit:jogging": "node scripts/audit-jogging-feature.cjs",
     "verify:xendit": "node scripts/verify-xendit-config.mjs",
     "native:configure": "node scripts/configure-native-background-gps.cjs",
-    "native:add:android": "npx cap add android && npm run native:configure",
+    "native:add:android": "npx cap add android && npm run native:configure && npm run playstore:android:configure",
     "native:add:ios": "npx cap add ios && npm run native:configure",
-    "native:sync": "npx cap sync && npm run native:configure",
+    "native:sync": "npx cap sync && npm run native:configure && npm run playstore:android:configure",
     "native:open:android": "npx cap open android",
     "native:open:ios": "npx cap open ios",
     "dev:turbopack": "next dev",
@@ -37,7 +37,12 @@
     "audit:ai-scope": "node --no-warnings --experimental-strip-types scripts/audit-ai-scope.mjs",
     "audit:timer": "node scripts/audit-rest-timer.cjs",
     "audit:mobile-ui": "node scripts/audit-mobile-ui.cjs",
-    "audit:i18n": "node scripts/audit-i18n.cjs"
+    "audit:i18n": "node scripts/audit-i18n.cjs",
+    "verify:package-name": "node scripts/verify-playstore-package.cjs",
+    "playstore:android:configure": "node scripts/configure-playstore-android.cjs",
+    "playstore:android:verify": "node scripts/verify-playstore-android.cjs",
+    "playstore:capacitor8:check": "node scripts/check-capacitor8-readiness.cjs",
+    "playstore:preflight": "npm run verify:package-name && npm run playstore:android:verify && npm run playstore:capacitor8:check"
   },
   "dependencies": {
     "@capacitor-community/background-geolocation": "^1.2.26",
