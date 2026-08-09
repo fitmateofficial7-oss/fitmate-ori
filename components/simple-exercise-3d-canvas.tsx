@@ -712,7 +712,7 @@ function drawEquipment(
   pose: HumanoidPose3D
 ) {
   const { right: bodyRight, forward: bodyForward } = getBodyBasis(pose);
-  const handAxis = Math.abs(bodyRight[0]) + Math.abs(bodyRight[2]) > 0.2 ? bodyRight : [1, 0, 0];
+  const handAxis: Vec3 = Math.abs(bodyRight[0]) + Math.abs(bodyRight[2]) > 0.2 ? bodyRight : [1, 0, 0];
   const handOffsetAmountMap: Partial<Record<ExerciseGuidePreset, number>> = {
     "bench-press": 0.04,
     "incline-press": 0.04,
