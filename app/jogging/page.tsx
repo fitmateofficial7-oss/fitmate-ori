@@ -343,7 +343,6 @@ export default function JoggingPage() {
   const [shareBusy, setShareBusy] = useState(false);
   const [nativeBackgroundReady, setNativeBackgroundReady] = useState(false);
   const [nativePlatform, setNativePlatform] = useState<string | null>(null);
-  const [showLocationDisclosure, setShowLocationDisclosure] = useState(false);
 
   const pointsRef = useRef<JoggingRoutePoint[]>([]);
   const statusRef = useRef<TrackingStatus>("idle");
@@ -868,32 +867,6 @@ export default function JoggingPage() {
     }
   }, [releaseScreenWakeLock, requestScreenWakeLock, startGpsWatch, tr]);
 
-  const startSessionWithDisclosure = useCallback(async () => {
-    if (nativeBackgroundReady) {
-      const accepted =
-        typeof window !== "undefined" &&
-        window.localStorage.getItem(
-          "fitmate_jogging_location_disclosure_v1"
-        ) === "accepted";
-      if (!accepted) {
-        setShowLocationDisclosure(true);
-        return;
-      }
-    }
-    await startSession();
-  }, [nativeBackgroundReady, startSession]);
-
-  const acceptLocationDisclosure = useCallback(async () => {
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(
-        "fitmate_jogging_location_disclosure_v1",
-        "accepted"
-      );
-    }
-    setShowLocationDisclosure(false);
-    await startSession();
-  }, [startSession]);
-
   const pauseSession = useCallback(() => {
     if (activeSegmentStartedAtRef.current) {
       elapsedBeforeMsRef.current +=
@@ -1241,47 +1214,6 @@ export default function JoggingPage() {
 
   return (
     <main className="fitmate-app-page min-h-screen scroll-pb-40 bg-[radial-gradient(circle_at_top_left,rgba(110,231,183,0.24),transparent_34%),linear-gradient(180deg,#f8fffb,#eefbf3_45%,#f8fafc)] pb-44 text-slate-950 sm:pb-36 dark:bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.16),transparent_32%),linear-gradient(180deg,#06110c,#081810_55%,#020617)] dark:text-white">
-      {showLocationDisclosure && (
-        <div className="fixed inset-0 z-[90] flex items-end justify-center bg-slate-950/55 p-3 backdrop-blur-sm sm:items-center sm:p-6">
-          <div className="w-full max-w-lg rounded-[28px] border border-emerald-200 bg-white p-5 text-slate-900 shadow-2xl dark:border-emerald-400/20 dark:bg-slate-950 dark:text-white sm:p-6">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-2xl dark:bg-emerald-400/10">
-              📍
-            </div>
-            <h2 className="mt-4 text-xl font-black">
-              {tr("Lokasi untuk merekam jogging", "Location for jogging tracking")}
-            </h2>
-            <p className="mt-3 text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300">
-              {tr(
-                "Saat kamu memulai sesi jogging, FitMate menggunakan lokasi presisi untuk menghitung rute, jarak, pace, dan kecepatan. Selama sesi masih aktif, pencatatan dapat terus berjalan saat aplikasi diminimalkan atau layar mati dan Android akan menampilkan notifikasi jogging yang aktif.",
-                "When you start a jogging session, FitMate uses precise location to calculate route, distance, pace, and speed. While the session is active, tracking can continue when the app is minimized or the screen is off, and Android will show an active jogging notification."
-              )}
-            </p>
-            <p className="mt-3 rounded-2xl bg-emerald-50 px-4 py-3 text-xs font-semibold leading-5 text-emerald-900 dark:bg-emerald-400/10 dark:text-emerald-100">
-              {tr(
-                "Lokasi hanya digunakan untuk sesi jogging yang kamu mulai sendiri. Tekan Jeda atau Selesai untuk menghentikan pencatatan.",
-                "Location is used only for the jogging session you start yourself. Tap Pause or Finish to stop tracking."
-              )}
-            </p>
-            <div className="mt-5 grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => setShowLocationDisclosure(false)}
-                className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-black text-slate-700 dark:border-white/10 dark:text-slate-200"
-              >
-                {tr("Nanti", "Not now")}
-              </button>
-              <button
-                type="button"
-                onClick={() => void acceptLocationDisclosure()}
-                className="rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-black text-white shadow-lg shadow-emerald-600/20"
-              >
-                {tr("Lanjutkan", "Continue")}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <header className="sticky top-0 z-40 border-b border-emerald-100/80 bg-white/88 px-4 py-3 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/85">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
           <FitMateBrand href="/dashboard" size="sm" showCompany />
@@ -1439,7 +1371,7 @@ export default function JoggingPage() {
               {status === "idle" && (
                 <button
                   type="button"
-                  onClick={() => void startSessionWithDisclosure()}
+                  onClick={startSession}
                   className="rounded-2xl bg-emerald-600 px-6 py-4 font-black text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-500 sm:col-span-2 lg:col-span-4"
                 >
                   <span className="inline-flex items-center justify-center gap-2">

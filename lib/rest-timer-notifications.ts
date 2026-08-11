@@ -102,6 +102,7 @@ export async function scheduleRestTimerNotification(
           sound: "default",
           schedule: {
             at: new Date(endsAt),
+            allowWhileIdle: true,
           },
           actionTypeId: REST_TIMER_ACTION_TYPE,
           extra: {

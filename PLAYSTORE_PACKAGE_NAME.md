@@ -68,8 +68,3 @@ Tahap setelah package name:
 8. Play Console listing
 9. privacy policy / Data safety
 10. internal testing sebelum production
-
-
-## Stage 2
-
-Lihat `PLAYSTORE_ANDROID_STAGE_2.md` untuk versionCode/versionName dan persiapan Android project.
