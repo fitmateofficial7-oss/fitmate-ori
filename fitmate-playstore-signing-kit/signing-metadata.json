@@ -1,0 +1,10 @@
+{
+  "packageName": "com.growsia.fitmate",
+  "keyAlias": "fitmate-upload",
+  "keystoreFile": "fitmate-upload-key.jks",
+  "keyAlgorithm": "RSA",
+  "keySize": 4096,
+  "signatureAlgorithm": "SHA256withRSA",
+  "validityDays": 10950,
+  "intendedUse": "Google Play upload key"
+}

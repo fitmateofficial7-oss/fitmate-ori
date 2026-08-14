@@ -1,0 +1,6 @@
+FitMate Upload Certificate
+==========================
+Package name : com.growsia.fitmate
+Alias        : fitmate-upload
+SHA-1        : 44:18:6F:E7:06:F1:5E:70:50:AA:42:EF:03:D3:29:BC:B8:2D:98:63
+SHA-256      : 3A:92:09:AF:F8:C4:22:9C:70:7D:D7:F3:67:96:90:59:05:68:8D:16:2D:20:6A:89:7D:BB:AF:51:AB:33:F4:E9

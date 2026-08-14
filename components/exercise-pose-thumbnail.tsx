@@ -1,4 +1,4 @@
-import type { ExerciseGuidePreset } from "@/lib/exercise-guides";
+import type { Exercise2DPreset } from "@/lib/exercise-guides";
 
 type Point = {
   x: number;
@@ -23,7 +23,7 @@ type FigurePose = {
 
 type ExercisePoseThumbnailProps = {
   exerciseName: string;
-  preset: ExerciseGuidePreset;
+  preset: Exercise2DPreset;
   language?: "id" | "en";
   mode?: "comparison" | "start" | "finish";
 };
@@ -100,7 +100,7 @@ function lyingPose(incline = false): FigurePose {
 }
 
 function poseFor(
-  preset: ExerciseGuidePreset,
+  preset: Exercise2DPreset,
   finish: boolean
 ): FigurePose {
   if (preset === "bench-press") {
@@ -182,7 +182,7 @@ function poseFor(
         };
   }
 
-  const seatedPresets: ExerciseGuidePreset[] = [
+  const seatedPresets: Exercise2DPreset[] = [
     "lat-pulldown",
     "seated-row",
     "leg-press",
@@ -605,7 +605,7 @@ function Equipment({
   preset,
 }: {
   pose: FigurePose;
-  preset: ExerciseGuidePreset;
+  preset: Exercise2DPreset;
 }) {
   const isBarbell = [
     "bench-press",

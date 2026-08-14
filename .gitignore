@@ -48,16 +48,3 @@ android/keystore.properties
 *.jks
 *.keystore
 android/fitmate-release-signing.properties
-# --- GitHub safety / local Android files ---
-/.idea/
-/fitmate-playstore-signing-kit/
-/fitmate-build-diagnostic/
-/FitMateRelease/
-/android/fitmate-build-backups/
-/android/local.properties
-/android/keystore.properties
-/android/fitmate-release-signing.properties
-/FITMATE_KEYSTORE_CREDENTIALS.txt
-/fitmate-upload-key.jks
-*.bak
-*.log
