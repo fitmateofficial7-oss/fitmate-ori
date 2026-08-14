@@ -37,7 +37,9 @@ export default function LanguageToggle() {
 
   return (
     <label
-      className={`fixed right-4 z-50 flex min-h-11 items-center gap-2 rounded-full border border-slate-200 bg-white/95 px-3 py-2 text-sm font-black text-slate-700 shadow-xl shadow-slate-300/40 backdrop-blur-xl ${
+      className={`fixed right-4 z-50 min-h-11 items-center gap-2 rounded-full border border-slate-200 bg-white/95 px-3 py-2 text-sm font-black text-slate-700 shadow-xl shadow-slate-300/40 backdrop-blur-xl ${
+        pathname === "/" ? "hidden lg:flex" : "flex"
+      } ${
         isWorkoutPage
           ? "top-20"
           : isAppPage

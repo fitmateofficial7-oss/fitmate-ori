@@ -1,0 +1,1 @@
+window.FITMATE_NATIVE_CONFIG = {"baseUrl":"https://fitmate.growsia.id","registerUrl":"https://fitmate.growsia.id/register","loginUrl":"https://fitmate.growsia.id/login","dashboardUrl":"https://fitmate.growsia.id/dashboard"};

@@ -1758,7 +1758,7 @@ export default function WorkoutPage() {
               <p className="text-xs font-black uppercase tracking-[0.16em] text-green-100">
                 {activeSession
                   ? tr("Sesi berjalan", "Session in progress")
-                  : tr("Latihan hari ini", "Today’s workout")}
+                  : tr("Hari ini", "Today")}
               </p>
               <h1 className="mt-2 truncate text-3xl font-black sm:text-4xl">
                 {activeSession
@@ -1772,7 +1772,7 @@ export default function WorkoutPage() {
                   ? `${activeCompletedExercises}/${activeTotalExercises} ${tr("gerakan selesai", "exercises complete")}`
                   : selectedDay
                     ? `${selectedDay.exercises.length} ${tr("gerakan", "exercises")} · ${localizeWorkoutFocus(selectedDay.focus, selectedDay.exercises.length > 0, language)}`
-                    : tr("Pilih satu hari untuk melihat sesi.", "Select a day to view the session.")}
+                    : tr("Pilih hari latihan.", "Choose a workout day.")}
               </p>
             </div>
 
@@ -1816,7 +1816,7 @@ export default function WorkoutPage() {
                   {tr("Gerakan", "Exercises")}
                 </p>
                 <h2 className="mt-1 text-2xl font-black">
-                  {tr("Selesaikan satu per satu", "Complete them one by one")}
+                  {tr("Gerakan", "Exercises")}
                 </h2>
               </div>
               <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-600 dark:bg-white/10 dark:text-slate-300">
@@ -1975,10 +1975,10 @@ export default function WorkoutPage() {
               <div className="flex items-end justify-between gap-4">
                 <div>
                   <p className="text-xs font-black uppercase tracking-wide text-green-600 dark:text-green-300">
-                    {tr("Rencana mingguan", "Weekly plan")}
+                    {tr("Minggu ini", "This week")}
                   </p>
                   <h2 className="mt-1 text-2xl font-black">
-                    {tr("Pilih hari", "Choose a day")}
+                    {tr("Pilih latihan", "Choose workout")}
                   </h2>
                 </div>
                 <span className="text-xs font-bold text-slate-400">
@@ -2199,7 +2199,7 @@ export default function WorkoutPage() {
               <span>
                 <span className="block font-black">{tr("Pustaka gerakan", "Exercise library")}</span>
                 <span className="block text-xs text-slate-500 dark:text-slate-400">
-                  {tr("Lihat panduan dan alternatif gerakan.", "Browse guides and alternatives.")}
+                  {tr("Panduan dan alternatif gerakan.", "Guides and alternatives.")}
                 </span>
               </span>
               

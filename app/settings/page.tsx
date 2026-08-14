@@ -316,8 +316,8 @@ export default function SettingsPage() {
       <header className="border-b border-slate-200 bg-white px-5 py-6 dark:border-white/10 dark:bg-slate-950 sm:px-8">
         <div className="mx-auto flex max-w-5xl flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-black uppercase tracking-[0.16em] text-green-600">{tr("Pengaturan FitMate", "FitMate Settings")}</p>
-            <h1 className="mt-2 text-3xl font-black">{tr("Keamanan & Pengaturan", "Safety & Settings")}</h1>
+            <p className="text-sm font-black uppercase tracking-[0.16em] text-green-600">{tr("FITMATE", "FITMATE")}</p>
+            <h1 className="mt-2 text-3xl font-black">{tr("Pengaturan", "Settings")}</h1>
             <p className="mt-2 text-sm text-slate-500">{email}</p>
           </div>
           <FitMateBrand href="/dashboard" size="sm" showCompany />
@@ -352,7 +352,7 @@ export default function SettingsPage() {
         <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7">
           <h2 className="text-xl font-black">{tr("Cedera & keterbatasan", "Injuries & limitations")}</h2>
           <p className="mt-2 text-sm leading-6 text-slate-500">
-            {tr("Satu kondisi per baris.", "This data is used to avoid unsuitable movements. Enter one item per line.")}
+            {tr("Satu kondisi per baris.", "One item per line.")}
           </p>
           <div className="mt-5 grid gap-4 md:grid-cols-2">
             {[
@@ -382,7 +382,7 @@ export default function SettingsPage() {
         <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <h2 className="text-xl font-black">{tr("Jadwal & notifikasi", "Schedule & notifications")}</h2>
+              <h2 className="text-xl font-black">{tr("Pengingat", "Reminders")}</h2>
               <p className="mt-2 text-sm text-slate-500">{tr("Pengingat PWA bekerja paling baik setelah FitMate dipasang di HP.", "PWA reminders work best after FitMate is installed on your phone.")}</p>
             </div>
             <button type="button" onClick={enableNotifications} className="rounded-2xl bg-green-600 px-4 py-2.5 text-sm font-black text-white">
@@ -494,7 +494,7 @@ export default function SettingsPage() {
           <h2 className="text-xl font-black">{tr("Data & akun", "Data & account")}</h2>
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
             <button type="button" onClick={exportData} disabled={exporting} className="rounded-2xl bg-slate-900 px-4 py-3 font-black text-white dark:bg-white dark:text-slate-950">
-              {exporting ? tr("Mengekspor…", "Exporting…") : tr("Download data saya", "Download my data")}
+              {exporting ? tr("Mengekspor…", "Exporting…") : tr("Unduh data", "Download data")}
             </button>
             <Link href="/privacy" className="rounded-2xl bg-slate-100 px-4 py-3 text-center font-black dark:bg-white/10">{tr("Kebijakan Privasi", "Privacy Policy")}</Link>
             <Link href="/terms" className="rounded-2xl bg-slate-100 px-4 py-3 text-center font-black dark:bg-white/10">{tr("Ketentuan", "Terms")}</Link>

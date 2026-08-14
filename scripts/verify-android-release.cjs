@@ -62,9 +62,25 @@ if (fs.existsSync(vars)) {
   if (target) {
     const n = Number(target[1]);
     if (n >= 36) ok(`targetSdkVersion ${n}`);
-    else warn(`targetSdkVersion masih ${n}. Untuk rilis baru menjelang kebijakan 31 Agustus 2026, siapkan target API 36.`);
+    else {
+      console.error(`❌ targetSdkVersion ${n}. Google Play update FitMate harus target API 36+.`);
+      failed = true;
+    }
+  } else {
+    console.error("❌ targetSdkVersion tidak ditemukan.");
+    failed = true;
   }
-  if (compile) info(`compileSdkVersion ${compile[1]}`);
+  if (compile) {
+    const n = Number(compile[1]);
+    if (n >= 36) ok(`compileSdkVersion ${n}`);
+    else {
+      console.error(`❌ compileSdkVersion ${n}. Android 16 membutuhkan compile SDK 36+.`);
+      failed = true;
+    }
+  } else {
+    console.error("❌ compileSdkVersion tidak ditemukan.");
+    failed = true;
+  }
 }
 
 if (failed) process.exit(1);

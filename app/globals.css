@@ -2103,3 +2103,376 @@ select {
     margin-top: 1rem !important;
   }
 }
+
+/* ========================================================================== 
+   FitMate minimal interface — 2026-08
+   A calmer product-wide surface system. The existing bottom/menu navigation is
+   intentionally outside .fitmate-app-page and is not changed by this layer.
+   ========================================================================== */
+.fitmate-minimal-ui .fitmate-app-page {
+  background: #f6f8f7 !important;
+  background-image: none !important;
+}
+
+.dark .fitmate-minimal-ui .fitmate-app-page {
+  background: #07100c !important;
+  background-image: none !important;
+}
+
+.fitmate-minimal-ui .fitmate-app-page > :where(nav, header) {
+  min-height: 3.75rem !important;
+  border-color: #e7ece9 !important;
+  background: rgba(255, 255, 255, 0.97) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(10px);
+}
+
+.dark .fitmate-minimal-ui .fitmate-app-page > :where(nav, header) {
+  border-color: #1d2d24 !important;
+  background: rgba(7, 16, 12, 0.97) !important;
+}
+
+/* App cards use one quiet surface instead of stacked glass/shadow effects. */
+.fitmate-minimal-ui .fitmate-app-page :where(section, article, aside)[class*="border"],
+.fitmate-minimal-ui .fitmate-app-page :where(div)[class*="rounded-2xl"][class*="border"],
+.fitmate-minimal-ui .fitmate-app-page :where(div)[class*="rounded-3xl"][class*="border"],
+.fitmate-minimal-ui .fitmate-app-page :where(div)[class*="rounded-["][class*="border"] {
+  border-color: #e2e8e4 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.dark .fitmate-minimal-ui .fitmate-app-page :where(section, article, aside)[class*="border"],
+.dark .fitmate-minimal-ui .fitmate-app-page :where(div)[class*="rounded-2xl"][class*="border"],
+.dark .fitmate-minimal-ui .fitmate-app-page :where(div)[class*="rounded-3xl"][class*="border"],
+.dark .fitmate-minimal-ui .fitmate-app-page :where(div)[class*="rounded-["][class*="border"] {
+  border-color: #203228 !important;
+}
+
+.fitmate-minimal-ui .fitmate-app-page :where([class*="shadow-2xl"], [class*="shadow-xl"], [class*="shadow-lg"], [class*="shadow-md"], [class*="shadow-sm"]) {
+  box-shadow: none !important;
+}
+
+/* Retain green as the single strong action color; remove decorative glow. */
+.fitmate-minimal-ui .fitmate-app-page :where(button, a)[class*="bg-green"],
+.fitmate-minimal-ui .fitmate-app-page :where(button, a)[class*="bg-emerald"] {
+  box-shadow: none !important;
+}
+
+.fitmate-minimal-ui .fitmate-app-page :where(button, a):not([class*="rounded-full"]) {
+  border-radius: 0.8rem !important;
+}
+
+.fitmate-minimal-ui .fitmate-app-page :where(.rounded-3xl, [class*="rounded-[2"], [class*="rounded-[1.7"], [class*="rounded-[1.5"]) {
+  border-radius: 1rem !important;
+}
+
+.fitmate-minimal-ui .fitmate-app-page .rounded-2xl {
+  border-radius: 0.9rem !important;
+}
+
+.fitmate-minimal-ui .fitmate-app-page .rounded-xl {
+  border-radius: 0.75rem !important;
+}
+
+.fitmate-minimal-ui .fitmate-app-page h1 {
+  font-weight: 800 !important;
+  letter-spacing: -0.032em !important;
+}
+
+.fitmate-minimal-ui .fitmate-app-page h2,
+.fitmate-minimal-ui .fitmate-app-page h3 {
+  font-weight: 750 !important;
+  letter-spacing: -0.018em !important;
+}
+
+.fitmate-minimal-ui .fitmate-app-page :where(.font-black) {
+  font-weight: 750 !important;
+}
+
+.fitmate-minimal-ui .fitmate-app-page :where([class*="tracking-[0."]) {
+  letter-spacing: 0.08em !important;
+}
+
+.fitmate-minimal-ui .fitmate-app-page :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, select) {
+  min-height: 2.75rem;
+  border-radius: 0.75rem !important;
+  border-color: #dce4df !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+
+.dark .fitmate-minimal-ui .fitmate-app-page :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, select) {
+  border-color: #263a2f !important;
+  background: #0b1711 !important;
+}
+
+/* Company credit remains on legal/marketing pages, but app headers show the
+   product name only to reduce repeated visual information. */
+.fitmate-minimal-ui .fitmate-app-page .fitmate-brand__company {
+  display: none;
+}
+
+.fitmate-minimal-ui .fitmate-app-page .fitmate-brand__mark {
+  box-shadow: none !important;
+}
+
+/* Progressive disclosure used for advanced controls such as the Jogging
+   Story editor. */
+.fitmate-advanced-panel > summary::-webkit-details-marker {
+  display: none;
+}
+
+.fitmate-advanced-panel__chevron {
+  display: inline-block;
+  transition: transform 160ms ease;
+}
+
+.fitmate-advanced-panel[open] .fitmate-advanced-panel__chevron {
+  transform: rotate(180deg);
+}
+
+/* Auth/legal supporting controls stay available but visually secondary. */
+.fitmate-minimal-ui .fitmate-auth-page {
+  background: #f6f8f7 !important;
+  background-image: none !important;
+}
+
+.dark .fitmate-minimal-ui .fitmate-auth-page {
+  background: #07100c !important;
+}
+
+.fitmate-minimal-ui .fitmate-auth-page > div {
+  border-color: #e2e8e4 !important;
+  box-shadow: none !important;
+}
+
+@media (max-width: 640px) {
+  .fitmate-minimal-ui .fitmate-app-page {
+    padding-bottom: max(5.9rem, calc(5.25rem + env(safe-area-inset-bottom))) !important;
+  }
+
+  .fitmate-minimal-ui .fitmate-app-page > :where(nav, header) {
+    min-height: 3.45rem !important;
+    padding: 0.5rem 0.72rem !important;
+  }
+
+  .fitmate-minimal-ui .fitmate-app-page > div[class*="max-w-"],
+  .fitmate-minimal-ui .fitmate-app-page > section[class*="max-w-"] {
+    padding-left: 0.72rem !important;
+    padding-right: 0.72rem !important;
+  }
+
+  .fitmate-minimal-ui .fitmate-app-page h1 {
+    font-size: 1.32rem !important;
+    line-height: 1.12 !important;
+  }
+
+  .fitmate-minimal-ui .fitmate-app-page h2 {
+    font-size: 1rem !important;
+  }
+
+  .fitmate-minimal-ui .fitmate-app-page h3 {
+    font-size: 0.92rem !important;
+  }
+
+  .fitmate-minimal-ui .fitmate-app-page p,
+  .fitmate-minimal-ui .fitmate-app-page li,
+  .fitmate-minimal-ui .fitmate-app-page label {
+    line-height: 1.38;
+  }
+
+  .fitmate-minimal-ui .fitmate-app-page :where(section, article, aside)[class*="p-8"],
+  .fitmate-minimal-ui .fitmate-app-page :where(section, article, aside)[class*="p-7"],
+  .fitmate-minimal-ui .fitmate-app-page :where(section, article, aside)[class*="p-6"],
+  .fitmate-minimal-ui .fitmate-app-page :where(section, article, aside)[class*="p-5"] {
+    padding: 0.85rem !important;
+  }
+
+  .fitmate-minimal-ui .fitmate-app-page :where([class*="space-y-8"], [class*="space-y-7"], [class*="space-y-6"]) > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0.85rem !important;
+  }
+
+  .fitmate-minimal-ui .fitmate-app-page :where([class*="gap-8"], [class*="gap-7"], [class*="gap-6"], [class*="gap-5"]) {
+    gap: 0.75rem !important;
+  }
+
+  .fitmate-minimal-ui .fitmate-app-page :where(button, a[role="button"]) {
+    min-height: 2.65rem;
+  }
+
+  .fitmate-minimal-ui .fitmate-app-page .fitmate-brand {
+    gap: 0.55rem;
+  }
+
+  .fitmate-minimal-ui .fitmate-app-page .fitmate-brand__mark {
+    width: 2.1rem !important;
+    height: 2.1rem !important;
+    border-radius: 0.65rem !important;
+  }
+}
+
+
+/* FitMate mobile comfort refinement — 2026-08-14 */
+/* Scoped to app pages. Floating bubble navigation lives outside this scope. */
+.fitmate-comfort-ui .fitmate-app-page {
+  --fitmate-surface: #ffffff;
+  --fitmate-surface-soft: #f4f7f5;
+  --fitmate-border: #e3e9e5;
+  --fitmate-text-muted: #647168;
+  background: #f7f9f8 !important;
+  color: #102018;
+  overscroll-behavior-y: contain;
+  -webkit-tap-highlight-color: transparent;
+}
+.dark .fitmate-comfort-ui .fitmate-app-page {
+  --fitmate-surface: #0a1510;
+  --fitmate-surface-soft: #0d1b14;
+  --fitmate-border: #213128;
+  --fitmate-text-muted: #9eaaa3;
+  background: #07100c !important;
+  color: #f4f7f5;
+}
+.fitmate-comfort-ui .fitmate-app-page > :where(header, nav) {
+  border-bottom: 1px solid var(--fitmate-border) !important;
+  background: color-mix(in srgb, var(--fitmate-surface) 96%, transparent) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(14px) !important;
+}
+.fitmate-comfort-ui .fitmate-app-page :where(section, article, aside, div)[class*="border"][class*="rounded-"] {
+  border-color: var(--fitmate-border) !important;
+}
+.fitmate-comfort-ui .fitmate-app-page :where([class*="shadow-2xl"], [class*="shadow-xl"], [class*="shadow-lg"], [class*="shadow-md"], [class*="shadow-sm"]) {
+  box-shadow: none !important;
+}
+.fitmate-comfort-ui .fitmate-app-page :where([class*="backdrop-blur"]):not(header):not(nav) {
+  backdrop-filter: none !important;
+}
+.fitmate-comfort-ui .fitmate-app-page :where(button, a) { touch-action: manipulation; }
+.fitmate-comfort-ui .fitmate-app-page :where(button, a[role="button"], input, select, textarea) { font-size: 0.875rem; }
+.fitmate-comfort-ui .fitmate-app-page :where(button, a[role="button"]) { min-height: 2.75rem; font-weight: 750; }
+.fitmate-comfort-ui .fitmate-app-page :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, select) {
+  min-height: 2.875rem;
+  border: 1px solid var(--fitmate-border) !important;
+  border-radius: 0.8rem !important;
+  background: var(--fitmate-surface) !important;
+  box-shadow: none !important;
+}
+.fitmate-comfort-ui .fitmate-app-page :where(input, textarea, select):focus {
+  border-color: #22a45a !important;
+  outline: 3px solid rgba(34, 164, 90, 0.12) !important;
+  outline-offset: 0;
+}
+.fitmate-comfort-ui .fitmate-app-page :where([class*="uppercase"][class*="tracking-"]) {
+  letter-spacing: 0.08em !important;
+  font-size: 0.68rem !important;
+}
+.fitmate-comfort-ui .fitmate-app-page :where(p, li) { text-wrap: pretty; }
+.fitmate-comfort-ui .fitmate-app-page :where(p)[class*="leading-7"] { line-height: 1.48 !important; }
+.fitmate-comfort-ui .fitmate-app-page :where(button, a, [class*="transition"]) { transition-duration: 140ms !important; }
+.fitmate-comfort-ui .fitmate-app-page :where([class*="hover:-translate"], [class*="hover:scale-"]) { transform: none !important; }
+
+@media (max-width: 640px) {
+  .fitmate-comfort-ui .fitmate-app-page {
+    min-height: 100dvh;
+    padding-bottom: max(6.1rem, calc(5.35rem + env(safe-area-inset-bottom))) !important;
+  }
+  .fitmate-comfort-ui .fitmate-app-page > :where(header, nav) {
+    min-height: calc(3.35rem + env(safe-area-inset-top));
+    padding-top: max(0.5rem, env(safe-area-inset-top)) !important;
+    padding-bottom: 0.5rem !important;
+    padding-left: max(0.9rem, env(safe-area-inset-left)) !important;
+    padding-right: max(0.9rem, env(safe-area-inset-right)) !important;
+  }
+  .fitmate-comfort-ui .fitmate-app-page > :where(div, section)[class*="max-w-"] {
+    padding-left: max(0.9rem, env(safe-area-inset-left)) !important;
+    padding-right: max(0.9rem, env(safe-area-inset-right)) !important;
+  }
+  .fitmate-comfort-ui .fitmate-app-page :where(h1) {
+    font-size: 1.28rem !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.026em !important;
+  }
+  .fitmate-comfort-ui .fitmate-app-page :where(h2) { font-size: 1.02rem !important; line-height: 1.22 !important; }
+  .fitmate-comfort-ui .fitmate-app-page :where(h3) { font-size: 0.94rem !important; line-height: 1.25 !important; }
+  .fitmate-comfort-ui .fitmate-app-page :where(p, li, label) { font-size: 0.84rem; line-height: 1.42; }
+  .fitmate-comfort-ui .fitmate-app-page :where(.text-4xl, .text-5xl, .text-6xl) { font-size: 1.55rem !important; line-height: 1.1 !important; }
+  .fitmate-comfort-ui .fitmate-app-page :where(.text-3xl) { font-size: 1.3rem !important; }
+  .fitmate-comfort-ui .fitmate-app-page :where(.text-2xl) { font-size: 1.08rem !important; }
+  .fitmate-comfort-ui .fitmate-app-page :where(section, article, aside)[class*="p-10"],
+  .fitmate-comfort-ui .fitmate-app-page :where(section, article, aside)[class*="p-9"],
+  .fitmate-comfort-ui .fitmate-app-page :where(section, article, aside)[class*="p-8"],
+  .fitmate-comfort-ui .fitmate-app-page :where(section, article, aside)[class*="p-7"],
+  .fitmate-comfort-ui .fitmate-app-page :where(section, article, aside)[class*="p-6"],
+  .fitmate-comfort-ui .fitmate-app-page :where(section, article, aside)[class*="p-5"] { padding: 0.9rem !important; }
+  .fitmate-comfort-ui .fitmate-app-page :where([class*="py-12"], [class*="py-10"], [class*="py-8"], [class*="py-7"], [class*="py-6"]) {
+    padding-top: 0.9rem !important;
+    padding-bottom: 0.9rem !important;
+  }
+  .fitmate-comfort-ui .fitmate-app-page :where([class*="space-y-8"], [class*="space-y-7"], [class*="space-y-6"], [class*="space-y-5"]) > :not([hidden]) ~ :not([hidden]) { margin-top: 0.8rem !important; }
+  .fitmate-comfort-ui .fitmate-app-page :where([class*="gap-8"], [class*="gap-7"], [class*="gap-6"], [class*="gap-5"], [class*="gap-4"]) { gap: 0.75rem !important; }
+  .fitmate-comfort-ui .fitmate-app-page :where(.rounded-3xl, [class*="rounded-[2"], [class*="rounded-[1.7"], [class*="rounded-[1.5"]) { border-radius: 1rem !important; }
+  .fitmate-comfort-ui .fitmate-app-page .rounded-2xl { border-radius: 0.85rem !important; }
+  .fitmate-comfort-ui .fitmate-app-page :where(button, a[role="button"]) { min-height: 2.8rem; padding-top: 0.65rem; padding-bottom: 0.65rem; }
+  .fitmate-comfort-ui .fitmate-app-page :where(table) { font-size: 0.78rem; }
+  .fitmate-comfort-ui .fitmate-app-page :where([class*="overflow-x-auto"]) { scrollbar-width: none; }
+  .fitmate-comfort-ui .fitmate-app-page :where([class*="overflow-x-auto"])::-webkit-scrollbar { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fitmate-comfort-ui .fitmate-app-page *,
+  .fitmate-comfort-ui .fitmate-app-page *::before,
+  .fitmate-comfort-ui .fitmate-app-page *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* Auth screens use the same calm mobile rhythm. */
+.fitmate-comfort-ui .fitmate-auth-page {
+  background: #f7f9f8 !important;
+  color: #102018;
+  -webkit-tap-highlight-color: transparent;
+}
+.fitmate-comfort-ui .fitmate-auth-page > div {
+  border-color: #e3e9e5 !important;
+  box-shadow: none !important;
+}
+.fitmate-comfort-ui .fitmate-auth-page :where(input:not([type="checkbox"]), textarea, select) {
+  min-height: 2.9rem;
+  border-radius: 0.8rem !important;
+  border-color: #dfe7e2 !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+.fitmate-comfort-ui .fitmate-auth-page :where(button, a[role="button"]) {
+  min-height: 2.8rem;
+  border-radius: 0.8rem !important;
+  box-shadow: none !important;
+}
+@media (max-width: 640px) {
+  .fitmate-comfort-ui .fitmate-auth-page {
+    min-height: 100dvh;
+    padding: max(0.8rem, env(safe-area-inset-top)) max(0.9rem, env(safe-area-inset-right)) max(0.9rem, env(safe-area-inset-bottom)) max(0.9rem, env(safe-area-inset-left)) !important;
+  }
+  .fitmate-comfort-ui .fitmate-auth-page > div {
+    min-height: calc(100dvh - 1.8rem) !important;
+    border-radius: 1rem !important;
+  }
+  .fitmate-comfort-ui .fitmate-auth-page section {
+    padding: 1.15rem !important;
+  }
+  .fitmate-comfort-ui .fitmate-auth-page h1,
+  .fitmate-comfort-ui .fitmate-auth-page h2 {
+    font-size: 1.55rem !important;
+    line-height: 1.12 !important;
+    letter-spacing: -0.025em !important;
+  }
+  .fitmate-comfort-ui .fitmate-auth-page :where([class*="mt-12"], [class*="mt-10"], [class*="mt-8"], [class*="mt-7"]) {
+    margin-top: 1rem !important;
+  }
+  .fitmate-comfort-ui .fitmate-auth-page :where([class*="space-y-5"]) > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0.8rem !important;
+  }
+}

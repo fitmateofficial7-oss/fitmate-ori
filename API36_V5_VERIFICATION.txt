@@ -1,0 +1,9 @@
+FITMATE API36 V5 STATIC VERIFICATION
+Installer labels: 12 unique
+Duplicate labels: NONE
+Recursive installer self-call: NONE
+npm verify call inside installer: NONE
+Gradle build call inside installer: NONE
+Command-line Tools auto-download: YES
+Android Platform 36 install: YES
+Build Tools 36.0.0 install: YES

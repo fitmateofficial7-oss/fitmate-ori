@@ -165,8 +165,8 @@ export default function RegisterPage() {
             </p>
             <h1 className="mt-4 text-5xl font-black leading-tight tracking-tight">
               {tr(
-                "Versi terkuatmu dimulai dari sini.",
-                "Your strongest version starts here."
+                "Mulai latihanmu.",
+                "Start your training."
               )}
             </h1>
             <p className="mt-5 max-w-md text-lg leading-8 text-slate-300">
@@ -203,15 +203,15 @@ export default function RegisterPage() {
             <FitMateBrand href="/" size="sm" showCompany className="lg:hidden" />
 
             <p className="mt-10 text-xs font-black uppercase tracking-[0.18em] text-green-600 lg:mt-0">
-              {tr("Gratis untuk memulai", "Free to start")}
+              {tr("DAFTAR", "SIGN UP")}
             </p>
             <h2 className="mt-3 text-4xl font-black tracking-tight">
               {tr("Buat akun FitMate", "Create your FitMate account")}
             </h2>
             <p className="mt-3 leading-7 text-slate-500">
               {tr(
-                "Isi profil singkat untuk mulai.",
-                "It only takes a minute. Then FitMate will adapt to you."
+                "Isi data singkat untuk mulai.",
+                "Add a few details to get started."
               )}
             </p>
 

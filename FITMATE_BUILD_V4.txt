@@ -1,0 +1,4 @@
+FitMate Android build scripts V4
+Automatic Android SDK Command-line Tools download enabled.
+Automatic Android 16 / API 36 installation enabled.
+Command-line Tools URL: https://dl.google.com/android/repository/commandlinetools-win-15859902_latest.zip

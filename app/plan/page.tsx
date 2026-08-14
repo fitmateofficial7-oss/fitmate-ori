@@ -1570,8 +1570,8 @@ export default function PlanPage(): import("react").JSX.Element {
 
                 <p className="mt-5 max-w-2xl leading-7 text-green-50">
                   {tr(
-                    "Jadwal disesuaikan dengan profil, target, dan kemampuanmu.",
-                    "Your schedule follows your profile, goal, and current level."
+                    "Jadwal sesuai target dan kemampuanmu.",
+                    "A schedule matched to your goal and level."
                   )}
                 </p>
 
@@ -1582,7 +1582,7 @@ export default function PlanPage(): import("react").JSX.Element {
                 <div className="rounded-3xl bg-white/10 p-6 backdrop-blur-sm">
 
                   <p className="text-sm font-semibold text-green-100">
-                    {tr("TUJUAN SAAT INI", "CURRENT GOAL")}
+                    {tr("TARGET", "GOAL")}
                   </p>
 
                   <p className="mt-2 text-2xl font-bold capitalize">
@@ -1592,7 +1592,7 @@ export default function PlanPage(): import("react").JSX.Element {
                   <p className="mt-2 text-sm text-green-100">
                     {profile.training_days
                       ? localizeTrainingDays(profile.training_days, language)
-                      : tr("Jadwal belum dipilih", "Schedule not selected")}
+                      : tr("Belum ada jadwal", "No schedule yet")}
                   </p>
 
                 </div>

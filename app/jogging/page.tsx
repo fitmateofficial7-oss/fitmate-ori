@@ -39,12 +39,16 @@ import {
   type NativeBackgroundLocationError,
   type NativeBackgroundLocationSample,
 } from "@/lib/native-background-location";
+import {
+  saveMediaToNativeGallery,
+} from "@/lib/native-media-saver";
 import { supabase } from "@/lib/supabase";
 
 type TrackingStatus = "idle" | "tracking" | "paused" | "finished";
 type ShareMode = "track" | "media";
 type ShareMediaKind = "image" | "video";
 type ShareDragTarget = "metrics" | "route" | "brand" | "details";
+type PendingLocationAction = "start" | "resume";
 
 type JoggingSession = {
   id: string;
@@ -343,6 +347,8 @@ export default function JoggingPage() {
   const [shareBusy, setShareBusy] = useState(false);
   const [nativeBackgroundReady, setNativeBackgroundReady] = useState(false);
   const [nativePlatform, setNativePlatform] = useState<string | null>(null);
+  const [pendingLocationAction, setPendingLocationAction] =
+    useState<PendingLocationAction | null>(null);
 
   const pointsRef = useRef<JoggingRoutePoint[]>([]);
   const statusRef = useRef<TrackingStatus>("idle");
@@ -355,6 +361,7 @@ export default function JoggingPage() {
   const wakeLockRef = useRef<FitMateWakeLockSentinel | null>(null);
   const sharePreviewRef = useRef<HTMLDivElement | null>(null);
   const shareDragOffsetRef = useRef({ x: 0, y: 0 });
+  const locationDisclosureAcceptedRef = useRef(false);
 
   const durationSeconds = Math.floor(elapsedMilliseconds / 1000);
   const stats = useMemo(
@@ -842,7 +849,7 @@ export default function JoggingPage() {
     setShareLayout(DEFAULT_JOGGING_SHARE_LAYOUT);
   }, [releaseScreenWakeLock, stopGpsWatch]);
 
-  const startSession = useCallback(async () => {
+  const beginStartSession = useCallback(async () => {
     const now = Date.now();
     pointsRef.current = [];
     setPoints([]);
@@ -880,7 +887,7 @@ export default function JoggingPage() {
     setElapsedMilliseconds(elapsedBeforeMsRef.current);
   }, [releaseScreenWakeLock, stopGpsWatch]);
 
-  const resumeSession = useCallback(async () => {
+  const beginResumeSession = useCallback(async () => {
     activeSegmentStartedAtRef.current = Date.now();
     statusRef.current = "tracking";
     setStatus("tracking");
@@ -894,6 +901,47 @@ export default function JoggingPage() {
       void releaseScreenWakeLock();
     }
   }, [releaseScreenWakeLock, requestScreenWakeLock, startGpsWatch]);
+
+  const requestLocationAwareAction = useCallback(
+    async (action: PendingLocationAction) => {
+      const nativeAvailable = await isNativeBackgroundLocationAvailable();
+      if (nativeAvailable && !locationDisclosureAcceptedRef.current) {
+        setPendingLocationAction(action);
+        return;
+      }
+
+      if (action === "start") {
+        await beginStartSession();
+      } else {
+        await beginResumeSession();
+      }
+    },
+    [beginResumeSession, beginStartSession]
+  );
+
+  const confirmLocationDisclosure = useCallback(() => {
+    const action = pendingLocationAction;
+    if (!action) return;
+
+    locationDisclosureAcceptedRef.current = true;
+    setPendingLocationAction(null);
+
+    if (action === "start") {
+      void beginStartSession();
+    } else {
+      void beginResumeSession();
+    }
+  }, [beginResumeSession, beginStartSession, pendingLocationAction]);
+
+  const dismissLocationDisclosure = useCallback(() => {
+    setPendingLocationAction(null);
+    setGpsMessage(
+      tr(
+        "Izin lokasi belum diminta. Jogging GPS tidak dimulai.",
+        "Location permission was not requested. GPS jogging did not start."
+      )
+    );
+  }, [tr]);
 
   const persistSession = useCallback(
     async (session: JoggingSession) => {
@@ -1152,18 +1200,36 @@ export default function JoggingPage() {
             tr("Aktivitas siap dibagikan.", "Activity is ready to share.")
           );
         } else {
-          const url = URL.createObjectURL(blob);
-          const anchor = document.createElement("a");
-          anchor.href = url;
-          anchor.download = fileName;
-          anchor.rel = "noopener";
-          document.body.appendChild(anchor);
-          anchor.click();
-          anchor.remove();
-          window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-          setSaveMessage(
-            tr("File share berhasil diunduh.", "Share file downloaded.")
+          const nativeGalleryResult = await saveMediaToNativeGallery(
+            blob,
+            fileName,
+            mimeType
           );
+
+          if (nativeGalleryResult) {
+            setSaveMessage(
+              tr(
+                "Tersimpan ke Galeri • album FitMate.",
+                "Saved to Gallery • FitMate album."
+              )
+            );
+          } else {
+            const url = URL.createObjectURL(blob);
+            const anchor = document.createElement("a");
+            anchor.href = url;
+            anchor.download = fileName;
+            anchor.rel = "noopener";
+            document.body.appendChild(anchor);
+            anchor.click();
+            anchor.remove();
+            window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+            setSaveMessage(
+              tr(
+                "File berhasil diunduh.",
+                "File downloaded successfully."
+              )
+            );
+          }
         }
       } catch (error) {
         if (!(error instanceof DOMException && error.name === "AbortError")) {
@@ -1218,48 +1284,30 @@ export default function JoggingPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
           <FitMateBrand href="/dashboard" size="sm" showCompany />
           <div className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-black uppercase tracking-[0.12em] text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200">
-            {tr("Gratis untuk semua akun", "Free for every account")}
+            {tr("Gratis", "Free")}
           </div>
         </div>
       </header>
 
       <div className="mx-auto max-w-6xl space-y-6 px-4 py-7 sm:px-6 lg:pb-10">
-        <section className="overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-emerald-950 via-teal-800 to-emerald-600 p-5 text-white shadow-xl sm:rounded-[2rem] sm:p-8">
-          <div className="grid gap-7 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.22em] text-emerald-200">
+        <section className="rounded-2xl border border-emerald-100 bg-white p-4 dark:border-white/10 dark:bg-slate-950 sm:p-5">
+          <div className="flex items-start gap-3">
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-emerald-600 text-white">
+              <FitMateIcon name="run" className="h-5 w-5" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-xs font-bold uppercase tracking-[0.08em] text-emerald-700 dark:text-emerald-300">
                 FitMate Jogging
               </p>
-              <h1 className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">
-                {tr(
-                  "Rekam rute, pace, jarak, dan kalori",
-                  "Track your route, pace, distance, and calories"
-                )}
+              <h1 className="mt-1 text-2xl font-black tracking-tight sm:text-3xl">
+                {tr("Jogging GPS", "GPS Jogging")}
               </h1>
-              <p className="mt-4 max-w-2xl font-semibold leading-7 text-emerald-50/85">
+              <p className="mt-1.5 max-w-2xl text-sm font-medium text-slate-500 dark:text-slate-400">
                 {tr(
-                  "Rekam rute, pace, jarak, dan aktivitas lari dari HP.",
-                  "Track your route, then create a share card."
+                  "Rute, jarak, pace, dan waktu.",
+                  "Route, distance, pace, and time."
                 )}
               </p>
-            </div>
-            <div className="grid grid-cols-4 gap-2 rounded-3xl bg-white/10 p-3 backdrop-blur lg:grid-cols-2 lg:gap-3 lg:p-4">
-              <div className="rounded-2xl bg-white/10 p-3 lg:p-4">
-                <FitMateIcon name="location" className="h-5 w-5" />
-                <p className="mt-1 text-xs font-black sm:text-sm lg:mt-2 lg:text-base">Live GPS</p>
-              </div>
-              <div className="rounded-2xl bg-white/10 p-3 lg:p-4">
-                <FitMateIcon name="energy" className="h-5 w-5" />
-                <p className="mt-1 text-xs font-black sm:text-sm lg:mt-2 lg:text-base">Pace & km</p>
-              </div>
-              <div className="rounded-2xl bg-white/10 p-3 lg:p-4">
-                <FitMateIcon name="activity" className="h-5 w-5" />
-                <p className="mt-1 text-xs font-black sm:text-sm lg:mt-2 lg:text-base">{tr("Kalori", "Calories")}</p>
-              </div>
-              <div className="rounded-2xl bg-white/10 p-3 lg:p-4">
-                <FitMateIcon name="share" className="h-5 w-5" />
-                <p className="mt-1 text-xs font-black sm:text-sm lg:mt-2 lg:text-base">Share card</p>
-              </div>
             </div>
           </div>
         </section>
@@ -1288,7 +1336,7 @@ export default function JoggingPage() {
                 )} /km`}
               />
               <MetricCard
-                label={tr("Pace saat ini", "Current pace")}
+                label={tr("Pace", "Pace")}
                 value={`${formatPace(
                   activeStats.currentPaceSecondsPerKm
                 )} /km`}
@@ -1371,7 +1419,7 @@ export default function JoggingPage() {
               {status === "idle" && (
                 <button
                   type="button"
-                  onClick={startSession}
+                  onClick={() => void requestLocationAwareAction("start")}
                   className="rounded-2xl bg-emerald-600 px-6 py-4 font-black text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-500 sm:col-span-2 lg:col-span-4"
                 >
                   <span className="inline-flex items-center justify-center gap-2">
@@ -1404,7 +1452,7 @@ export default function JoggingPage() {
                 <>
                   <button
                     type="button"
-                    onClick={resumeSession}
+                    onClick={() => void requestLocationAwareAction("resume")}
                     className="rounded-2xl bg-emerald-600 px-6 py-4 font-black text-white"
                   >
                     <span className="inline-flex items-center justify-center gap-2"><FitMateIcon name="play" className="h-5 w-5" />{tr("Lanjutkan", "Resume")}</span>
@@ -1425,7 +1473,7 @@ export default function JoggingPage() {
                     onClick={resetSession}
                     className="rounded-2xl border border-slate-200 bg-white px-6 py-4 font-black text-slate-700 dark:border-white/10 dark:bg-slate-900 dark:text-white"
                   >
-                    {tr("Aktivitas baru", "New activity")}
+                    {tr("Baru", "New")}
                   </button>
                   <button
                     type="button"
@@ -1433,7 +1481,7 @@ export default function JoggingPage() {
                     disabled={shareBusy}
                     className="rounded-2xl bg-slate-950 px-6 py-4 font-black text-white disabled:opacity-60 dark:bg-white dark:text-slate-950"
                   >
-                    ↓ {tr("Download kartu", "Download card")}
+                    {tr("Simpan kartu", "Save card")}
                   </button>
                   <button
                     type="button"
@@ -1441,7 +1489,7 @@ export default function JoggingPage() {
                     disabled={shareBusy}
                     className="rounded-2xl bg-emerald-600 px-6 py-4 font-black text-white disabled:opacity-60 sm:col-span-2"
                   >
-                    {tr("Bagikan aktivitas", "Share activity")}
+                    {tr("Bagikan", "Share")}
                   </button>
                 </>
               )}
@@ -1461,7 +1509,7 @@ export default function JoggingPage() {
           <section className="grid gap-5 lg:grid-cols-[0.82fr_1.18fr] lg:gap-6">
             <div className="rounded-[2rem] border border-emerald-100 bg-white p-5 shadow-lg dark:border-white/10 dark:bg-slate-950 sm:p-6">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-300">
-                {tr("Editor share FitMate", "FitMate share editor")}
+                {tr("Kartu aktivitas", "Activity card")}
               </p>
               <h2 className="mt-2 text-2xl font-black">
                 {tr(
@@ -1471,8 +1519,14 @@ export default function JoggingPage() {
               </h2>
               <p className="mt-2 text-sm font-semibold leading-6 text-slate-500 dark:text-slate-400">
                 {tr(
-                  "Pilih, ubah ukuran, lalu tarik elemen ke posisi yang diinginkan.",
-                  "Select, resize, and drag elements on the preview."
+                  "Simpan langsung dengan tampilan default, atau buka pengaturan opsional jika ingin mengubah posisi elemen.",
+                  "Save immediately with the default layout, or open the optional controls to reposition elements."
+                )}
+              </p>
+              <p className="mt-2 text-xs font-bold text-emerald-700 dark:text-emerald-300">
+                {tr(
+                  "Di aplikasi Android, tombol Simpan memasukkan kartu ke Galeri album FitMate.",
+                  "In the Android app, Save puts the card in the FitMate Gallery album."
                 )}
               </p>
 
@@ -1529,20 +1583,27 @@ export default function JoggingPage() {
                 </label>
               )}
 
-              <div className="mt-5 space-y-4 rounded-3xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/5">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="font-black">
-                      {tr("Atur elemen", "Edit element")}
-                    </p>
-                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-                      {tr(
-                        "Pilih elemen, ubah ukuran, lalu tarik langsung pada preview",
-                        "Select an element, resize it, then drag it directly on the preview"
-                      )}
-                    </p>
-                  </div>
-                  <button
+              <details className="fitmate-advanced-panel mt-4 rounded-2xl border border-slate-200 bg-slate-50 dark:border-white/10 dark:bg-white/5">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-black text-slate-800 dark:text-slate-100">
+                  <span>
+                    {tr("Atur tampilan (opsional)", "Customize layout (optional)")}
+                  </span>
+                  <span className="fitmate-advanced-panel__chevron text-slate-400" aria-hidden="true">⌄</span>
+                </summary>
+                <div className="space-y-4 border-t border-slate-200 p-4 dark:border-white/10">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="font-black">
+                        {tr("Atur elemen", "Edit element")}
+                      </p>
+                      <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                        {tr(
+                          "Pilih elemen, ubah ukuran, lalu tarik langsung pada preview",
+                          "Select an element, resize it, then drag it directly on the preview"
+                        )}
+                      </p>
+                    </div>
+                    <button
                     type="button"
                     onClick={() => {
                       setShareLayout(DEFAULT_JOGGING_SHARE_LAYOUT);
@@ -1624,16 +1685,17 @@ export default function JoggingPage() {
                     "The exported result follows the preview."
                   )}
                 </p>
-              </div>
+                </div>
+              </details>
 
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
                 <button
                   type="button"
                   onClick={() => void exportSession(false)}
                   disabled={shareBusy}
                   className="rounded-2xl bg-slate-950 px-5 py-4 font-black text-white disabled:opacity-60 dark:bg-white dark:text-slate-950"
                 >
-                  ↓ {shareBusy ? tr("Memproses…", "Processing…") : tr("Download", "Download")}
+                  {shareBusy ? tr("Memproses…", "Processing…") : tr("Simpan", "Save")}
                 </button>
                 <button
                   type="button"
@@ -1835,10 +1897,10 @@ export default function JoggingPage() {
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.16em] text-emerald-600 dark:text-emerald-300">
-                {tr("Riwayat gratis", "Free history")}
+                {tr("RIWAYAT", "HISTORY")}
               </p>
               <h2 className="mt-2 text-2xl font-black">
-                {tr("Aktivitas jogging kamu", "Your jogging activities")}
+                {tr("Riwayat jogging", "Jogging history")}
               </h2>
             </div>
             <Link
@@ -1912,6 +1974,97 @@ export default function JoggingPage() {
           </p>
         </section>
       </div>
+
+      {pendingLocationAction && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="fitmate-location-disclosure-title"
+          className="fixed inset-0 z-[100] flex items-end justify-center bg-slate-950/70 p-3 backdrop-blur-sm sm:items-center sm:p-6"
+        >
+          <div className="w-full max-w-lg overflow-hidden rounded-[2rem] border border-emerald-200 bg-white shadow-2xl dark:border-emerald-500/30 dark:bg-slate-950">
+            <div className="bg-gradient-to-br from-emerald-950 via-teal-800 to-emerald-600 p-6 text-white">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15">
+                <FitMateIcon name="location" className="h-6 w-6" />
+              </div>
+              <h2
+                id="fitmate-location-disclosure-title"
+                className="mt-4 text-2xl font-black tracking-tight"
+              >
+                {tr(
+                  "Izinkan FitMate melacak lokasi saat Jogging?",
+                  "Allow FitMate to track your location during Jogging?"
+                )}
+              </h2>
+              <p className="mt-2 text-sm font-semibold leading-6 text-emerald-50/90">
+                {tr(
+                  "FitMate mengumpulkan data lokasi presisi (GPS) untuk merekam rute, jarak, pace, kecepatan, dan statistik jogging.",
+                  "FitMate collects precise location (GPS) data to record your route, distance, pace, speed, and jogging statistics."
+                )}
+              </p>
+            </div>
+
+            <div className="space-y-4 p-6 text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300">
+              <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-950 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100">
+                <p className="font-black">
+                  {tr("Lokasi latar belakang", "Background location")}
+                </p>
+                <p className="mt-1">
+                  {tr(
+                    "Saat Jogging aktif, FitMate mengakses lokasi di latar belakang saat aplikasi diminimalkan, layar mati, atau tidak sedang digunakan.",
+                    "During active Jogging, FitMate accesses location in the background when the app is minimized, the screen is off, or not in use."
+                  )}
+                </p>
+                <p className="mt-1">
+                  {tr(
+                    "Akses ini menjaga rute tetap tercatat dan berhenti saat sesi selesai.",
+                    "This keeps your route recorded and stops when the session ends."
+                  )}
+                </p>
+              </div>
+
+              <p>
+                {tr(
+                  "Data lokasi tidak dijual dan tidak digunakan untuk iklan. Rute dapat disimpan di perangkat dan disinkronkan ke akun FitMate untuk riwayat jogging.",
+                  "Location data is not sold or used for ads. Routes may be stored on your device and synced to your FitMate account for jogging history."
+                )}
+              </p>
+
+              <p>
+                {tr(
+                  "Kamu dapat menolak atau mencabut izin di pengaturan perangkat. Tanpa izin lokasi, GPS Jogging tidak dapat merekam rute dengan benar.",
+                  "You can decline or revoke permission in device settings. Without location permission, GPS Jogging cannot record your route correctly."
+                )}
+              </p>
+
+              <Link
+                href="/privacy"
+                target="_blank"
+                className="inline-flex font-black text-emerald-700 underline underline-offset-4 dark:text-emerald-300"
+              >
+                {tr("Baca Kebijakan Privasi", "Read Privacy Policy")}
+              </Link>
+
+              <div className="grid gap-3 pt-1 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={dismissLocationDisclosure}
+                  className="rounded-2xl border border-slate-200 bg-white px-5 py-3.5 font-black text-slate-700 transition hover:bg-slate-50 dark:border-white/10 dark:bg-slate-900 dark:text-white"
+                >
+                  {tr("Jangan sekarang", "Not now")}
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmLocationDisclosure}
+                  className="rounded-2xl bg-emerald-600 px-5 py-3.5 font-black text-white shadow-lg shadow-emerald-600/20 transition hover:bg-emerald-500"
+                >
+                  {tr("Lanjutkan", "Continue")}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

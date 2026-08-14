@@ -199,17 +199,17 @@ export default function ExercisesPage() {
           <div>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-green-200 bg-green-50 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-green-700">
               <FitMateIcon name="activity" className="h-4 w-4" />
-              {tr("Panduan gerakan 2D", "2D movement guide")}
+              {tr("PANDUAN", "GUIDE")}
             </div>
 
             <h1 className="text-4xl font-black tracking-tight sm:text-5xl">
-              {tr("Panduan Latihan", "Exercise Guide")}
+              {tr("Gerakan", "Exercises")}
             </h1>
 
             <p className="mt-4 max-w-2xl leading-7 text-slate-600">
               {tr(
-                "Pilih gerakan untuk melihat panduannya.",
-                "Choose an exercise to see the guide."
+                "Cari gerakan dan lihat caranya.",
+                "Find an exercise and view the steps."
               )}
             </p>
           </div>
@@ -230,8 +230,8 @@ export default function ExercisesPage() {
           <input
             type="text"
             placeholder={tr(
-              "Cari nama gerakan atau otot...",
-              "Search exercise name or muscle..."
+              "Cari gerakan atau otot",
+              "Search exercise or muscle"
             )}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -292,7 +292,7 @@ export default function ExercisesPage() {
         <div className="mb-6 flex items-center justify-between">
           <div>
             <p className="text-sm text-slate-500">
-              {tr("Ditemukan", "Found")}{" "}
+              {tr("Hasil", "Results")}{" "}
               <span className="font-semibold text-slate-900 dark:text-white">
                 {filteredExercises.length}
               </span>{" "}

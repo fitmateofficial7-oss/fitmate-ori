@@ -29,7 +29,7 @@
     "native:configure": "node scripts/configure-native-background-gps.cjs",
     "native:add:android": "npx cap add android && npm run native:configure",
     "native:add:ios": "npx cap add ios && npm run native:configure",
-    "native:sync": "npx cap sync && npm run native:configure",
+    "native:sync": "npm run native:verify-url && npm run native:prepare-welcome && npx cap sync && npm run native:configure",
     "native:open:android": "npx cap open android",
     "native:open:ios": "npx cap open ios",
     "dev:turbopack": "next dev",
@@ -40,7 +40,16 @@
     "audit:i18n": "node scripts/audit-i18n.cjs",
     "verify:package-name": "node scripts/verify-playstore-package.cjs",
     "verify:playstore-assets": "node scripts/verify-playstore-assets.cjs",
-    "verify:android-release": "node scripts/verify-android-release.cjs"
+    "verify:android-release": "node scripts/verify-android-release.cjs",
+    "native:verify-url": "node scripts/verify-native-url.cjs",
+    "verify:api36": "node scripts/verify-android-api36.cjs",
+    "verify:api36:sdk": "node scripts/verify-android-api36.cjs --sdk",
+    "android:install-api36": "node scripts/install-android-api36.cjs",
+    "native:prepare-welcome": "node scripts/prepare-native-welcome.cjs",
+    "verify:native-entry": "node scripts/verify-native-mobile-entry.cjs",
+    "audit:playstore-location": "node scripts/audit-playstore-location-privacy.cjs",
+    "audit:simple-mobile": "node scripts/audit-simple-mobile-experience.cjs",
+    "audit:mobile-comfort": "node scripts/audit-mobile-comfort-refinement.cjs"
   },
   "dependencies": {
     "@capacitor-community/background-geolocation": "^1.2.26",

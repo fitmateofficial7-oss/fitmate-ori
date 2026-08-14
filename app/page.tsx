@@ -8,6 +8,7 @@ import GetStartedButton from "@/components/get-started-button";
 import FitMateIcon, { type FitMateIconName } from "@/components/fitmate-icon";
 import { useLanguage } from "@/components/language-provider";
 import LiveIcon from "@/components/live-icon";
+import MobileWelcome from "@/components/mobile-welcome";
 
 const FEATURES = [
   {
@@ -69,6 +70,8 @@ export default function Home() {
 
   return (
     <main className="fitmate-marketing-page min-h-screen overflow-hidden bg-white text-slate-950">
+      <MobileWelcome />
+      <div className="hidden lg:block">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(circle_at_20%_8%,_rgba(34,197,94,.12),_transparent_34%)]" />
 
       <nav className="relative z-20 px-4 py-5 sm:px-6 lg:px-10">
@@ -412,6 +415,7 @@ export default function Home() {
       <footer className="border-t border-slate-100 bg-white px-6 py-8 dark:border-white/10 dark:bg-slate-950">
         <CompanySignature compact className="mx-auto max-w-7xl" />
       </footer>
+      </div>
     </main>
   );
 }

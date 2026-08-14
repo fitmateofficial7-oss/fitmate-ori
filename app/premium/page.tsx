@@ -454,7 +454,7 @@ export default function PremiumPage() {
                 <div className="mt-6 space-y-4">
                   <fieldset>
                     <legend className="mb-3 text-sm font-black text-slate-800 dark:text-slate-100">
-                      {tr("Pilih cara pembayaran", "Choose payment type")}
+                      {tr("Pilih pembayaran", "Choose payment")}
                     </legend>
                     <div className="grid gap-3 sm:grid-cols-2">
                       <label
@@ -631,7 +631,7 @@ export default function PremiumPage() {
               FitMate Free
             </p>
             <h2 className="mt-2 text-xl font-black text-slate-950 dark:text-white">
-              {tr("Untuk mencoba fitur utama", "Try the core experience")}
+              {tr("Free", "Free")}
             </h2>
             <ul className="mt-4 space-y-2 text-sm font-semibold text-slate-600 dark:text-slate-300">
               <li>{tr("2 generate seumur hidup", "2 lifetime generations")}</li>
@@ -653,7 +653,7 @@ export default function PremiumPage() {
               FitMate Premium
             </p>
             <h2 className="mt-2 text-xl font-black text-slate-950 dark:text-white">
-              {tr("Akses fitur Premium", "Premium feature access")}
+              {tr("Premium", "Premium")}
             </h2>
             <p className="mt-3 text-sm font-semibold leading-6 text-slate-700 dark:text-amber-50">
               {tr(
@@ -714,7 +714,7 @@ export default function PremiumPage() {
                 {tr("Pembayaran", "Billing")}
               </p>
               <h2 className="mt-1 text-2xl font-black text-slate-950 dark:text-white">
-                {tr("Riwayat transaksi", "Transaction history")}
+                {tr("Transaksi", "Transactions")}
               </h2>
             </div>
             <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">

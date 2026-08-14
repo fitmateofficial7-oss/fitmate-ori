@@ -109,7 +109,9 @@ export default function ThemeToggle() {
               "Use dark appearance"
             )
       }
-      className={`fixed left-4 z-50 flex min-h-11 items-center gap-2 rounded-full border border-slate-200 bg-white/95 px-3.5 py-2 text-sm font-black text-slate-700 shadow-xl shadow-slate-300/40 backdrop-blur-xl hover:-translate-y-0.5 hover:border-green-400 hover:text-green-700 ${
+      className={`fixed left-4 z-50 min-h-11 items-center gap-2 rounded-full border border-slate-200 bg-white/95 px-3.5 py-2 text-sm font-black text-slate-700 shadow-xl shadow-slate-300/40 backdrop-blur-xl hover:-translate-y-0.5 hover:border-green-400 hover:text-green-700 ${
+        pathname === "/" ? "hidden lg:flex" : "flex"
+      } ${
         isAppPage
           ? "bottom-24 sm:bottom-5"
           : "bottom-4 sm:bottom-5"

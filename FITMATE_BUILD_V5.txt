@@ -1,0 +1,4 @@
+FitMate Android Build V5 - NO LOOP
+Installer API 36 rewritten from scratch.
+No recursive npm verify calls inside INSTALL-ANDROID-API36.bat.
+Command-line Tools auto-download + API 36 auto-install enabled.

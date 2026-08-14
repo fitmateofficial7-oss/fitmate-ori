@@ -1,0 +1,34 @@
+FITMATE SIMPLE MOBILE UI / SWIPE BACK / GALLERY SAVE - VALIDATION
+Date: 2026-08-14
+
+Implemented:
+- Simplified global FitMate application UI while keeping existing bottom floating bubble menu unchanged.
+- Android system/edge back navigates app/browser history first; exits only when no history remains.
+- Client-side native fallback edge-swipe back for Android WebView.
+- Jogging share/download editor simplified with optional advanced controls.
+- Jogging Save stores generated image/video in Android Gallery album FitMate through MediaStore on Android 10+; web/browser download remains fallback.
+- Native MainActivity and MediaSaver plugin are preserved by native:configure templates.
+
+Validation PASS:
+- native:configure
+- audit:simple-mobile
+- audit:jogging
+- audit:mobile-ui
+- audit:i18n
+- audit:playstore-location
+- verify:api36
+- verify:package-name
+- verify:android-release
+- verify:native-entry
+- audit:timer
+- audit:subscription
+- audit:premium-gates
+- audit:ai-scope
+- audit:sql
+- audit-project --cycles 25: checkedFiles=2550, checkedImports=9125, brokenLocalImports=0, syntaxErrors=0
+- CSS parser: errors=0
+- Java native source syntax/bridge signature validation: PASS
+- Bottom menu SHA256 unchanged: 0c0f0e35057db63143b7dddd75d2ffd1442f858a9b9522fbc79da55893c2abb8
+
+Environment limitation:
+- A clean npm ci/full Next.js build could not be completed in this execution environment because dependency installation was interrupted by the container/network environment. Final device/release build should still be run on the normal development machine/CI.

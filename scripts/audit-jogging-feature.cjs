@@ -53,7 +53,7 @@ assert(
 );
 assert(
   !page.includes("PremiumFeatureGate") &&
-    page.includes("Gratis untuk semua akun"),
+    (page.includes("Gratis untuk semua akun") || page.includes('tr("Gratis", "Free")')),
   "Jogging must remain available to Free users."
 );
 assert(
