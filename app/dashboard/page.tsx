@@ -1312,18 +1312,18 @@ export default function DashboardPage() {
                 </p>
 
                 <h1 className="mt-3 flex items-center gap-3 text-4xl font-bold md:text-5xl">
-                  {tr("Ringkasan", "Overview")}
+                  {tr("Ringkasan latihan", "Training overview")}
                 </h1>
 
                 <p className="mt-4 max-w-2xl text-green-50">
                   {userEmail
                     ? tr(
-                        "Latihan, nutrisi, dan progres hari ini.",
-                        "Today’s workout, nutrition, and progress."
+                        "Latihan dan progresmu dalam satu tempat.",
+                        "View your plan, start a workout, and track progress in one place."
                       )
                     : tr(
-                        "Mulai dari langkah pertama.",
-                        "Start with your first step."
+                        "Mulai perjalanan latihan Anda bersama FitMate.",
+                        "Start your fitness journey with FitMate."
                       )}
                 </p>
 
@@ -1400,7 +1400,7 @@ export default function DashboardPage() {
                 <div>
 
                   <p className="text-sm font-medium text-gray-500">
-                    {tr("Latihan", "Workouts")}
+                    {tr("Total Latihan", "Total Workouts")}
                   </p>
 
                   <p className="mt-2 text-4xl font-bold text-gray-900">
@@ -1431,7 +1431,7 @@ export default function DashboardPage() {
                 <div>
 
                   <p className="text-sm font-medium text-gray-500">
-                    {tr("Streak", "Streak")}
+                    {tr("Streak Latihan", "Workout Streak")}
                   </p>
 
                   <p className="mt-2 text-4xl font-bold text-gray-900">
@@ -1495,7 +1495,7 @@ export default function DashboardPage() {
                 <div>
 
                   <p className="text-sm font-medium text-gray-500">
-                    {tr("Selesai", "Completion")}
+                    {tr("Tingkat Penyelesaian", "Completion Rate")}
                   </p>
 
                   <p className="mt-2 text-4xl font-bold text-gray-900">
@@ -1537,11 +1537,11 @@ export default function DashboardPage() {
               <div>
 
                 <p className="text-sm font-semibold uppercase text-green-600">
-                  {tr("PROFIL", "PROFILE")}
+                  {tr("PROFIL KEBUGARAN", "YOUR FITNESS PROFILE")}
                 </p>
 
                 <h2 className="mt-2 text-2xl font-bold">
-                  {tr("Target saat ini", "Current goal")}
+                  {tr("Tujuan Anda Saat Ini", "Your Current Goal")}
                 </h2>
 
               </div>
@@ -1613,7 +1613,7 @@ export default function DashboardPage() {
           <div className="rounded-3xl bg-gray-900 p-6 text-white shadow-sm">
 
             <p className="text-sm font-semibold text-gray-400">
-              {tr("LATIHAN", "WORKOUT")}
+              {tr("STATUS LATIHAN", "WORKOUT STATUS")}
             </p>
 
             {activeSession ? (
@@ -1694,7 +1694,7 @@ export default function DashboardPage() {
               </p>
 
               <h2 className="mt-2 text-2xl font-bold">
-                {tr("Minggu ini", "This week")}
+                {tr("Aktivitas Mingguan", "Your Weekly Activity")}
               </h2>
 
             </div>
@@ -2051,11 +2051,11 @@ export default function DashboardPage() {
               <div>
 
                 <p className="text-sm font-semibold uppercase text-green-600">
-                  {tr("Berat", "Weight")}
+                  {tr("Progres Berat", "Weight Progress")}
                 </p>
 
                 <h2 className="mt-2 text-2xl font-bold">
-                  {tr("Progres berat", "Weight progress")}
+                  {tr("Pantau Berat Badan", "Track Your Body Weight")}
                 </h2>
 
                 <p className="mt-2 text-gray-500">

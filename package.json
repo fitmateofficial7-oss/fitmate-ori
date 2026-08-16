@@ -47,9 +47,7 @@
     "android:install-api36": "node scripts/install-android-api36.cjs",
     "native:prepare-welcome": "node scripts/prepare-native-welcome.cjs",
     "verify:native-entry": "node scripts/verify-native-mobile-entry.cjs",
-    "audit:playstore-location": "node scripts/audit-playstore-location-privacy.cjs",
-    "audit:simple-mobile": "node scripts/audit-simple-mobile-experience.cjs",
-    "audit:mobile-comfort": "node scripts/audit-mobile-comfort-refinement.cjs"
+    "audit:playstore-location": "node scripts/audit-playstore-location-privacy.cjs"
   },
   "dependencies": {
     "@capacitor-community/background-geolocation": "^1.2.26",

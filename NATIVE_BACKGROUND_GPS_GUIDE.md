@@ -45,7 +45,6 @@ npm run native:open:android
 
 - `ACCESS_COARSE_LOCATION`
 - `ACCESS_FINE_LOCATION`
-- `ACCESS_BACKGROUND_LOCATION`
 - `FOREGROUND_SERVICE`
 - `FOREGROUND_SERVICE_LOCATION`
 - `POST_NOTIFICATIONS`
@@ -82,3 +81,7 @@ In Xcode, confirm **Signing & Capabilities → Background Modes → Location upd
 ## Google Play and App Store review
 
 Location is sensitive data. The store listing and in-app permission explanation should clearly state that background location is used only during a user-started jogging session to draw the route, calculate distance/pace, and restore the activity.
+
+
+## Google Play note — 2026-08-16
+FitMate starts its Android location foreground service only from the visible Jogging screen after a user action. The app therefore does not declare `ACCESS_BACKGROUND_LOCATION`. Active Jogging can continue while the app is minimized or the screen is off through the foreground service and its ongoing notification. Do not re-add `ACCESS_BACKGROUND_LOCATION` unless the product later needs to start or obtain location from a truly background state and Google Play approval has been obtained.

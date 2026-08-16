@@ -6,7 +6,6 @@ import PwaManager from "@/components/pwa-manager";
 import RestTimerNotificationManager from "@/components/rest-timer-notification-manager";
 import LanguageProvider from "@/components/language-provider";
 import LanguageToggle from "@/components/language-toggle";
-import MobileSwipeBack from "@/components/mobile-swipe-back";
 import ThemeToggle from "@/components/theme-toggle";
 import "./globals.css";
 
@@ -85,12 +84,11 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="fitmate-simple-ui fitmate-minimal-ui fitmate-comfort-ui min-h-full flex flex-col">
+      <body className="fitmate-simple-ui min-h-full flex flex-col">
         <LanguageProvider>
           <ClientMonitoring />
           <PwaManager />
           <RestTimerNotificationManager />
-          <MobileSwipeBack />
           {children}
           <FloatingBubbleMenu />
           <ThemeToggle />

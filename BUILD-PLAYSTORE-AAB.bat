@@ -84,6 +84,19 @@ echo [6/8] Sinkronisasi Capacitor dan konfigurasi native...
 call npm run native:sync
 if errorlevel 1 goto :fail
 
+echo.
+echo [POLICY] Memeriksa izin lokasi Google Play...
+call npm run audit:playstore-location
+if errorlevel 1 goto :fail
+
+findstr /C:"android.permission.ACCESS_BACKGROUND_LOCATION" "android\app\src\main\AndroidManifest.xml" >nul 2>&1
+if not errorlevel 1 (
+  echo [ERROR] ACCESS_BACKGROUND_LOCATION masih ada di AndroidManifest.xml.
+  echo Build dihentikan agar AAB tidak ditolak Google Play lagi.
+  goto :fail
+)
+echo [OK] ACCESS_BACKGROUND_LOCATION tidak ada.
+
 if not exist "android\fitmate-release-signing.properties" (
   echo.
   echo [ERROR] Signing Play Store belum ditemukan:
@@ -177,159 +190,93 @@ exit /b 1
 set "JAVA_SELECTED="
 
 rem ======================================================
-rem FITMATE JAVA 21 AUTO DETECTOR V2
-rem Tidak menjalankan quoted EXE di dalam FOR /F.
-rem Ini menghindari error: 'C:\Program' is not recognized.
+rem FITMATE JAVA 21 AUTO DETECTOR V3
+rem Fix: Java 21 yang sudah valid tidak boleh jatuh lagi
+rem ke blok "JDK belum ditemukan".
 rem ======================================================
 
-rem 1) Environment variables.
-call :try_java21 "%FITMATE_JAVA_HOME%"
-if defined JAVA_SELECTED goto :java_found
+call :check_java21 "%FITMATE_JAVA_HOME%"
+if defined JAVA_SELECTED goto :java21_ready
 
-call :try_java21 "%JAVA_HOME%"
-if defined JAVA_SELECTED goto :java_found
+rem Lokasi yang sudah terbukti ada pada mesin user.
+call :check_java21 "%USERPROFILE%\.jdks\jbr-21.0.11"
+if defined JAVA_SELECTED goto :java21_ready
 
-call :try_java21 "%JDK_HOME%"
-if defined JAVA_SELECTED goto :java_found
+call :check_java21 "%JAVA_HOME%"
+if defined JAVA_SELECTED goto :java21_ready
+call :check_java21 "%JDK_HOME%"
+if defined JAVA_SELECTED goto :java21_ready
+call :check_java21 "%STUDIO_JDK%"
+if defined JAVA_SELECTED goto :java21_ready
 
-call :try_java21 "%STUDIO_JDK%"
-if defined JAVA_SELECTED goto :java_found
+call :check_java21 "%ProgramFiles%\Android\Android Studio\jbr"
+if defined JAVA_SELECTED goto :java21_ready
+call :check_java21 "%LOCALAPPDATA%\Programs\Android Studio\jbr"
+if defined JAVA_SELECTED goto :java21_ready
 
-rem 2) java.exe / javac.exe yang sudah ada di PATH.
-for /f "delims=" %%J in ('where java 2^>nul') do (
-    if not defined JAVA_SELECTED (
-        for %%P in ("%%~dpJ..") do call :try_java21 "%%~fP"
-    )
-)
-if defined JAVA_SELECTED goto :java_found
+for /d %%D in ("%USERPROFILE%\.jdks\*21*") do call :check_java21 "%%~fD"
+if defined JAVA_SELECTED goto :java21_ready
+for /d %%D in ("%USERPROFILE%\.gradle\jdks\*21*") do call :check_java21 "%%~fD"
+if defined JAVA_SELECTED goto :java21_ready
 
-for /f "delims=" %%J in ('where javac 2^>nul') do (
-    if not defined JAVA_SELECTED (
-        for %%P in ("%%~dpJ..") do call :try_java21 "%%~fP"
-    )
-)
-if defined JAVA_SELECTED goto :java_found
+for /d %%D in ("%ProgramFiles%\Eclipse Adoptium\jdk-21*") do call :check_java21 "%%~fD"
+if defined JAVA_SELECTED goto :java21_ready
+for /d %%D in ("%ProgramFiles%\Microsoft\jdk-21*") do call :check_java21 "%%~fD"
+if defined JAVA_SELECTED goto :java21_ready
+for /d %%D in ("%ProgramFiles%\Java\jdk-21*") do call :check_java21 "%%~fD"
+if defined JAVA_SELECTED goto :java21_ready
+for /d %%D in ("%ProgramFiles%\Amazon Corretto\jdk21*") do call :check_java21 "%%~fD"
+if defined JAVA_SELECTED goto :java21_ready
+for /d %%D in ("%ProgramFiles%\Zulu\zulu-21*") do call :check_java21 "%%~fD"
+if defined JAVA_SELECTED goto :java21_ready
 
-rem 3) Android Studio / JetBrains Runtime.
-call :try_java21 "%ProgramFiles%\Android\Android Studio\jbr"
-if defined JAVA_SELECTED goto :java_found
-
-call :try_java21 "%ProgramFiles%\Android\Android Studio\jre"
-if defined JAVA_SELECTED goto :java_found
-
-call :try_java21 "%LOCALAPPDATA%\Programs\Android Studio\jbr"
-if defined JAVA_SELECTED goto :java_found
-
-for /d %%D in ("%ProgramFiles%\Android\Android Studio*\jbr") do (
-    if not defined JAVA_SELECTED call :try_java21 "%%~fD"
-)
-if defined JAVA_SELECTED goto :java_found
-
-for /d %%D in ("%LOCALAPPDATA%\Programs\Android Studio*\jbr") do (
-    if not defined JAVA_SELECTED call :try_java21 "%%~fD"
-)
-if defined JAVA_SELECTED goto :java_found
-
-rem 4) JDK 21 umum.
-for /d %%D in ("%ProgramFiles%\Eclipse Adoptium\jdk-21*") do (
-    if not defined JAVA_SELECTED call :try_java21 "%%~fD"
-)
-if defined JAVA_SELECTED goto :java_found
-
-for /d %%D in ("%LOCALAPPDATA%\Programs\Eclipse Adoptium\jdk-21*") do (
-    if not defined JAVA_SELECTED call :try_java21 "%%~fD"
-)
-if defined JAVA_SELECTED goto :java_found
-
-for /d %%D in ("%ProgramFiles%\Microsoft\jdk-21*") do (
-    if not defined JAVA_SELECTED call :try_java21 "%%~fD"
-)
-if defined JAVA_SELECTED goto :java_found
-
-for /d %%D in ("%ProgramFiles%\Java\jdk-21*") do (
-    if not defined JAVA_SELECTED call :try_java21 "%%~fD"
-)
-if defined JAVA_SELECTED goto :java_found
-
-for /d %%D in ("%ProgramFiles%\Amazon Corretto\jdk21*") do (
-    if not defined JAVA_SELECTED call :try_java21 "%%~fD"
-)
-if defined JAVA_SELECTED goto :java_found
-
-for /d %%D in ("%ProgramFiles%\Zulu\zulu-21*") do (
-    if not defined JAVA_SELECTED call :try_java21 "%%~fD"
-)
-if defined JAVA_SELECTED goto :java_found
-
-rem 5) JDK yang dibuat/didownload IDE di profile user.
-for /d %%D in ("%USERPROFILE%\.jdks\*21*") do (
-    if not defined JAVA_SELECTED call :try_java21 "%%~fD"
-)
-if defined JAVA_SELECTED goto :java_found
-
-for /d %%D in ("%USERPROFILE%\.gradle\jdks\*21*") do (
-    if not defined JAVA_SELECTED call :try_java21 "%%~fD"
-)
-if defined JAVA_SELECTED goto :java_found
+for /f "delims=" %%J in ('where javac 2^>nul') do call :check_java21 "%%~dpJ.."
+if defined JAVA_SELECTED goto :java21_ready
+for /f "delims=" %%J in ('where java 2^>nul') do call :check_java21 "%%~dpJ.."
+if defined JAVA_SELECTED goto :java21_ready
 
 echo.
 echo ======================================================
 echo [ERROR] JDK 21 YANG VALID BELUM DITEMUKAN
 echo ======================================================
 echo.
-echo BAT sudah mengecek JAVA_HOME, PATH, Android Studio,
-echo Adoptium, Microsoft JDK, Java, Corretto, Zulu,
-echo .jdks, dan Gradle JDK.
+echo BAT sudah mengecek JBR Android Studio, .jdks,
+echo JAVA_HOME, PATH, Adoptium, Microsoft, Java,
+echo Corretto, Zulu, dan Gradle JDK.
 echo.
-echo Jika JDK 21 memang sudah terinstall di lokasi custom:
-echo.
+echo Jika JDK 21 ada di lokasi custom:
 echo   set "FITMATE_JAVA_HOME=C:\lokasi\jdk-21"
-echo   BUILD-APK.bat
-echo.
-echo Atau install JDK 21 lalu jalankan BAT ini lagi.
+echo lalu jalankan BAT ini lagi.
 echo.
 exit /b 1
 
-:java_found
+:java21_ready
 set "JAVA_HOME=%JAVA_SELECTED%"
 set "PATH=%JAVA_HOME%\bin;%PATH%"
 echo.
-echo [OK] Java 21 ditemukan:
+echo [OK] Java 21 ditemukan dan diverifikasi:
 echo      %JAVA_HOME%
 echo.
+"%JAVA_HOME%\bin\javac.exe" -version
+if errorlevel 1 exit /b 1
 "%JAVA_HOME%\bin\java.exe" -version
+if errorlevel 1 exit /b 1
 exit /b 0
 
-
-:try_java21
+:check_java21
+if defined JAVA_SELECTED exit /b 0
 set "JAVA_CANDIDATE=%~1"
-
 if not defined JAVA_CANDIDATE exit /b 0
 if not exist "%JAVA_CANDIDATE%\bin\java.exe" exit /b 0
 if not exist "%JAVA_CANDIDATE%\bin\javac.exe" exit /b 0
 
-rem Jalankan java.exe langsung ke temporary file.
-rem Sengaja TIDAK memakai quoted executable di FOR /F.
-set "JAVA_TEST_FILE=%TEMP%\fitmate-java-version-%RANDOM%-%RANDOM%.txt"
-"%JAVA_CANDIDATE%\bin\java.exe" -version > "%JAVA_TEST_FILE%" 2>&1
-if errorlevel 1 (
-    del /q "%JAVA_TEST_FILE%" >nul 2>&1
-    exit /b 0
-)
+set "JAVA_TEST_FILE=%TEMP%\fitmate-javac-version-%RANDOM%-%RANDOM%.txt"
+"%JAVA_CANDIDATE%\bin\javac.exe" -version > "%JAVA_TEST_FILE%" 2>&1
+if errorlevel 1 goto :check_java21_cleanup
+findstr /B /C:"javac 21" "%JAVA_TEST_FILE%" >nul 2>&1
+if errorlevel 1 goto :check_java21_cleanup
+for %%P in ("%JAVA_CANDIDATE%") do set "JAVA_SELECTED=%%~fP"
 
-set "JAVA_VERSION_RAW="
-for /f "usebackq tokens=1,2,3*" %%A in ("%JAVA_TEST_FILE%") do (
-    if not defined JAVA_VERSION_RAW set "JAVA_VERSION_RAW=%%~C"
-)
+:check_java21_cleanup
 del /q "%JAVA_TEST_FILE%" >nul 2>&1
-
-if not defined JAVA_VERSION_RAW exit /b 0
-
-set "JAVA_MAJOR="
-for /f "tokens=1 delims=." %%M in ("%JAVA_VERSION_RAW%") do set "JAVA_MAJOR=%%M"
-
-if "%JAVA_MAJOR%"=="21" (
-    set "JAVA_SELECTED=%JAVA_CANDIDATE%"
-)
-
 exit /b 0

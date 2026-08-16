@@ -162,14 +162,14 @@ export default function MotivationPage() {
               <FitMateIcon name="activity" className="h-5 w-5" />
             </span>
             <div>
-              <p className="text-sm font-semibold text-green-700 dark:text-green-300">{tr("HARI INI", "TODAY")}</p>
+              <p className="text-sm font-semibold text-green-700 dark:text-green-300">{tr("Persiapan latihan", "Workout prep")}</p>
               <h1 className="mt-1 text-3xl font-bold tracking-tight sm:text-4xl">
-                {tr("Kondisimu hari ini", "How do you feel?")}
+                {tr("Sesuaikan sesi dengan kondisimu hari ini", "Match the session to how you feel today")}
               </h1>
               <p className="mt-3 leading-7 text-slate-500 dark:text-slate-400">
                 {tr(
-                  "Pilih kondisi sebelum latihan.",
-                  "Choose how you feel before training."
+                  "Pilih kondisimu hari ini.",
+                  "Choose how you feel today for a short note before training."
                 )}
               </p>
             </div>
@@ -202,7 +202,7 @@ export default function MotivationPage() {
 
           <div className="mt-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#0b1511] sm:p-9">
             <div className="flex items-center justify-between gap-4">
-              <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">{tr("Catatan", "Note")}</p>
+              <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">{tr("Catatan untuk sesi ini", "Note for this session")}</p>
               <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500 dark:bg-slate-800 dark:text-slate-300">
                 {BOOST_LIMIT - boosts} {tr("tersisa", "left")}
               </span>
@@ -221,7 +221,7 @@ export default function MotivationPage() {
                 <FitMateIcon name="activity" className="h-4 w-4" />
                 {boosts >= BOOST_LIMIT
                   ? tr("Batas hari ini tercapai", "Daily limit reached")
-                  : tr("Catatan lain", "Another note")}
+                  : tr("Tampilkan catatan lain", "Show another note")}
               </button>
               <button
                 type="button"
@@ -241,7 +241,7 @@ export default function MotivationPage() {
               </span>
               <h2 className="mt-4 text-lg font-semibold">{tr("Mulai latihan", "Start workout")}</h2>
               <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
-                {tr("Buka latihan hari ini.", "Open today’s workout.")}
+                {tr("Buka sesi hari ini dan mulai dari gerakan pertama.", "Open today's session and begin with the first exercise.")}
               </p>
             </Link>
 
@@ -251,7 +251,7 @@ export default function MotivationPage() {
               </span>
               <h2 className="mt-4 text-lg font-semibold">{tr("Tanya Coach", "Ask Coach")}</h2>
               <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
-                {tr("Tanya latihan, recovery, atau program.", "Ask about training, recovery, or your program.")}
+                {tr("Bahas kendala latihan, recovery, atau penyesuaian program.", "Discuss training, recovery, or program adjustments.")}
               </p>
             </Link>
           </div>

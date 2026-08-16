@@ -1,0 +1,5 @@
+# Keep the real signing file private. Copy this to fitmate-release-signing.properties locally.
+storeFile=C:/path/to/fitmate-upload-key.jks
+storePassword=YOUR_PRIVATE_STORE_PASSWORD
+keyAlias=fitmate-upload
+keyPassword=YOUR_PRIVATE_KEY_PASSWORD

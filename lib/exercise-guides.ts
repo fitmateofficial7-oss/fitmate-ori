@@ -30,10 +30,6 @@ export type ExerciseGuidePreset =
   | "plank"
   | "standing";
 
-// Backward-compatible alias for newer/legacy 2D exercise components.
-// Keep ExerciseGuidePreset as the canonical preset type.
-export type Exercise2DPreset = ExerciseGuidePreset;
-
 export type ExerciseGuide = {
   slug: string;
   preset: ExerciseGuidePreset;

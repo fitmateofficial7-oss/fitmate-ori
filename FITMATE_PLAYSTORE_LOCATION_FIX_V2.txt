@@ -1,0 +1,2 @@
+FITMATE PLAYSTORE LOCATION FIX V2 - 2026-08-16
+Removed ACCESS_BACKGROUND_LOCATION; active Jogging continues via Android location foreground service.

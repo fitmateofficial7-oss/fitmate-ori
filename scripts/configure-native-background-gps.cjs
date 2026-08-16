@@ -35,7 +35,6 @@ function configureAndroid() {
   const permissions = [
     "android.permission.ACCESS_COARSE_LOCATION",
     "android.permission.ACCESS_FINE_LOCATION",
-    "android.permission.ACCESS_BACKGROUND_LOCATION",
     "android.permission.FOREGROUND_SERVICE",
     "android.permission.FOREGROUND_SERVICE_LOCATION",
     "android.permission.POST_NOTIFICATIONS",
@@ -61,24 +60,6 @@ function configureAndroid() {
   }
 
   write(manifestPath, manifest);
-
-  // Re-apply FitMate local native code after `cap add`/`cap sync`. This keeps
-  // Android edge-back history handling and gallery saving reproducible even
-  // when the Android platform folder is regenerated.
-  const nativeTemplateDir = path.join(
-    root,
-    "native-templates/android/com/growsia/fitmate"
-  );
-  const nativeTargetDir = path.join(
-    root,
-    "android/app/src/main/java/com/growsia/fitmate"
-  );
-  for (const fileName of ["MainActivity.java", "MediaSaverPlugin.java"]) {
-    const templatePath = path.join(nativeTemplateDir, fileName);
-    if (fs.existsSync(templatePath)) {
-      write(path.join(nativeTargetDir, fileName), fs.readFileSync(templatePath, "utf8"));
-    }
-  }
 
   const stringsPath = path.join(
     root,

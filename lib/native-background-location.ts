@@ -104,18 +104,20 @@ export async function startNativeBackgroundLocation(
     return null;
   }
 
-  await requestAndroidNotificationPermission(context.platform);
-
   const english =
     typeof window !== "undefined" &&
     window.localStorage.getItem("fitmate_language") === "en";
 
-  return context.plugin.addWatcher(
+  // IMPORTANT FOR GOOGLE PLAY:
+  // addWatcher() is the call that may trigger Android's LOCATION runtime prompt.
+  // It must happen immediately after FitMate's in-app location disclosure.
+  // Do not request notification permission before this call.
+  const watcherId = await context.plugin.addWatcher(
     {
       backgroundTitle: english ? "FitMate Jogging is active" : "FitMate Jogging aktif",
       backgroundMessage: english
-        ? "FitMate is recording your route. Tap to return."
-        : "FitMate sedang merekam rute lari. Ketuk notifikasi untuk kembali.",
+        ? "FitMate is recording your active Jogging route. Tap to return."
+        : "FitMate sedang merekam rute Jogging aktif. Ketuk untuk kembali.",
       requestPermissions: true,
       stale: false,
       // Three metres keeps the route responsive while reducing GPS noise and
@@ -132,6 +134,15 @@ export async function startNativeBackgroundLocation(
       }
     }
   );
+
+  // Android 13+ may need POST_NOTIFICATIONS so the foreground-service
+  // tracking notification is visible. Request it only AFTER the location
+  // permission flow, so Google's required disclosure directly precedes the
+  // location runtime prompt. The location foreground service itself is what
+  // keeps an active, user-started Jogging session tracking while minimized.
+  void requestAndroidNotificationPermission(context.platform);
+
+  return watcherId;
 }
 
 export async function stopNativeBackgroundLocation(watcherId: string) {

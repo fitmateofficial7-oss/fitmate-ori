@@ -467,7 +467,7 @@ export default function ProgressPage() {
             FitMate Progress
           </p>
           <h1 className="mt-1 text-2xl font-black sm:text-3xl">
-            {tr("Progres", "Progress")}
+            {tr("Progres latihan", "Workout progress")}
           </h1>
         </div>
       </header>
@@ -477,7 +477,7 @@ export default function ProgressPage() {
 
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { label: tr("Latihan 7 hari", "7-day workouts"), value: weekly.workouts },
+            { label: tr("Workout 7 hari", "7-day workouts"), value: weekly.workouts },
             { label: tr("Set kerja", "Working sets"), value: weekly.sets },
             { label: tr("Volume", "Volume"), value: `${Math.round(weekly.volume).toLocaleString(language === "id" ? "id-ID" : "en-US")} kg` },
             { label: tr("Gerakan aktif", "Active exercises"), value: weekly.exerciseCount },
@@ -491,7 +491,7 @@ export default function ProgressPage() {
 
         <section className="grid gap-6 lg:grid-cols-3">
           <article className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7">
-            <h2 className="text-xl font-black">{tr("Minggu ini", "This week")}</h2>
+            <h2 className="text-xl font-black">{tr("Review mingguan", "Weekly review")}</h2>
             <div className="mt-4 space-y-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
               <p>{tr("Workout selesai", "Completed workouts")}: <strong>{weekly.workouts}</strong></p>
               <p>{tr("Perubahan volume", "Volume change")}: <strong>{weeklyReview.volumeChange == null ? tr("Belum ada pembanding", "No comparison yet") : `${weeklyReview.volumeChange >= 0 ? "+" : ""}${weeklyReview.volumeChange}%`}</strong></p>
@@ -512,7 +512,7 @@ export default function ProgressPage() {
           </article>
 
           <article className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7">
-            <h2 className="text-xl font-black">{tr("Personal record", "Personal records")}</h2>
+            <h2 className="text-xl font-black">{tr("Estimasi personal record", "Estimated personal records")}</h2>
             <div className="mt-4 space-y-3">
               {personalRecords.length === 0 && <p className="text-sm text-slate-500">{tr("Catat beban dan repetisi untuk melihat estimasi 1RM.", "Log load and reps to see estimated 1RM.")}</p>}
               {personalRecords.map(([name, record]) => <div key={name} className="rounded-xl bg-slate-50 p-3 dark:bg-white/5"><p className="truncate text-xs font-bold text-slate-500">{name}</p><p className="mt-1 font-black">{record.estimatedMax} kg <span className="text-xs font-medium text-slate-400">e1RM · {record.load}×{record.reps}</span></p></div>)}
@@ -523,7 +523,7 @@ export default function ProgressPage() {
         <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7">
             <div className="flex items-start justify-between gap-4">
-              <div><h2 className="text-2xl font-black">{tr("Kesiapan hari ini", "Today’s readiness")}</h2><p className="mt-2 text-sm text-slate-500">{tr("Isi sebelum latihan.", "Complete before training.")}</p></div>
+              <div><h2 className="text-2xl font-black">{tr("Daily readiness", "Daily readiness")}</h2><p className="mt-2 text-sm text-slate-500">{tr("Isi sebelum memulai latihan.", "Complete this before training.")}</p></div>
               {todayReadiness && <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-black text-green-800">{todayReadiness.readiness_score}/100</span>}
             </div>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -575,7 +575,7 @@ export default function ProgressPage() {
         </section>
 
         <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7">
-          <h2 className="text-2xl font-black">{tr("Sesi berikutnya", "Next session")}</h2>
+          <h2 className="text-2xl font-black">{tr("Rekomendasi sesi berikutnya", "Next-session recommendations")}</h2>
           <div className="mt-5 grid gap-3 md:grid-cols-2">
             {recommendations.length === 0 && <p className="text-sm text-slate-500">{tr("Selesaikan latihan untuk mendapat rekomendasi beban.", "Complete workout sets to generate progressive-overload recommendations.")}</p>}
             {recommendations.slice(0, 8).map((item) => (
@@ -604,7 +604,7 @@ export default function ProgressPage() {
           </div>
 
           <div className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7">
-            <h2 className="text-2xl font-black">{tr("Foto progres", "Progress photos")}</h2>
+            <h2 className="text-2xl font-black">{tr("Foto progres privat", "Private progress photos")}</h2>
             <p className="mt-2 text-sm text-slate-500">{tr("Hanya akunmu yang dapat membuka file ini.", "Only your account can access these files.")}</p>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => setPhotoFile(event.target.files?.[0] || null)} className="rounded-xl border border-slate-200 p-3 text-xs dark:border-white/10" />

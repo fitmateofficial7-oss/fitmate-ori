@@ -706,14 +706,14 @@ export default function CoachPage() {
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-green-300">
                   {tr(
-                    "COACH",
-                    "COACH"
+                    "FITNESS · NUTRISI · KESEHATAN",
+                    "FITNESS · NUTRITION · HEALTH"
                   )}
                 </p>
                 <h1 className="mt-2 text-2xl font-black">
                   {tr(
-                    "Tanya Coach",
-                    "Ask Coach"
+                    "Apa yang ingin kamu cek?",
+                    "What do you want to check?"
                   )}
                 </h1>
               </div>
@@ -743,7 +743,7 @@ export default function CoachPage() {
                   }`}
                 >
                   <FitMateIcon name="camera" className="mr-1 inline h-4 w-4" />
-                  {tr("Scan makanan", "Scan food")}
+                  {tr("Upload foto", "Upload photo")}
                   {usage &&
                     ` · ${usage.nutrition.remaining}/${usage.nutrition.limit}`}
                 </button>
@@ -780,14 +780,14 @@ export default function CoachPage() {
                 <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-green-600 text-white"><FitMateIcon name="coach" className="h-7 w-7" /></span>
                 <h2 className="mt-6 text-2xl font-black">
                   {tr(
-                    "Ada yang mau ditanyakan?",
-                    "What can I help with?"
+                    "Hai! Aku FitMate Coach.",
+                    "Hi! I'm FitMate Coach."
                   )}
                 </h2>
                 <p className="mt-3 leading-7 text-slate-500">
                   {tr(
-                    "Tanya latihan, nutrisi, recovery, atau scan makanan.",
-                    "Ask about training, nutrition, recovery, or scan a meal."
+                    "Tanya soal latihan, nutrisi, recovery, atau kesehatan.",
+                    "Ask about training, nutrition, recovery, or health. You can also scan a meal."
                   )}
                 </p>
                 <div className="mt-5 flex flex-wrap justify-center gap-2">

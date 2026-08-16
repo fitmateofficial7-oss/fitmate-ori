@@ -46,12 +46,12 @@ export default function FitMateBrand({
   const style = SIZE_STYLES[size];
   const content = (
     <span
-      className={`fitmate-brand inline-flex items-center gap-3 ${
+      className={`inline-flex items-center gap-3 ${
         centered ? "justify-center text-center" : ""
       } ${className}`}
     >
       <span
-        className={`fitmate-brand__mark relative flex shrink-0 items-center justify-center overflow-hidden border border-green-400/45 bg-[#07110c] shadow-lg shadow-green-500/15 ${style.mark}`}
+        className={`relative flex shrink-0 items-center justify-center overflow-hidden border border-green-400/45 bg-[#07110c] shadow-lg shadow-green-500/15 ${style.mark}`}
       >
         <span className="absolute inset-0 bg-[radial-gradient(circle_at_35%_20%,rgba(52,211,153,.18),transparent_55%)]" />
         <Image
@@ -67,7 +67,7 @@ export default function FitMateBrand({
       {showName && (
         <span className={`flex min-w-0 flex-col ${centered ? "items-center" : "items-start"}`}>
           <span
-            className={`fitmate-brand__name ${style.name} font-black leading-none tracking-tight ${
+            className={`${style.name} font-black leading-none tracking-tight ${
               inverse ? "text-white" : "text-slate-950 dark:text-white"
             }`}
           >
@@ -75,7 +75,7 @@ export default function FitMateBrand({
           </span>
           {showCompany && (
             <span
-              className={`fitmate-brand__company mt-1.5 font-bold uppercase tracking-[0.16em] ${style.company} ${
+              className={`mt-1.5 font-bold uppercase tracking-[0.16em] ${style.company} ${
                 inverse
                   ? "text-green-200/90"
                   : "text-slate-400 dark:text-slate-400"

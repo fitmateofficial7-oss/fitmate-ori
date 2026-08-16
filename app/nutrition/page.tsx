@@ -463,7 +463,7 @@ export default function NutritionPage() {
               FitMate Nutrition
             </p>
             <h1 className="mt-1 text-2xl font-black sm:text-3xl">
-              {tr("Nutrisi", "Nutrition")}
+              {tr("Nutrisi hari ini", "Today’s nutrition")}
             </h1>
           </div>
           <Link
@@ -515,7 +515,7 @@ export default function NutritionPage() {
               </div>
             </div>
             <div className="mt-5 flex items-center justify-between rounded-2xl bg-white/12 px-4 py-3">
-              <span className="text-sm font-bold">{tr("Sisa", "Remaining")}</span>
+              <span className="text-sm font-bold">{tr("Sisa hari ini", "Remaining")}</span>
               <span className="font-black">{Math.round(remaining.calories)} kcal</span>
             </div>
           </div>
@@ -693,7 +693,7 @@ export default function NutritionPage() {
                 </div>
                 <div className="min-w-0">
                   <p className="font-black">
-                    {tr("Rating makanan", "Food rating")}
+                    {tr("Rating kesehatan makanan", "Food health rating")}
                   </p>
                   <p className="mt-1 text-xs opacity-80">
                     {tr(
@@ -774,7 +774,7 @@ export default function NutritionPage() {
 
         <section className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-6">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-xl font-black">{tr("Jurnal", "Journal")}</h2>
+            <h2 className="text-xl font-black">{tr("Jurnal hari ini", "Today’s journal")}</h2>
             <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-500 dark:bg-white/10 dark:text-slate-300">
               {todayEntries.length}
             </span>
@@ -785,7 +785,7 @@ export default function NutritionPage() {
               <div className="py-8 text-center">
                 <p className="font-bold">{tr("Belum ada makanan", "No meals yet")}</p>
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                  {tr("Tambah makanan atau scan lewat Coach.", "Add food or scan it with Coach.")}
+                  {tr("Tambah manual atau scan dari Coach.", "Add one manually or scan it in Coach.")}
                 </p>
               </div>
             )}

@@ -217,15 +217,15 @@ export default function LoginPage() {
             <FitMateBrand href="/" size="md" showCompany />
 
             <p className="mt-12 text-xs font-black uppercase tracking-[0.18em] text-green-600">
-              {tr("MASUK", "SIGN IN")}
+              {tr("Selamat datang kembali", "Welcome back")}
             </p>
             <h1 className="mt-3 text-4xl font-black tracking-tight">
-              {tr("Masuk ke FitMate", "Sign in to FitMate")}
+              {tr("Lanjutkan progresmu.", "Continue your progress.")}
             </h1>
             <p className="mt-3 leading-7 text-slate-500">
               {tr(
-                "Lanjutkan latihan dan progresmu.",
-                "Continue your workout and progress."
+                "Rencana latihan, Coach, dan riwayat progresmu siap dilanjutkan.",
+                "Your training plan, Coach, and progress history are ready."
               )}
             </p>
 
@@ -262,7 +262,7 @@ export default function LoginPage() {
                   <p className="mt-1 text-sm leading-6 text-green-700">
                     {tr(
                       "Masukkan email untuk menerima tautan reset.",
-                      "Enter your email to receive a reset link."
+                      "Enter your account email. We will send a secure link to create a new password."
                     )}
                   </p>
                 </div>

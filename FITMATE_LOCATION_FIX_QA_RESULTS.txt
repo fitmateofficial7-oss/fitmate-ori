@@ -1,0 +1,20 @@
+FitMate Google Play Location Fix V2 - QA Results
+Date: 2026-08-16
+
+PASS AndroidManifest.xml parses as valid XML
+PASS ACCESS_COARSE_LOCATION present
+PASS ACCESS_FINE_LOCATION present
+PASS ACCESS_BACKGROUND_LOCATION absent
+PASS FOREGROUND_SERVICE_LOCATION present
+PASS prominent disclosure is in normal Jogging start/resume flow
+PASS Indonesian disclosure uses explicit location + closed/not-in-use wording
+PASS English disclosure uses explicit location + closed/not-in-use wording
+PASS consent requires affirmative Agree & Continue action
+PASS decline path does not start GPS
+PASS native addWatcher/location permission flow occurs before POST_NOTIFICATIONS request
+PASS native configure script does not re-add ACCESS_BACKGROUND_LOCATION
+PASS build BAT files stop the build if ACCESS_BACKGROUND_LOCATION reappears
+PASS output package contains no .env.local, AAB, APK, JKS, or signing passwords
+
+NOT RUN: full npm typecheck / Next.js build. npm dependency install did not complete in the inspection environment within the available execution window.
+NOT RUN: signed Android AAB build. Release keystore/signing secrets are intentionally excluded from this delivered ZIP.

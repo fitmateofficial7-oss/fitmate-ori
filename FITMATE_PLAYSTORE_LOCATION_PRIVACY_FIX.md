@@ -1,16 +1,14 @@
-# FitMate Play Store Location Privacy Fix — 2026-08-14
+# FitMate Play Store Location Privacy Fix — 2026-08-16
 
-This update aligns FitMate's privacy disclosure with the implemented GPS Jogging feature.
+This revision supersedes the earlier 2026-08-14 location-permission approach.
 
-## Changes
-- Expanded `/privacy` with a dedicated precise-location and background-location section in Indonesian and English.
-- Explicitly documents GPS coordinate/route collection, purposes, active-session background use, local/Supabase storage, sharing behavior, user controls, and no advertising/sale use.
-- Updated the Privacy Policy effective date to `2026-08-14`.
-- Added an in-app prominent location disclosure before the native Android background geolocation plugin can request location permission.
-- The disclosure explains that tracking can continue while the app is minimized, the screen is off, or the app is not actively visible.
-- Users can choose **Not now** without triggering the Android location permission request.
-- Added a direct link from the disclosure to `/privacy`.
-- Existing Android permissions for coarse, fine, and background location are retained because the native Jogging implementation actively uses background GPS during a user-started session.
+## Final Android approach
+- FitMate does **not** declare `ACCESS_BACKGROUND_LOCATION`.
+- Jogging is started by the user from the visible Jogging screen.
+- Android tracking continues during that active session through a location foreground service and ongoing notification.
+- The app keeps `ACCESS_COARSE_LOCATION`, `ACCESS_FINE_LOCATION`, `FOREGROUND_SERVICE`, and `FOREGROUND_SERVICE_LOCATION`.
+- The in-app disclosure appears before Android's location runtime permission prompt.
+- Android 13+ notification permission is requested only after the location permission flow.
 
-## Play Console reminder
-The Data safety and background-location declarations in Play Console must match this implementation: precise location is used for app functionality (GPS Jogging), and background location is limited to an active user-started Jogging session.
+## Google Play upload
+Build a brand-new AAB with a higher versionCode. Do not upload an older AAB that still contains `ACCESS_BACKGROUND_LOCATION`. Also review every active Play Console track so an older active artifact does not keep the restricted permission present.
