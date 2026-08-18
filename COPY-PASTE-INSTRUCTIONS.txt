@@ -1,0 +1,29 @@
+FITMATE - REMOTE POLICY COPY/PASTE PATCH
+Tanggal: 2026-08-18
+
+1. COPY folder/file berikut ke ROOT project FitMate:
+   public/fitmate-release.json
+   scripts/verify-remote-policy-release.cjs
+
+2. Di package.json pastikan scripts memiliki:
+   "verify:remote-policy": "node scripts/verify-remote-policy-release.cjs"
+
+3. Jangan menghapus source Prominent Disclosure/Jogging dari FULL V6.
+   Patch ini hanya memastikan marker release dan verifier tersedia.
+
+4. Build web:
+   npm run build
+
+5. Deploy/restart menggunakan mekanisme production FitMate yang SUDAH dipakai.
+   Jangan mengganti database, .env production, Xendit key, atau signing key.
+
+6. Setelah production aktif, buka:
+   https://fitmate.growsia.id/fitmate-release.json
+
+   Harus mengembalikan JSON, BUKAN 404.
+
+7. Jalankan dari root project:
+   npm run verify:remote-policy
+
+8. Jika PASS, baru build AAB:
+   BUILD-PLAYSTORE-AAB.bat

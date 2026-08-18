@@ -72,11 +72,17 @@ if errorlevel 1 goto :fail
 
 echo.
 echo [REMOTE POLICY] Memastikan server FitMate sudah memakai disclosure terbaru...
+echo [INFO] Verifier V6 mencoba Node fetch, HTTPS IPv4, lalu curl IPv4.
 call npm run verify:remote-policy
 if errorlevel 1 (
   echo.
-  echo [ERROR] Server web FitMate masih versi lama atau tidak dapat diverifikasi.
-  echo Deploy source terbaru ke production lebih dulu, lalu jalankan BAT ini lagi.
+  echo [ERROR] Remote policy belum berhasil diverifikasi.
+  echo.
+  echo Buka di browser:
+  echo https://fitmate.growsia.id/fitmate-release.json
+  echo.
+  echo Jika URL menampilkan 404 / halaman lama, deploy source V6 ke production lebih dulu.
+  echo Jika JSON sudah benar tetapi verifier tetap gagal, kirim seluruh detail error V6.
   goto :fail
 )
 
