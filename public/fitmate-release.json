@@ -1,0 +1,7 @@
+{
+  "app": "FitMate",
+  "packageName": "com.growsia.fitmate",
+  "locationDisclosureVersion": "2026-08-17-prominent-disclosure-v3",
+  "locationModel": "user-started-jogging-foreground-service",
+  "accessBackgroundLocationDeclared": false
+}

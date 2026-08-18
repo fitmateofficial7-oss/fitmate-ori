@@ -70,6 +70,16 @@ call npm run native:verify-url
 if errorlevel 1 goto :fail
 
 echo.
+echo [REMOTE POLICY] Memastikan server FitMate sudah memakai disclosure terbaru...
+call npm run verify:remote-policy
+if errorlevel 1 (
+  echo.
+  echo [ERROR] Server web FitMate masih versi lama atau tidak dapat diverifikasi.
+  echo Deploy source terbaru ke production lebih dulu, lalu jalankan BAT ini lagi.
+  goto :fail
+)
+
+echo.
 echo [4/8] Memeriksa package name...
 call npm run verify:package-name
 if errorlevel 1 goto :fail
@@ -134,6 +144,14 @@ call gradlew.bat bundleRelease
 set "GRADLE_EXIT=%ERRORLEVEL%"
 popd
 if not "%GRADLE_EXIT%"=="0" goto :fail
+
+echo.
+echo [FINAL POLICY] Memeriksa merged AndroidManifest hasil Gradle...
+call npm run verify:merged-android-permissions
+if errorlevel 1 (
+  echo [ERROR] Izin lokasi final hasil merge tidak aman untuk Play Store.
+  goto :fail
+)
 
 set "AAB_PATH=%CD%\android\app\build\outputs\bundle\release\app-release.aab"
 if not exist "%AAB_PATH%" (

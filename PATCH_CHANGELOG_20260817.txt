@@ -1,0 +1,34 @@
+FITMATE PLAY STORE PROMINENT DISCLOSURE FULL FIX V3
+Date: 2026-08-17
+Package: com.growsia.fitmate
+
+Core policy/runtime changes:
+- app/jogging/page.tsx
+- lib/native-background-location.ts
+- lib/legal.ts
+- public/fitmate-release.json
+
+Build/policy guards:
+- scripts/audit-playstore-location-privacy.cjs
+- scripts/verify-remote-policy-release.cjs
+- scripts/verify-merged-android-permissions.cjs
+- BUILD-PLAYSTORE-AAB.bat
+- BUILD_FITMATE_AAB_AUTO_VERSION.bat
+- BUILD-APK.bat
+- README_FIX_JAVA21.txt
+- package.json
+
+Documentation/QA:
+- README_PAKAI_INI.txt
+- PLAY_CONSOLE_SUBMISSION_GUIDE_20260817.md
+- FITMATE_LOCATION_FIX_QA_RESULTS.txt
+- FITMATE_PLAYSTORE_LOCATION_REJECTION_FIX_20260816.md (superseded marker)
+
+Security cleanup in delivered source:
+- Removed historical Android keystore properties backup files containing credentials.
+- Replaced historical Xendit credential examples in documentation with placeholders.
+- No real .env, JKS/keystore, release signing properties, or credential file is bundled.
+
+Critical behavior after fix:
+Start/Resume Jogging -> FitMate prominent disclosure -> explicit consent -> Android/browser
+location permission -> GPS start. Decline never requests location and never starts GPS.

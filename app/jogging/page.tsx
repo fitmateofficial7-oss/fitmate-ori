@@ -33,7 +33,6 @@ import {
 import {
   getNativeLocationPlatform,
   isNativeBackgroundLocationAvailable,
-  openNativeLocationSettings,
   startNativeBackgroundLocation,
   stopNativeBackgroundLocation,
   type NativeBackgroundLocationError,
@@ -358,7 +357,6 @@ export default function JoggingPage() {
   const wakeLockRef = useRef<FitMateWakeLockSentinel | null>(null);
   const sharePreviewRef = useRef<HTMLDivElement | null>(null);
   const shareDragOffsetRef = useRef({ x: 0, y: 0 });
-  const locationDisclosureAcceptedRef = useRef(false);
 
   const durationSeconds = Math.floor(elapsedMilliseconds / 1000);
   const stats = useMemo(
@@ -569,8 +567,8 @@ export default function JoggingPage() {
       setGpsMessage(
         denied
           ? tr(
-              "Aktifkan lokasi latar belakang di pengaturan.",
-              "Background location permission is not granted. Open FitMate location settings."
+              "Izin lokasi FitMate belum diberikan. Kamu dapat mengizinkannya melalui pengaturan perangkat.",
+              "FitMate location permission is not granted. You can allow it in device settings."
             )
           : error.message ||
               tr(
@@ -585,27 +583,42 @@ export default function JoggingPage() {
   const startGpsWatch = useCallback(async () => {
     stopGpsWatch();
 
-    try {
-      const nativeWatcherId = await startNativeBackgroundLocation(
-        acceptNativePosition,
-        handleNativeGpsError
-      );
-      if (nativeWatcherId) {
-        nativeWatchIdRef.current = nativeWatcherId;
-        gpsProviderRef.current = "native";
-        setNativeBackgroundReady(true);
+    // In the Android/iOS shell, use only the native provider. If native startup
+    // fails or permission is denied, do not immediately trigger a second web
+    // geolocation permission request. That keeps the consent -> permission flow
+    // deterministic for users and Google Play reviewers.
+    const nativeAvailable = await isNativeBackgroundLocationAvailable();
+    if (nativeAvailable) {
+      try {
+        const nativeWatcherId = await startNativeBackgroundLocation(
+          acceptNativePosition,
+          handleNativeGpsError
+        );
+        if (nativeWatcherId) {
+          nativeWatchIdRef.current = nativeWatcherId;
+          gpsProviderRef.current = "native";
+          setNativeBackgroundReady(true);
+          setGpsMessage(
+            tr(
+              "GPS Jogging aktif · rute tetap direkam saat aplikasi diminimalkan atau layar mati",
+              "Jogging GPS active · route continues while the app is minimized or the screen is off"
+            )
+          );
+          return true;
+        }
+      } catch {
         setGpsMessage(
           tr(
-            "Background GPS aktif · rute tetap direkam saat layar mati",
-            "Background GPS active · route continues when the screen is off"
+            "GPS Jogging belum dapat dimulai. Periksa izin lokasi FitMate dan layanan lokasi perangkat.",
+            "Jogging GPS could not start. Check FitMate location permission and your device location service."
           )
         );
-        return true;
       }
-    } catch {
-      // Continue with the browser fallback below.
+      return false;
     }
 
+    // Browser-only fallback. This path is still protected by the same prominent
+    // disclosure because requestLocationAwareAction() is unconditional.
     if (!("geolocation" in navigator)) {
       setGpsMessage(
         tr(
@@ -899,28 +912,23 @@ export default function JoggingPage() {
     }
   }, [releaseScreenWakeLock, requestScreenWakeLock, startGpsWatch]);
 
+  // Google Play policy gate: every action that can begin location access must
+  // show FitMate's disclosure first. This is intentionally NOT conditional on
+  // the native plugin being available because the web geolocation fallback also
+  // accesses sensitive location data.
   const requestLocationAwareAction = useCallback(
-    async (action: PendingLocationAction) => {
-      const nativeAvailable = await isNativeBackgroundLocationAvailable();
-      if (nativeAvailable && !locationDisclosureAcceptedRef.current) {
-        setPendingLocationAction(action);
-        return;
-      }
-
-      if (action === "start") {
-        await beginStartSession();
-      } else {
-        await beginResumeSession();
-      }
+    (action: PendingLocationAction) => {
+      setPendingLocationAction(action);
     },
-    [beginResumeSession, beginStartSession]
+    []
   );
 
   const confirmLocationDisclosure = useCallback(() => {
     const action = pendingLocationAction;
     if (!action) return;
 
-    locationDisclosureAcceptedRef.current = true;
+    // The user's affirmative tap is the consent action. Only after this state
+    // transition do we enter code that can trigger Android/browser permission.
     setPendingLocationAction(null);
 
     if (action === "start") {
@@ -1382,15 +1390,6 @@ export default function JoggingPage() {
                         "The route updates automatically."
                       )}
                 </p>
-                {nativeBackgroundReady && (
-                  <button
-                    type="button"
-                    onClick={() => void openNativeLocationSettings()}
-                    className="mt-2 text-xs font-black text-emerald-700 underline-offset-4 hover:underline dark:text-emerald-300"
-                  >
-                    {tr("Buka pengaturan izin lokasi", "Open location permission settings")}
-                  </button>
-                )}
               </div>
               <label className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 font-bold shadow-sm dark:bg-slate-900">
                 <span className="text-sm text-slate-500 dark:text-slate-400">
@@ -1963,54 +1962,55 @@ export default function JoggingPage() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="fitmate-location-disclosure-title"
-          className="fixed inset-0 z-[100] flex items-end justify-center bg-slate-950/70 p-3 backdrop-blur-sm sm:items-center sm:p-6"
+          aria-describedby="fitmate-location-disclosure-description"
+          className="fixed inset-0 z-[100] flex items-end justify-center bg-slate-950/75 p-3 backdrop-blur-sm sm:items-center sm:p-6"
         >
-          <div className="w-full max-w-lg overflow-hidden rounded-[2rem] border border-emerald-200 bg-white shadow-2xl dark:border-emerald-500/30 dark:bg-slate-950">
-            <div className="bg-gradient-to-br from-emerald-950 via-teal-800 to-emerald-600 p-6 text-white">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15">
+          <div className="max-h-[calc(100dvh-1.5rem)] w-full max-w-lg overflow-y-auto overscroll-contain rounded-[2rem] border border-emerald-200 bg-white shadow-2xl dark:border-emerald-500/30 dark:bg-slate-950 sm:max-h-[calc(100dvh-3rem)]">
+            <div className="bg-gradient-to-br from-emerald-950 via-teal-800 to-emerald-600 p-5 text-white sm:p-6">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/15">
                 <FitMateIcon name="location" className="h-6 w-6" />
               </div>
               <h2
                 id="fitmate-location-disclosure-title"
-                className="mt-4 text-2xl font-black tracking-tight"
+                className="mt-3 text-2xl font-black tracking-tight"
+              >
+                {tr("Penggunaan Data Lokasi", "Location Data Use")}
+              </h2>
+              <p
+                id="fitmate-location-disclosure-description"
+                className="mt-2 text-sm font-bold leading-6 text-white"
               >
                 {tr(
-                  "Lokasi untuk Jogging",
-                  "Location for Jogging"
-                )}
-              </h2>
-              <p className="mt-2 text-sm font-semibold leading-6 text-emerald-50/90">
-                {tr(
-                  "FitMate mengumpulkan data lokasi untuk mengaktifkan pelacakan rute Jogging, jarak, pace, dan kecepatan bahkan saat aplikasi ditutup atau tidak digunakan.",
-                  "FitMate collects location data to enable Jogging route tracking, distance, pace, and speed even when the app is closed or not in use."
+                  "FitMate mengakses dan mengumpulkan data lokasi presisi (GPS) untuk fitur Jogging agar dapat merekam rute serta menghitung jarak, pace, dan kecepatan.",
+                  "FitMate accesses and collects precise location (GPS) data for Jogging to record your route and calculate distance, pace, and speed."
                 )}
               </p>
             </div>
 
-            <div className="space-y-4 p-6 text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300">
+            <div className="space-y-3 p-5 text-sm font-semibold leading-6 text-slate-600 dark:text-slate-300 sm:p-6">
               <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-950 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100">
                 <p className="font-black">
-                  {tr("Saat sesi Jogging aktif", "While a Jogging session is active")}
+                  {tr("Saat Jogging aktif", "While Jogging is active")}
                 </p>
                 <p className="mt-1">
                   {tr(
-                    "Pelacakan hanya berjalan setelah kamu menekan Mulai/Lanjutkan Jogging. FitMate menggunakan layanan lokasi latar depan Android agar sesi aktif tetap merekam rute saat aplikasi diminimalkan atau layar mati. Pelacakan berhenti saat sesi diakhiri atau aplikasi di-force-stop.",
-                    "Tracking starts only after you tap Start/Resume Jogging. FitMate uses Android's location foreground service so the active session can keep recording your route while the app is minimized or the screen is off. Tracking stops when you end the session or force-stop the app."
+                    "Selama sesi Jogging aktif, FitMate tetap mengakses lokasi ketika aplikasi berjalan di latar belakang (background), diminimalkan, atau layar mati. Pelacakan baru dimulai setelah kamu menekan tombol Setuju & Izinkan Lokasi dan berhenti saat sesi Jogging diakhiri atau aplikasi di-force-stop.",
+                    "During an active Jogging session, FitMate continues accessing location while the app is in the background, minimized, or the screen is off. Tracking starts only after you tap Agree & Allow Location and stops when you end Jogging or force-stop the app."
                   )}
                 </p>
               </div>
 
               <p>
                 {tr(
-                  "Data lokasi tidak dijual dan tidak digunakan untuk iklan atau penargetan pemasaran. Rute aktivitas dapat disimpan di perangkat dan disinkronkan ke akun FitMate agar riwayat jogging dapat ditampilkan kembali.",
-                  "Location data is not sold and is not used for advertising or marketing targeting. Activity routes may be stored on your device and synchronized to your FitMate account so jogging history can be restored."
+                  "Titik lokasi dan rute dapat disimpan sementara di perangkat dan disinkronkan ke akun FitMate untuk menyimpan riwayat Jogging. Data lokasi tidak dijual dan tidak digunakan untuk iklan. Rute hanya dibagikan kepada pihak lain jika kamu sendiri memilih fitur Bagikan.",
+                  "Location points and routes may be stored temporarily on your device and synchronized to your FitMate account for Jogging history. Location data is not sold or used for advertising. A route is shared with others only when you choose the Share feature."
                 )}
               </p>
 
               <p>
                 {tr(
-                  "Kamu dapat menolak sekarang atau mencabut izin kapan saja melalui pengaturan perangkat. Tanpa izin lokasi, fitur GPS Jogging tidak dapat merekam rute dengan benar.",
-                  "You can decline now or revoke permission at any time in device settings. Without location permission, GPS Jogging cannot record your route correctly."
+                  "Kamu dapat menolak sekarang atau mencabut izin kapan saja melalui pengaturan perangkat. Tanpa izin lokasi, fitur GPS Jogging tidak akan dimulai.",
+                  "You can decline now or revoke permission at any time in device settings. Without location permission, GPS Jogging will not start."
                 )}
               </p>
 
@@ -2022,20 +2022,20 @@ export default function JoggingPage() {
                 {tr("Baca Kebijakan Privasi", "Read Privacy Policy")}
               </Link>
 
-              <div className="grid gap-3 pt-1 sm:grid-cols-2">
+              <div className="sticky bottom-0 grid gap-3 border-t border-slate-100 bg-white/95 pt-3 backdrop-blur sm:grid-cols-2 dark:border-white/10 dark:bg-slate-950/95">
                 <button
                   type="button"
                   onClick={dismissLocationDisclosure}
                   className="rounded-2xl border border-slate-200 bg-white px-5 py-3.5 font-black text-slate-700 transition hover:bg-slate-50 dark:border-white/10 dark:bg-slate-900 dark:text-white"
                 >
-                  {tr("Tidak setuju", "Don't allow")}
+                  {tr("Tidak Setuju", "Don't Agree")}
                 </button>
                 <button
                   type="button"
                   onClick={confirmLocationDisclosure}
                   className="rounded-2xl bg-emerald-600 px-5 py-3.5 font-black text-white shadow-lg shadow-emerald-600/20 transition hover:bg-emerald-500"
                 >
-                  {tr("Setuju & Lanjutkan", "Agree & Continue")}
+                  {tr("Setuju & Izinkan Lokasi", "Agree & Allow Location")}
                 </button>
               </div>
             </div>

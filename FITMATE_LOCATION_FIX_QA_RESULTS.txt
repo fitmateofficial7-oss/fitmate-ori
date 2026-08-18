@@ -1,20 +1,61 @@
-FitMate Google Play Location Fix V2 - QA Results
-Date: 2026-08-16
+FitMate Google Play Prominent Disclosure Fix V3 - QA Results
+Date: 2026-08-17
+Package: com.growsia.fitmate
+Disclosure version: 2026-08-17-prominent-disclosure-v3
 
-PASS AndroidManifest.xml parses as valid XML
+PASS AndroidManifest.xml valid and package checks pass
 PASS ACCESS_COARSE_LOCATION present
 PASS ACCESS_FINE_LOCATION present
-PASS ACCESS_BACKGROUND_LOCATION absent
-PASS FOREGROUND_SERVICE_LOCATION present
-PASS prominent disclosure is in normal Jogging start/resume flow
-PASS Indonesian disclosure uses explicit location + closed/not-in-use wording
-PASS English disclosure uses explicit location + closed/not-in-use wording
-PASS consent requires affirmative Agree & Continue action
-PASS decline path does not start GPS
-PASS native addWatcher/location permission flow occurs before POST_NOTIFICATIONS request
-PASS native configure script does not re-add ACCESS_BACKGROUND_LOCATION
-PASS build BAT files stop the build if ACCESS_BACKGROUND_LOCATION reappears
-PASS output package contains no .env.local, AAB, APK, JKS, or signing passwords
+PASS ACCESS_BACKGROUND_LOCATION absent from source manifest
+PASS FOREGROUND_SERVICE and FOREGROUND_SERVICE_LOCATION present
+PASS POST_NOTIFICATIONS present for Android foreground-service notification
+PASS Start and Resume always enter the in-app disclosure gate first
+PASS disclosure gate is NOT conditional on native-plugin availability
+PASS browser geolocation fallback cannot bypass the disclosure gate
+PASS decline action cannot start GPS or request location permission
+PASS affirmative action is explicit: Setuju & Izinkan Lokasi / Agree & Allow Location
+PASS disclosure explicitly states precise GPS data access/collection
+PASS disclosure explains route, distance, pace, and speed use
+PASS disclosure explicitly explains background/minimized/screen-off use
+PASS disclosure explains local temporary storage and FitMate account synchronization
+PASS disclosure explains sale/advertising behavior and user-initiated route sharing
+PASS modal is scrollable on small phones and does not auto-dismiss
+PASS native location request happens only after affirmative disclosure action
+PASS notification permission is requested after the native location watcher/permission flow
+PASS native provider failure does not trigger a second browser location permission prompt
+PASS pre-consent shortcut to native Location settings removed
+PASS Privacy Policy matches Jogging location behavior and company identity
+PASS Privacy version updated to 2026-08-17
+PASS remote release marker added at /fitmate-release.json
+PASS AAB build verifies live server disclosure marker before building
+PASS AAB build blocks stale production web UI/disclosure
+PASS AAB build source-manifest audit blocks ACCESS_BACKGROUND_LOCATION
+PASS post-Gradle merged-manifest verifier blocks ACCESS_BACKGROUND_LOCATION from dependencies
+PASS legacy BUILD_FITMATE_AAB_AUTO_VERSION.bat routes to canonical Play Store builder
+PASS package name verifier: com.growsia.fitmate
+PASS Android target/compile SDK verification: API 36
+PASS native mobile entry audit passes
+PASS Jogging feature audit passes
+PASS historical signing-property backups containing credentials removed from delivered source
+PASS historical Xendit credential examples in documentation sanitized to placeholders
+PASS output does not include a real .env, private JKS/keystore, or release signing properties
 
-NOT RUN: full npm typecheck / Next.js build. npm dependency install did not complete in the inspection environment within the available execution window.
-NOT RUN: signed Android AAB build. Release keystore/signing secrets are intentionally excluded from this delivered ZIP.
+AUTOMATED CHECKS EXECUTED
+-------------------------
+PASS node scripts/audit-jogging-feature.cjs
+PASS node scripts/audit-playstore-location-privacy.cjs
+PASS node scripts/verify-playstore-package.cjs
+PASS node scripts/verify-android-release.cjs
+PASS node scripts/verify-native-mobile-entry.cjs
+PASS TypeScript syntax transpile check for the modified Jogging/native-location files
+
+NOT RUN IN THIS INSPECTION ENVIRONMENT
+--------------------------------------
+- Full npm typecheck / Next.js production build: dependency installation could not
+  complete because the required npm packages were not available in this container's
+  offline cache.
+- Signed Android AAB build: the private local upload keystore/signing credentials are
+  intentionally not bundled into this delivered source.
+
+The canonical BUILD-PLAYSTORE-AAB.bat performs the live-server and Android build-time
+policy guards on the user's build machine before producing the Play Store AAB.

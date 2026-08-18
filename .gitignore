@@ -61,3 +61,5 @@ android/fitmate-release-signing.properties
 /fitmate-upload-key.jks
 *.bak
 *.log
+android/keystore.properties*.bak
+android/*signing*.properties.bak

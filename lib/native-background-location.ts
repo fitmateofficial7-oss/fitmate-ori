@@ -47,25 +47,34 @@ async function getNativeContext(): Promise<NativeContext | null> {
     return null;
   }
 
-  nativeContextPromise ??= (async () => {
-    try {
-      const { Capacitor, registerPlugin } = await import("@capacitor/core");
-      if (!Capacitor.isNativePlatform()) {
+  if (!nativeContextPromise) {
+    nativeContextPromise = (async () => {
+      try {
+        const { Capacitor, registerPlugin } = await import("@capacitor/core");
+        if (!Capacitor.isNativePlatform()) {
+          return null;
+        }
+
+        return {
+          platform: Capacitor.getPlatform(),
+          plugin: registerPlugin<BackgroundGeolocationPlugin>(
+            "BackgroundGeolocation"
+          ),
+        };
+      } catch {
         return null;
       }
+    })();
+  }
 
-      return {
-        platform: Capacitor.getPlatform(),
-        plugin: registerPlugin<BackgroundGeolocationPlugin>(
-          "BackgroundGeolocation"
-        ),
-      };
-    } catch {
-      return null;
-    }
-  })();
-
-  return nativeContextPromise;
+  const context = await nativeContextPromise;
+  // Do not permanently cache a transient initialization failure. This avoids a
+  // case where the first probe reports "web mode" and the next call silently
+  // falls back to navigator.geolocation, which could bypass native expectations.
+  if (!context) {
+    nativeContextPromise = null;
+  }
+  return context;
 }
 
 async function requestAndroidNotificationPermission(platform: string) {

@@ -47,7 +47,9 @@
     "android:install-api36": "node scripts/install-android-api36.cjs",
     "native:prepare-welcome": "node scripts/prepare-native-welcome.cjs",
     "verify:native-entry": "node scripts/verify-native-mobile-entry.cjs",
-    "audit:playstore-location": "node scripts/audit-playstore-location-privacy.cjs"
+    "audit:playstore-location": "node scripts/audit-playstore-location-privacy.cjs",
+    "verify:remote-policy": "node scripts/verify-remote-policy-release.cjs",
+    "verify:merged-android-permissions": "node scripts/verify-merged-android-permissions.cjs"
   },
   "dependencies": {
     "@capacitor-community/background-geolocation": "^1.2.26",

@@ -34,8 +34,8 @@ Failed AI calls do not consume quota. Server-side database reservations prevent 
 ```env
 FITMATE_APP_URL=https://your-fitmate-domain.com
 NEXT_PUBLIC_APP_URL=https://your-fitmate-domain.com
-XENDIT_SECRET_KEY=xnd_production_...
-XENDIT_WEBHOOK_TOKEN=...
+XENDIT_SECRET_KEY=YOUR_XENDIT_SECRET_KEY
+XENDIT_WEBHOOK_TOKEN=YOUR_XENDIT_WEBHOOK_TOKEN
 ```
 
 Never expose either Xendit value using a `NEXT_PUBLIC_` prefix.

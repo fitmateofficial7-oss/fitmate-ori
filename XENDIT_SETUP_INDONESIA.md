@@ -86,8 +86,8 @@ Buat `.env.production` di root proyek FitMate dan isi nilai sebenarnya:
 FITMATE_APP_URL=https://DOMAIN-FITMATE
 NEXT_PUBLIC_APP_URL=https://DOMAIN-FITMATE
 
-XENDIT_SECRET_KEY=xnd_development_ISI_DARI_DASHBOARD_XENDIT
-XENDIT_WEBHOOK_TOKEN=ISI_CALLBACK_TOKEN_DARI_WEBHOOK_XENDIT
+XENDIT_SECRET_KEY=YOUR_XENDIT_SECRET_KEY
+XENDIT_WEBHOOK_TOKEN=YOUR_XENDIT_WEBHOOK_TOKEN
 ```
 
 Pastikan variabel Supabase dan OpenAI yang ada di `.env.example` juga sudah terisi. Jangan pernah mengubah nama credential Xendit menjadi `NEXT_PUBLIC_XENDIT_...` karena itu akan membocorkannya ke browser.
