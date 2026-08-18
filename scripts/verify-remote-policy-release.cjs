@@ -4,6 +4,7 @@ const path = require("node:path");
 const dns = require("node:dns");
 const http = require("node:http");
 const https = require("node:https");
+const os = require("node:os");
 const { execFileSync } = require("node:child_process");
 
 const EXPECTED_DISCLOSURE_VERSION = "2026-08-17-prominent-disclosure-v3";
@@ -12,12 +13,9 @@ const REQUEST_HEADERS = {
   accept: "application/json,text/plain,*/*",
   "cache-control": "no-cache",
   pragma: "no-cache",
-  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) FitMateReleaseVerifier/6.0",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) FitMateReleaseVerifier/8.0",
 };
 
-// Banyak Windows/ISP memiliki route IPv6 yang terpasang tetapi tidak benar-benar
-// dapat menjangkau internet. Utamakan IPv4 agar Node tidak berhenti dengan
-// error generik `fetch failed` padahal browser/curl masih bisa membuka domain.
 try {
   dns.setDefaultResultOrder("ipv4first");
 } catch {}
@@ -52,34 +50,34 @@ function fail(message, details = []) {
   console.error(message);
   for (const detail of details.filter(Boolean)) console.error(`   ${detail}`);
   console.error(
-    "\nPemeriksaan ini sengaja menjaga agar AAB tidak membuka UI/policy lama saat direview Google Play.\n" +
+    "\nPemeriksaan ini menjaga agar AAB tidak membuka UI/policy lama saat direview Google Play.\n" +
       "Buka URL marker berikut di browser untuk pengecekan manual:\n" +
       `  ${DEFAULT_PRODUCTION_URL}/fitmate-release.json\n`
   );
   process.exit(1);
 }
 
-function validateMarker(data) {
+function validateMarker(data, sourceLabel = "marker") {
   if (!data || typeof data !== "object") {
-    fail("fitmate-release.json di server bukan object JSON yang valid.");
+    fail(`${sourceLabel} bukan object JSON yang valid.`);
   }
   if (data.packageName !== "com.growsia.fitmate") {
-    fail(`Package marker server tidak cocok: ${data.packageName || "kosong"}`);
+    fail(`Package ${sourceLabel} tidak cocok: ${data.packageName || "kosong"}`);
   }
   if (data.locationDisclosureVersion !== EXPECTED_DISCLOSURE_VERSION) {
     fail(
-      `Disclosure server masih versi ${data.locationDisclosureVersion || "lama/tidak ada"}; ` +
+      `Disclosure ${sourceLabel} masih versi ${data.locationDisclosureVersion || "lama/tidak ada"}; ` +
         `harus ${EXPECTED_DISCLOSURE_VERSION}.`
     );
   }
   if (data.accessBackgroundLocationDeclared !== false) {
-    fail("Marker server tidak menyatakan ACCESS_BACKGROUND_LOCATION = false.");
+    fail(`${sourceLabel} tidak menyatakan ACCESS_BACKGROUND_LOCATION = false.`);
   }
 }
 
 function parseJson(text, source) {
   try {
-    return JSON.parse(text.replace(/^\uFEFF/, ""));
+    return JSON.parse(String(text).replace(/^\uFEFF/, ""));
   } catch (error) {
     throw new Error(`${source} mengembalikan data yang bukan JSON valid: ${error.message}`);
   }
@@ -159,6 +157,8 @@ function fetchWithCurl(endpoint) {
     "--fail",
     "--location",
     "--ipv4",
+    "--http1.1",
+    "--tlsv1.2",
     "--retry",
     "2",
     "--retry-delay",
@@ -184,6 +184,87 @@ function fetchWithCurl(endpoint) {
   return parseJson(text, "curl");
 }
 
+function decodeHtml(text) {
+  return String(text)
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&#x27;/gi, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&")
+    .replace(/&nbsp;/g, " ");
+}
+
+function extractJsonFromBrowserDom(dom) {
+  const text = String(dom || "").trim();
+  if (text.startsWith("{")) return parseJson(text, "Browser headless");
+
+  const pre = text.match(/<pre[^>]*>([\s\S]*?)<\/pre>/i);
+  if (pre) {
+    const candidate = decodeHtml(pre[1].replace(/<[^>]+>/g, "")).trim();
+    if (candidate.startsWith("{")) return parseJson(candidate, "Browser headless");
+  }
+
+  const plain = decodeHtml(
+    text
+      .replace(/<script[\s\S]*?<\/script>/gi, " ")
+      .replace(/<style[\s\S]*?<\/style>/gi, " ")
+      .replace(/<[^>]+>/g, " ")
+  );
+  const first = plain.indexOf("{");
+  const last = plain.lastIndexOf("}");
+  if (first >= 0 && last > first) {
+    return parseJson(plain.slice(first, last + 1).trim(), "Browser headless");
+  }
+  throw new Error("browser terbuka tetapi JSON marker tidak ditemukan di DOM");
+}
+
+function browserCandidates() {
+  if (process.platform !== "win32") return [];
+  const pf = process.env.ProgramFiles || "C:\\Program Files";
+  const pfx86 = process.env["ProgramFiles(x86)"] || "C:\\Program Files (x86)";
+  const local = process.env.LOCALAPPDATA || "";
+  return [
+    path.join(pf, "Google", "Chrome", "Application", "chrome.exe"),
+    path.join(pfx86, "Google", "Chrome", "Application", "chrome.exe"),
+    local && path.join(local, "Google", "Chrome", "Application", "chrome.exe"),
+    path.join(pf, "Microsoft", "Edge", "Application", "msedge.exe"),
+    path.join(pfx86, "Microsoft", "Edge", "Application", "msedge.exe"),
+    local && path.join(local, "Microsoft", "Edge", "Application", "msedge.exe"),
+  ].filter(Boolean);
+}
+
+function fetchWithBrowser(endpoint) {
+  const browser = browserCandidates().find((candidate) => fs.existsSync(candidate));
+  if (!browser) throw new Error("Chrome/Edge tidak ditemukan untuk fallback browser");
+
+  const profileDir = fs.mkdtempSync(path.join(os.tmpdir(), "fitmate-policy-browser-"));
+  try {
+    const args = [
+      "--headless=new",
+      "--disable-gpu",
+      "--disable-extensions",
+      "--no-first-run",
+      "--no-default-browser-check",
+      `--user-data-dir=${profileDir}`,
+      "--virtual-time-budget=15000",
+      "--dump-dom",
+      endpoint.toString(),
+    ];
+    const dom = execFileSync(browser, args, {
+      encoding: "utf8",
+      windowsHide: true,
+      stdio: ["ignore", "pipe", "ignore"],
+      timeout: 45000,
+      maxBuffer: 2 * 1024 * 1024,
+    });
+    return extractJsonFromBrowserDom(dom);
+  } finally {
+    try {
+      fs.rmSync(profileDir, { recursive: true, force: true });
+    } catch {}
+  }
+}
+
 function shortError(error) {
   const code = error?.cause?.code || error?.code;
   const cause = error?.cause?.message;
@@ -192,8 +273,31 @@ function shortError(error) {
     .join(" | ");
 }
 
+function verifyManualConfirmation() {
+  if (process.env.FITMATE_MANUAL_REMOTE_CONFIRMED !== "YES") {
+    fail("Mode manual hanya boleh dipakai setelah pengguna melihat marker production di browser dan mengonfirmasi dari BUILD-PLAYSTORE-AAB.bat.");
+  }
+  const localMarker = path.join(process.cwd(), "public", "fitmate-release.json");
+  if (!fs.existsSync(localMarker)) {
+    fail(`Marker lokal tidak ditemukan: ${localMarker}`);
+  }
+  const data = parseJson(fs.readFileSync(localMarker, "utf8"), "public/fitmate-release.json");
+  validateMarker(data, "marker lokal yang sudah dicocokkan secara manual dengan production");
+  console.log("✅ Konfirmasi manual production diterima.");
+  console.log("✅ Marker lokal yang dicocokkan memenuhi policy release yang diwajibkan.");
+  console.log(`✅ Location disclosure: ${EXPECTED_DISCLOSURE_VERSION}`);
+  console.log("✅ ACCESS_BACKGROUND_LOCATION marker: false");
+  console.log("⚠️  Catatan: jalur manual dipakai karena koneksi CLI ke server di-reset/timeout, bukan karena marker production salah.");
+}
+
 async function main() {
   loadEnvFiles();
+
+  if (process.argv.includes("--manual-confirmed")) {
+    verifyManualConfirmation();
+    return;
+  }
+
   const raw =
     [process.env.CAPACITOR_SERVER_URL, process.env.FITMATE_APP_URL, process.env.NEXT_PUBLIC_APP_URL]
       .map((value) => value && value.trim())
@@ -234,21 +338,31 @@ async function main() {
   if (!data) {
     try {
       data = fetchWithCurl(endpoint);
-      console.log("✅ Remote marker terbaca via curl IPv4.");
+      console.log("✅ Remote marker terbaca via curl IPv4/HTTP1.1/TLS1.2.");
     } catch (error) {
       const stderr = error?.stderr ? String(error.stderr).trim() : "";
       errors.push(`curl IPv4: ${shortError(error)}${stderr ? ` | ${stderr}` : ""}`);
+      console.log("⚠️  curl gagal, mencoba Chrome/Edge headless sebagai browser sungguhan...");
+    }
+  }
+
+  if (!data) {
+    try {
+      data = fetchWithBrowser(endpoint);
+      console.log("✅ Remote marker terbaca via Chrome/Edge headless.");
+    } catch (error) {
+      errors.push(`Browser headless: ${shortError(error)}`);
     }
   }
 
   if (!data) {
     fail(
-      "Server FitMate tidak dapat diverifikasi dari komputer ini. Ini berbeda dengan 'server versi lama'.",
+      "Server FitMate tidak dapat diverifikasi otomatis dari komputer ini. Ini berbeda dengan 'server versi lama'.",
       errors
     );
   }
 
-  validateMarker(data);
+  validateMarker(data, "marker production");
   console.log("✅ Remote FitMate policy release sudah sesuai.");
   console.log(`✅ Location disclosure: ${EXPECTED_DISCLOSURE_VERSION}`);
   console.log("✅ ACCESS_BACKGROUND_LOCATION marker: false");

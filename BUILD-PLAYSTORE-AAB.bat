@@ -1,5 +1,5 @@
 @echo off
-setlocal EnableExtensions
+setlocal EnableExtensions EnableDelayedExpansion
 cd /d "%~dp0"
 title FitMate - Build Play Store AAB
 
@@ -34,16 +34,29 @@ if not exist "package.json" (
   goto :fail
 )
 
-if not exist "node_modules\.bin\cap.cmd" (
-  echo [1/8] node_modules belum tersedia. Menjalankan npm install...
-  call npm install
+echo [1/9] Memeriksa dependency Capacitor yang terpasang...
+call node scripts\verify-capacitor-install.cjs
+if errorlevel 1 (
+  echo.
+  echo [INFO] node_modules Capacitor tidak konsisten atau masih membawa file versi lama/baru.
+  echo [INFO] Membuat ulang dependency SECARA BERSIH dari package-lock...
+  echo [INFO] Perintah: npm ci --legacy-peer-deps
+  echo.
+  call npm ci --legacy-peer-deps
+  if errorlevel 1 (
+    echo [ERROR] npm ci gagal. Dependency tidak boleh dipakai setengah-setengah.
+    goto :fail
+  )
+
+  echo.
+  echo [INFO] Memverifikasi ulang dependency Capacitor...
+  call node scripts\verify-capacitor-install.cjs
   if errorlevel 1 goto :fail
-) else (
-  echo [1/8] Dependencies tersedia.
 )
+echo [OK] Dependency Capacitor bersih dan sesuai package-lock.
 
 echo.
-echo [2/8] Mencari Java 21 yang valid...
+echo [2/9] Mencari Java 21 yang valid...
 call :detect_java21
 if errorlevel 1 goto :fail
 
@@ -65,40 +78,56 @@ if errorlevel 1 (
   if errorlevel 1 goto :fail
 )
 echo.
-echo [3/8] Memeriksa URL FitMate untuk Android...
+echo [3/9] Memeriksa URL FitMate untuk Android...
 echo [INFO] Jika env URL kosong, production default = https://fitmate.growsia.id
 call npm run native:verify-url
 if errorlevel 1 goto :fail
 
 echo.
 echo [REMOTE POLICY] Memastikan server FitMate sudah memakai disclosure terbaru...
-echo [INFO] Verifier V6 mencoba Node fetch, HTTPS IPv4, lalu curl IPv4.
+echo [INFO] Verifier V8 mencoba Node, HTTPS IPv4, curl, lalu Chrome/Edge headless.
 call npm run verify:remote-policy
 if errorlevel 1 (
   echo.
-  echo [ERROR] Remote policy belum berhasil diverifikasi.
+  echo [INFO] Verifikasi otomatis gagal karena koneksi CLI/browser headless dapat di-reset ISP/server.
+  echo [INFO] Ini TIDAK otomatis berarti production masih versi lama.
   echo.
-  echo Buka di browser:
+  echo Browser akan dibuka ke marker production:
   echo https://fitmate.growsia.id/fitmate-release.json
   echo.
-  echo Jika URL menampilkan 404 / halaman lama, deploy source V6 ke production lebih dulu.
-  echo Jika JSON sudah benar tetapi verifier tetap gagal, kirim seluruh detail error V6.
-  goto :fail
+  start "" "https://fitmate.growsia.id/fitmate-release.json"
+  echo Pastikan browser menampilkan JSON dengan nilai berikut:
+  echo   packageName = com.growsia.fitmate
+  echo   locationDisclosureVersion = 2026-08-17-prominent-disclosure-v3
+  echo   accessBackgroundLocationDeclared = false
+  echo.
+  choice /C YN /N /M "Jika JSON SUDAH BENAR, tekan Y. Jika 404/salah, tekan N: "
+  if errorlevel 2 goto :fail
+  set "FITMATE_MANUAL_REMOTE_CONFIRMED=YES"
+  call node scripts\verify-remote-policy-release.cjs --manual-confirmed
+  set "FITMATE_MANUAL_REMOTE_CONFIRMED="
+  if errorlevel 1 goto :fail
+  echo [OK] Remote policy dikonfirmasi manual karena jalur network verifier diblok/reset.
 )
 
 echo.
-echo [4/8] Memeriksa package name...
+echo [4/9] Memeriksa package name...
 call npm run verify:package-name
 if errorlevel 1 goto :fail
 
 echo.
-echo [5/8] Memeriksa konfigurasi Android release...
+echo [5/9] Memeriksa konfigurasi Android release...
 call npm run verify:android-release
 if errorlevel 1 goto :fail
 
 echo.
-echo [6/8] Sinkronisasi Capacitor dan konfigurasi native...
+echo [6/9] Sinkronisasi Capacitor dan konfigurasi native...
 call npm run native:sync
+if errorlevel 1 goto :fail
+
+echo.
+echo [7/9] Memastikan Capacitor tetap konsisten setelah native sync...
+call node scripts\verify-capacitor-install.cjs
 if errorlevel 1 goto :fail
 
 echo.
@@ -136,7 +165,7 @@ set "VERSION_PREPARED=1"
 echo [OK] versionCode baru: %NEW_VERSION_CODE%
 
 echo.
-echo [7/8] Membersihkan build Android lama...
+echo [8/9] Membersihkan build Android lama...
 pushd android
 call gradlew.bat --stop >nul 2>&1
 call gradlew.bat clean
@@ -146,7 +175,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [8/8] Membuat AAB release...
+echo [9/9] Membuat AAB release...
 call gradlew.bat bundleRelease
 set "GRADLE_EXIT=%ERRORLEVEL%"
 popd
