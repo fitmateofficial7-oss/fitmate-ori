@@ -49,7 +49,8 @@
     "verify:native-entry": "node scripts/verify-native-mobile-entry.cjs",
     "audit:playstore-location": "node scripts/audit-playstore-location-privacy.cjs",
     "verify:remote-policy": "node scripts/verify-remote-policy-release.cjs",
-    "verify:merged-android-permissions": "node scripts/verify-merged-android-permissions.cjs"
+    "verify:merged-android-permissions": "node scripts/verify-merged-android-permissions.cjs",
+    "prebuild": "node scripts/ensure-exercise-preset-compat.cjs"
   },
   "dependencies": {
     "@capacitor-community/background-geolocation": "^1.2.26",

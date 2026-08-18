@@ -37,7 +37,17 @@ for (const rel of pages) {
   for (const match of text.matchAll(trPattern)) {
     const id = match[2].replace(/\s+/g, " ").trim();
     const en = match[4].replace(/\s+/g, " ").trim();
-    if (id.length > 150 || en.length > 150) longCopy.push({ rel, id, en });
+
+    // Google Play Prominent Disclosure intentionally needs complete, explicit copy.
+    // Do not treat those policy-required location paragraphs as everyday UI verbosity.
+    const isRequiredLocationDisclosure =
+      rel === "app/jogging/page.tsx" &&
+      (/lokasi|location/i.test(id) || /lokasi|location/i.test(en)) &&
+      (/background|latar belakang|iklan|advertising|sinkron|synchron/i.test(id + " " + en));
+
+    if (!isRequiredLocationDisclosure && (id.length > 150 || en.length > 150)) {
+      longCopy.push({ rel, id, en });
+    }
   }
 }
 checks.push([longCopy.length === 0, `no oversized everyday UI copy (${longCopy.length} found)`]);

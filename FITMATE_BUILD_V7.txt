@@ -1,0 +1,14 @@
+FITMATE BUILD V7 - TYPESCRIPT COMPATIBILITY + PLAY STORE POLICY RELEASE
+Date: 2026-08-18
+Package: com.growsia.fitmate
+Version: 1.4.79
+
+Fix utama:
+- Exercise2DPreset diekspor kembali sebagai alias kompatibel dari ExerciseGuidePreset.
+- prebuild guard memastikan alias compatibility tersedia sebelum `next build`.
+- Tidak mengubah data exercise, UI, jogging, entitlement, billing, atau database.
+- Mempertahankan Play Store Prominent Disclosure V3, Android API 36 fix, Native URL fix, dan Remote Policy V6.
+
+Error yang ditangani:
+./components/exercise-pose-thumbnail.tsx:1:15
+'@/lib/exercise-guides' has no exported member named 'Exercise2DPreset'.

@@ -1,17 +1,12 @@
-FITMATE READY COPY-PASTE — 2026-08-18
+FITMATE READY COPY-PASTE V7 — 2026-08-18
 
-PAKAI BEGINI:
 1. Extract ZIP ini.
 2. Copy SEMUA isi hasil extract langsung ke ROOT project FitMate kamu.
 3. Jika Windows bertanya Replace/Merge, pilih Replace files in destination.
-4. JANGAN hapus atau timpa file production rahasia milikmu seperti .env/.env.production,
-   keystore, atau fitmate-release-signing.properties asli. ZIP ini hanya berisi contoh,
-   bukan credential asli.
-5. Deploy source web ini ke fitmate.growsia.id terlebih dahulu.
-6. Pastikan https://fitmate.growsia.id/fitmate-release.json sudah menampilkan JSON.
-7. Setelah itu jalankan BUILD-PLAYSTORE-AAB.bat.
+4. JANGAN timpa credential production asli (.env/.env.production, keystore, fitmate-release-signing.properties).
+5. Commit/push/deploy source web ini ke fitmate.growsia.id.
+6. Pastikan https://fitmate.growsia.id/fitmate-release.json menampilkan JSON, bukan 404.
+7. Setelah web production benar, jalankan BUILD-PLAYSTORE-AAB.bat untuk AAB baru.
 
-Marker yang sudah terpasang:
-- packageName: com.growsia.fitmate
-- locationDisclosureVersion: 2026-08-17-prominent-disclosure-v3
-- accessBackgroundLocationDeclared: false
+V7 menambahkan compatibility alias Exercise2DPreset dan prebuild guard agar error TypeScript
+exercise-pose-thumbnail tidak muncul lagi walaupun folder tujuan masih memiliki komponen lama.
