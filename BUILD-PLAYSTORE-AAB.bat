@@ -54,7 +54,7 @@ call npm run verify:api36:sdk
 if errorlevel 1 (
   echo.
   echo [INFO] Platform Android 16 / API 36 belum ada.
-  echo [INFO] Menyiapkan API 36 dengan installer V5 no-loop...
+  echo [INFO] Menyiapkan API 36 dengan installer V6 license-fix...
   echo.
   call "%~dp0INSTALL-ANDROID-API36.bat" /AUTO
   if errorlevel 1 goto :fail

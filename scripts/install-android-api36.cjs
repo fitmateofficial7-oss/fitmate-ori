@@ -57,25 +57,40 @@ if (!sdkmanager) {
   process.exit(1);
 }
 
-console.log(`✅ sdkmanager: ${sdkmanager}`);
-console.log("\nMenginstall Android SDK Platform 36 dan Build-Tools 36.0.0...");
-console.log("Jika diminta license, baca lalu jawab y untuk menyetujui.\n");
+const env = { ...process.env, ANDROID_SDK_ROOT: sdkRoot, ANDROID_HOME: sdkRoot };
+const acceptInput = "y\r\n".repeat(300);
 
-const result = spawnSync(sdkmanager, ["platforms;android-36", "build-tools;36.0.0", "platform-tools"], {
-  stdio: "inherit",
-  shell: process.platform === "win32",
-  env: { ...process.env, ANDROID_SDK_ROOT: sdkRoot, ANDROID_HOME: sdkRoot },
-});
-
-if (result.error) {
-  console.error(`❌ Gagal menjalankan sdkmanager: ${result.error.message}`);
-  process.exit(1);
+function runSdkManager(args, label) {
+  console.log(`\n${label}\n`);
+  const result = spawnSync(sdkmanager, args, {
+    input: acceptInput,
+    encoding: "utf8",
+    stdio: ["pipe", "inherit", "inherit"],
+    shell: process.platform === "win32",
+    env,
+  });
+  if (result.error) {
+    console.error(`❌ Gagal menjalankan sdkmanager: ${result.error.message}`);
+    process.exit(1);
+  }
+  if (result.status !== 0) process.exit(result.status || 1);
 }
-if (result.status !== 0) process.exit(result.status || 1);
+
+console.log(`✅ sdkmanager: ${sdkmanager}`);
+runSdkManager([`--sdk_root=${sdkRoot}`, "--licenses"], "Menerima Android SDK licenses...");
+runSdkManager(
+  [`--sdk_root=${sdkRoot}`, "platforms;android-36", "build-tools;36.0.0", "platform-tools"],
+  "Menginstall Android SDK Platform 36, Build-Tools 36.0.0, dan Platform-Tools..."
+);
 
 const androidJar = path.join(sdkRoot, "platforms", "android-36", "android.jar");
-if (!fs.existsSync(androidJar)) {
-  console.error("❌ Instalasi selesai tetapi Platform 36 belum ditemukan.");
+const buildTools = path.join(sdkRoot, "build-tools", "36.0.0");
+const platformTools = path.join(sdkRoot, "platform-tools");
+if (!fs.existsSync(androidJar) || !fs.existsSync(buildTools) || !fs.existsSync(platformTools)) {
+  console.error("❌ Instalasi sdkmanager selesai tetapi komponen API 36 belum lengkap.");
+  console.error(`   android.jar: ${fs.existsSync(androidJar) ? "OK" : "MISSING"}`);
+  console.error(`   build-tools 36.0.0: ${fs.existsSync(buildTools) ? "OK" : "MISSING"}`);
+  console.error(`   platform-tools: ${fs.existsSync(platformTools) ? "OK" : "MISSING"}`);
   process.exit(1);
 }
 

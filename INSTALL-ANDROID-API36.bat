@@ -1,14 +1,15 @@
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
 cd /d "%~dp0"
-title FitMate - Android API 36 Auto Setup V5
+title FitMate - Android API 36 Auto Setup V6
 
 cls
 echo ======================================================
-echo       FITMATE - ANDROID 16 / API 36 SETUP V5
+echo       FITMATE - ANDROID 16 / API 36 SETUP V6
 echo ======================================================
 echo.
-echo Installer V5: no-loop, self-contained.
+echo Installer V6: memperbaiki penerimaan license sdkmanager di Windows.
+echo Tidak memakai PowerShell.
 echo.
 
 echo [1/6] Mencari Java 21...
@@ -34,7 +35,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [4/6] Memasang license dan Android API 36...
+echo [4/6] Menerima license dan memasang Android API 36...
 call :API36_INSTALL
 if errorlevel 1 goto :SETUP_FAIL
 
@@ -69,6 +70,10 @@ exit /b 0
 set "JAVA_SELECTED="
 
 call :JAVA21_TRY "%FITMATE_JAVA_HOME%"
+if defined JAVA_SELECTED goto :JAVA21_OK
+
+rem Lokasi Java 21 yang sebelumnya terdeteksi pada mesin FitMate.
+call :JAVA21_TRY "%USERPROFILE%\.jdks\jbr-21.0.11"
 if defined JAVA_SELECTED goto :JAVA21_OK
 
 call :JAVA21_TRY "%JAVA_HOME%"
@@ -284,17 +289,42 @@ exit /b 0
 
 
 :API36_INSTALL
-echo [INFO] Menerima Android SDK licenses...
-(for /L %%I in (1,1,100) do @echo y) | call "%SDKMANAGER%" --sdk_root="%SDK_ROOT%" --licenses >nul
+set "LICENSE_INPUT=%TEMP%\fitmate-android-license-%RANDOM%-%RANDOM%.txt"
+
+rem Windows tidak memiliki perintah `yes`. Buat file jawaban y dan redirect
+rem ke stdin sdkmanager. Ini lebih stabil daripada pipe + CALL pada .bat.
+(for /L %%I in (1,1,300) do @echo y)>"%LICENSE_INPUT%"
+if not exist "%LICENSE_INPUT%" (
+    echo [ERROR] Gagal membuat file jawaban license sementara.
+    exit /b 1
+)
+
+echo [INFO] Menerima semua Android SDK licenses...
+call "%SDKMANAGER%" --sdk_root="%SDK_ROOT%" --licenses < "%LICENSE_INPUT%"
+set "LICENSE_EXIT=%ERRORLEVEL%"
+if not "%LICENSE_EXIT%"=="0" (
+    echo [ERROR] sdkmanager --licenses gagal. Exit code: %LICENSE_EXIT%
+    del /q "%LICENSE_INPUT%" >nul 2>&1
+    exit /b 1
+)
+
+echo.
 echo [INFO] Memasang platform-tools, Android 16 API 36, dan Build-Tools 36.0.0...
-(for /L %%I in (1,1,100) do @echo y) | call "%SDKMANAGER%" --sdk_root="%SDK_ROOT%" "platform-tools" "platforms;android-36" "build-tools;36.0.0"
-if errorlevel 1 exit /b 1
+call "%SDKMANAGER%" --sdk_root="%SDK_ROOT%" "platform-tools" "platforms;android-36" "build-tools;36.0.0" < "%LICENSE_INPUT%"
+set "INSTALL_EXIT=%ERRORLEVEL%"
+del /q "%LICENSE_INPUT%" >nul 2>&1
+
+if not "%INSTALL_EXIT%"=="0" (
+    echo [ERROR] Instalasi paket Android SDK gagal. Exit code: %INSTALL_EXIT%
+    exit /b 1
+)
 exit /b 0
 
 
 :API36_VERIFY
 if not exist "%SDK_ROOT%\platforms\android-36\android.jar" (
     echo [ERROR] %SDK_ROOT%\platforms\android-36\android.jar belum ada.
+    echo [INFO] License atau download paket Android API 36 belum selesai.
     exit /b 1
 )
 
@@ -303,8 +333,14 @@ if not exist "%SDK_ROOT%\build-tools\36.0.0" (
     exit /b 1
 )
 
+if not exist "%SDK_ROOT%\platform-tools" (
+    echo [ERROR] Platform-Tools belum ada.
+    exit /b 1
+)
+
 echo [OK] Android SDK Platform 36 tersedia.
 echo [OK] Android SDK Build-Tools 36.0.0 tersedia.
+echo [OK] Android SDK Platform-Tools tersedia.
 exit /b 0
 
 
