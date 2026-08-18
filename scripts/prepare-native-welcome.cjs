@@ -37,18 +37,15 @@ function loadEnvFiles() {
 
 loadEnvFiles();
 
+const DEFAULT_PRODUCTION_URL = "https://fitmate.growsia.id";
+
 const raw = [
   process.env.CAPACITOR_SERVER_URL,
   process.env.FITMATE_APP_URL,
   process.env.NEXT_PUBLIC_APP_URL,
 ]
   .map((value) => value && value.trim())
-  .find(Boolean);
-
-if (!raw) {
-  console.error("❌ URL FitMate belum dikonfigurasi untuk native welcome.");
-  process.exit(1);
-}
+  .find(Boolean) || DEFAULT_PRODUCTION_URL;
 
 let url;
 try {

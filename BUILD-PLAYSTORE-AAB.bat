@@ -66,6 +66,7 @@ if errorlevel 1 (
 )
 echo.
 echo [3/8] Memeriksa URL FitMate untuk Android...
+echo [INFO] Jika env URL kosong, production default = https://fitmate.growsia.id
 call npm run native:verify-url
 if errorlevel 1 goto :fail
 

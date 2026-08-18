@@ -3,6 +3,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const EXPECTED_DISCLOSURE_VERSION = "2026-08-17-prominent-disclosure-v3";
+const DEFAULT_PRODUCTION_URL = "https://fitmate.growsia.id";
 
 function loadEnvFiles() {
   const mode = process.env.NODE_ENV === "development" ? "development" : "production";
@@ -47,9 +48,7 @@ async function main() {
     process.env.NEXT_PUBLIC_APP_URL,
   ]
     .map((value) => value && value.trim())
-    .find(Boolean);
-
-  if (!raw) fail("URL FitMate belum dikonfigurasi.");
+    .find(Boolean) || DEFAULT_PRODUCTION_URL;
 
   let endpoint;
   try {

@@ -34,6 +34,8 @@ function loadNativeEnvFiles() {
 
 loadNativeEnvFiles();
 
+const DEFAULT_PRODUCTION_URL = "https://fitmate.growsia.id";
+
 function resolveRemoteAppUrl() {
   const configured = [
     process.env.CAPACITOR_SERVER_URL,
@@ -41,17 +43,8 @@ function resolveRemoteAppUrl() {
     process.env.NEXT_PUBLIC_APP_URL,
   ]
     .map((value) => value?.trim())
-    .find(Boolean);
+    .find(Boolean) ?? DEFAULT_PRODUCTION_URL;
 
-  if (!configured) {
-    throw new Error(
-      [
-        "URL FitMate belum dikonfigurasi.",
-        "Isi CAPACITOR_SERVER_URL, FITMATE_APP_URL, atau NEXT_PUBLIC_APP_URL",
-        "dengan URL HTTPS FitMate yang dapat dibuka dari HP.",
-      ].join("\n")
-    );
-  }
 
   let url: URL;
   try {

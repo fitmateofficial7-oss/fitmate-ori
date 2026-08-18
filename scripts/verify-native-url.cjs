@@ -26,27 +26,24 @@ function loadNativeEnvFiles() {
 
 loadNativeEnvFiles();
 
+const DEFAULT_PRODUCTION_URL = "https://fitmate.growsia.id";
+
 const raw = [
   process.env.CAPACITOR_SERVER_URL,
   process.env.FITMATE_APP_URL,
   process.env.NEXT_PUBLIC_APP_URL,
 ]
   .map((value) => value && value.trim())
-  .find(Boolean);
+  .find(Boolean) || DEFAULT_PRODUCTION_URL;
 
 function fail(message) {
   console.error("\n❌ FitMate Native URL belum siap.\n");
   console.error(message);
   console.error(
-    "\nIsi .env.local, contoh:\nCAPACITOR_SERVER_URL=https://fitmate-domain-kamu.com\nNEXT_PUBLIC_APP_URL=https://fitmate-domain-kamu.com\nFITMATE_APP_URL=https://fitmate-domain-kamu.com\n"
+    "\nProduction default: https://fitmate.growsia.id\n" +
+      "Opsional: isi CAPACITOR_SERVER_URL / FITMATE_APP_URL / NEXT_PUBLIC_APP_URL untuk override staging/development.\n"
   );
   process.exit(1);
-}
-
-if (!raw) {
-  fail(
-    "CAPACITOR_SERVER_URL, FITMATE_APP_URL, dan NEXT_PUBLIC_APP_URL semuanya kosong. Build dihentikan agar Native Shell tidak ikut terpasang lagi."
-  );
 }
 
 let url;
@@ -71,6 +68,12 @@ if (process.env.NODE_ENV === "production" && url.protocol !== "https:") {
   fail("Build production harus memakai URL HTTPS.");
 }
 
-console.log("✅ FitMate Native URL:", url.toString().replace(/\/$/, ""));
+const normalizedUrl = url.toString().replace(/\/$/, "");
+const usingDefault = ![process.env.CAPACITOR_SERVER_URL, process.env.FITMATE_APP_URL, process.env.NEXT_PUBLIC_APP_URL].some((value) => value && value.trim());
+console.log("✅ FitMate Native URL:", normalizedUrl);
+if (usingDefault) {
+  console.log("✅ URL production default dipakai: https://fitmate.growsia.id");
+  console.log("ℹ️  Env tetap dapat meng-override URL ini untuk staging/development.");
+}
 console.log("✅ Android akan membuka Native Mobile Welcome lokal terlebih dahulu.");
 console.log("✅ Setelah Start/Login, aplikasi akan membuka FitMate HTTPS di WebView.");
