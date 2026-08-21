@@ -312,7 +312,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <main className="fitmate-app-page min-h-screen bg-slate-50 pb-32 text-slate-900 dark:bg-slate-950 dark:text-white">
+    <main className="fitmate-app-page fitmate-settings-page min-h-screen bg-slate-50 pb-32 text-slate-900 dark:bg-slate-950 dark:text-white">
       <header className="border-b border-slate-200 bg-white px-5 py-6 dark:border-white/10 dark:bg-slate-950 sm:px-8">
         <div className="mx-auto flex max-w-5xl flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div>

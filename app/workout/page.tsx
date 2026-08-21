@@ -1701,7 +1701,7 @@ export default function WorkoutPage() {
   // ====================================================
 
   return (
-    <main className="fitmate-app-page min-h-screen bg-slate-50 pb-48 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    <main className="fitmate-app-page fitmate-workout-page min-h-screen bg-slate-50 pb-48 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/90 px-4 py-3 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/90 sm:px-6">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
           <FitMateBrand href="/dashboard" size="sm" showCompany />

@@ -460,7 +460,7 @@ export default function ProgressPage() {
       descriptionId="Analisis progres, readiness, pengukuran tubuh, foto progres, dan rekomendasi adaptif tersedia di FitMate Premium."
       descriptionEn="Progress analytics, readiness, body measurements, progress photos, and adaptive recommendations are available with FitMate Premium."
     >
-      <main className="fitmate-app-page min-h-screen bg-slate-50 pb-32 text-slate-900 dark:bg-slate-950 dark:text-white">
+      <main className="fitmate-app-page fitmate-progress-page min-h-screen bg-slate-50 pb-32 text-slate-900 dark:bg-slate-950 dark:text-white">
       <header className="border-b border-slate-200/80 bg-white/90 px-4 py-4 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/90 sm:px-6">
         <div className="mx-auto max-w-6xl">
           <p className="text-xs font-black uppercase tracking-[0.16em] text-green-600 dark:text-green-300">

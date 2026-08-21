@@ -314,7 +314,7 @@ export default function PremiumPage() {
   );
 
   return (
-    <main className="fitmate-app-page min-h-screen pb-24 text-slate-950 dark:text-white">
+    <main className="fitmate-app-page fitmate-premium-page min-h-screen pb-24 text-slate-950 dark:text-white">
       <header className="border-b border-slate-200/80 bg-white/90 px-4 py-4 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/90 sm:px-6">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
           <FitMateBrand href="/dashboard" size="sm" showCompany />

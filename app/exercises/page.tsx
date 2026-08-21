@@ -190,12 +190,12 @@ export default function ExercisesPage() {
     : null;
 
   return (
-    <main className="fitmate-app-page min-h-screen bg-white pb-28 text-slate-900">
+    <main className="fitmate-app-page fitmate-exercises-page min-h-screen bg-white pb-28 text-slate-900">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
 
         {/* HEADER */}
 
-        <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+        <div className="fitmate-exercises-header mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-green-200 bg-green-50 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-green-700">
               <FitMateIcon name="activity" className="h-4 w-4" />
@@ -225,7 +225,7 @@ export default function ExercisesPage() {
 
         {/* FILTERS */}
 
-        <div className="mb-8 grid gap-4 rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-4">
+        <div className="fitmate-exercises-filters mb-8 grid gap-4 rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-4">
 
           <input
             type="text"
@@ -352,7 +352,7 @@ export default function ExercisesPage() {
         {!loading &&
           !premiumLoading &&
           filteredExercises.length > 0 && (
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="fitmate-exercises-grid grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 
               {filteredExercises.map((exercise) => {
                 const guide = getExerciseGuide(

@@ -28,9 +28,10 @@ assert(
 );
 assert(
   coach.includes("feature=ai-consultation") &&
-    coach.includes("feature=meal-scan") &&
-    coach.includes('data.code === "PREMIUM_REQUIRED"'),
-  "Coach and meal scan must redirect Free users to Premium when their lifetime quota is exhausted."
+    coach.includes('data.code === "PREMIUM_REQUIRED"') &&
+    nutrition.includes("feature=meal-scan") &&
+    nutrition.includes('data.code === "PREMIUM_REQUIRED"'),
+  "Coach consultation and Nutrition meal scan must redirect Free users to Premium when their lifetime quota is exhausted."
 );
 assert(
   exercises.includes("const FREE_EXERCISE_LIMIT = 10") &&
@@ -40,8 +41,10 @@ assert(
 );
 assert(
   progress.includes("<PremiumFeatureGate") &&
-    nutrition.includes("<PremiumFeatureGate"),
-  "Progress and Nutrition pages must be wrapped in the Premium feature gate."
+    nutrition.includes("usePremiumAccess") &&
+    nutrition.includes("Tracking nutrisi ada di Premium") &&
+    nutrition.includes('capture="environment"'),
+  "Progress must stay Premium-gated while Nutrition keeps meal scan accessible and locks advanced tracking for Free accounts."
 );
 assert(
   gate.includes("blur-[7px]") &&
@@ -72,7 +75,7 @@ console.log(
       status: "PASS",
       autoRedirects: ["plan-generation", "ai-consultation", "meal-scan"],
       free3DExerciseGuides: 10,
-      lockedPages: ["progress", "nutrition"],
+      lockedPages: ["progress", "nutrition-tracking"],
       themeAwarePremiumPage: true,
     },
     null,

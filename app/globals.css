@@ -2103,3 +2103,990 @@ select {
     margin-top: 1rem !important;
   }
 }
+
+/* ========================================================================== 
+   FitMate v14.82 — simple mobile refinement
+   Mobile only: flatter surfaces, tighter spacing, calmer hierarchy.
+   The bottom dock and center bubble navigation keep their existing geometry.
+   ========================================================================== */
+@media (max-width: 640px) {
+  .fitmate-app-page {
+    background: #f7f9f8 !important;
+    background-image: none !important;
+    padding-bottom: max(6.15rem, calc(5.65rem + env(safe-area-inset-bottom))) !important;
+  }
+
+  .dark .fitmate-app-page {
+    background: #07100c !important;
+    background-image: none !important;
+  }
+
+  .fitmate-app-page > :where(nav, header) {
+    min-height: 3.7rem !important;
+    border-bottom: 1px solid rgb(226 232 240 / 0.82) !important;
+    background: rgb(255 255 255 / 0.96) !important;
+    padding: 0.58rem 0.72rem !important;
+    box-shadow: none !important;
+    backdrop-filter: blur(12px);
+  }
+
+  .dark .fitmate-app-page > :where(nav, header) {
+    border-bottom-color: rgb(255 255 255 / 0.08) !important;
+    background: rgb(7 16 12 / 0.96) !important;
+  }
+
+  .fitmate-app-page > section,
+  .fitmate-app-page > div > section,
+  .fitmate-app-page > main > section {
+    padding-left: 0.7rem !important;
+    padding-right: 0.7rem !important;
+  }
+
+  .fitmate-app-page h1 {
+    font-size: 1.34rem !important;
+    line-height: 1.14 !important;
+    letter-spacing: -0.028em !important;
+  }
+
+  .fitmate-app-page h2 {
+    font-size: 1.04rem !important;
+    line-height: 1.22 !important;
+    letter-spacing: -0.018em !important;
+  }
+
+  .fitmate-app-page h3 {
+    font-size: 0.92rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .fitmate-app-page :where(p, li, label) {
+    line-height: 1.42 !important;
+  }
+
+  .fitmate-app-page :where(.text-sm) {
+    font-size: 0.82rem !important;
+  }
+
+  .fitmate-app-page :where(.text-xs) {
+    font-size: 0.7rem !important;
+    line-height: 1.35 !important;
+  }
+
+  .fitmate-app-page :where(section, article, aside)[class*="rounded-"],
+  .fitmate-app-page :where(div)[class*="rounded-2xl"][class*="border"],
+  .fitmate-app-page :where(div)[class*="rounded-3xl"][class*="border"] {
+    border-color: #e5e9e7 !important;
+    border-radius: 1rem !important;
+    box-shadow: 0 2px 8px rgb(15 23 42 / 0.035) !important;
+    backdrop-filter: none !important;
+  }
+
+  .fitmate-app-page :where(section, article, aside)[class*="rounded-"]:not([class*="bg-"]),
+  .fitmate-app-page :where(div)[class*="rounded-2xl"][class*="border"]:not([class*="bg-"]),
+  .fitmate-app-page :where(div)[class*="rounded-3xl"][class*="border"]:not([class*="bg-"]) {
+    background-color: #fff !important;
+  }
+
+  .dark .fitmate-app-page :where(section, article, aside)[class*="rounded-"],
+  .dark .fitmate-app-page :where(div)[class*="rounded-2xl"][class*="border"],
+  .dark .fitmate-app-page :where(div)[class*="rounded-3xl"][class*="border"] {
+    border-color: rgb(255 255 255 / 0.09) !important;
+    box-shadow: none !important;
+  }
+
+  .dark .fitmate-app-page :where(section, article, aside)[class*="rounded-"]:not([class*="bg-"]),
+  .dark .fitmate-app-page :where(div)[class*="rounded-2xl"][class*="border"]:not([class*="bg-"]),
+  .dark .fitmate-app-page :where(div)[class*="rounded-3xl"][class*="border"]:not([class*="bg-"]) {
+    background-color: #0b1711 !important;
+  }
+
+  .fitmate-app-page :where([class*="shadow-2xl"], [class*="shadow-xl"], [class*="shadow-lg"], [class*="shadow-md"]) {
+    box-shadow: 0 2px 9px rgb(15 23 42 / 0.045) !important;
+  }
+
+  .dark .fitmate-app-page :where([class*="shadow-2xl"], [class*="shadow-xl"], [class*="shadow-lg"], [class*="shadow-md"]) {
+    box-shadow: none !important;
+  }
+
+  .fitmate-app-page :where(.rounded-3xl, .rounded-2xl) {
+    border-radius: 1rem !important;
+  }
+
+  .fitmate-app-page :where(.rounded-xl) {
+    border-radius: 0.82rem !important;
+  }
+
+  .fitmate-app-page [class*="p-10"],
+  .fitmate-app-page [class*="p-8"],
+  .fitmate-app-page [class*="p-7"],
+  .fitmate-app-page [class*="p-6"] {
+    padding: 0.78rem !important;
+  }
+
+  .fitmate-app-page [class*="p-5"] {
+    padding: 0.72rem !important;
+  }
+
+  .fitmate-app-page [class*="gap-8"],
+  .fitmate-app-page [class*="gap-7"],
+  .fitmate-app-page [class*="gap-6"],
+  .fitmate-app-page [class*="gap-5"] {
+    gap: 0.68rem !important;
+  }
+
+  .fitmate-app-page [class*="mt-12"],
+  .fitmate-app-page [class*="mt-10"],
+  .fitmate-app-page [class*="mt-8"],
+  .fitmate-app-page [class*="mt-7"],
+  .fitmate-app-page [class*="mt-6"] {
+    margin-top: 0.78rem !important;
+  }
+
+  .fitmate-app-page [class*="mb-10"],
+  .fitmate-app-page [class*="mb-8"],
+  .fitmate-app-page [class*="mb-6"] {
+    margin-bottom: 0.78rem !important;
+  }
+
+  .fitmate-app-page :where(button, a[role="button"]):not(.fitmate-mobile-dock__bubble) {
+    min-height: 2.5rem;
+  }
+
+  .fitmate-app-page :where(button, a)[class*="rounded-"]:not([class*="rounded-full"]):not(.fitmate-mobile-dock__bubble) {
+    border-radius: 0.82rem !important;
+  }
+
+  .fitmate-app-page :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, select) {
+    min-height: 2.72rem !important;
+    border-radius: 0.82rem !important;
+    box-shadow: none !important;
+  }
+
+  .fitmate-app-page textarea {
+    min-height: 5.25rem;
+  }
+
+  .fitmate-level-card,
+  .fitmate-action-card,
+  .fitmate-day-card,
+  .fitmate-exercise-card {
+    min-height: 0 !important;
+    border-radius: 1rem !important;
+  }
+
+  .fitmate-app-page footer {
+    padding: 1rem 0.75rem 1.35rem !important;
+  }
+
+  /* Auth/onboarding surfaces should feel like the same compact mobile app. */
+  .fitmate-auth-page {
+    background: #f7f9f8 !important;
+    padding: 0.55rem !important;
+  }
+
+  .dark .fitmate-auth-page {
+    background: #07100c !important;
+  }
+
+  .fitmate-auth-page > div {
+    min-height: calc(100dvh - 1.1rem) !important;
+    border-radius: 1rem !important;
+    box-shadow: none !important;
+  }
+
+  .fitmate-auth-page h1,
+  .fitmate-auth-page h2 {
+    font-size: 1.45rem !important;
+    line-height: 1.12 !important;
+  }
+
+  .fitmate-auth-page p,
+  .fitmate-auth-page label {
+    font-size: 0.84rem !important;
+    line-height: 1.42 !important;
+  }
+
+  .fitmate-auth-page input,
+  .fitmate-auth-page textarea,
+  .fitmate-auth-page select {
+    min-height: 2.8rem !important;
+    border-radius: 0.82rem !important;
+    padding-top: 0.68rem !important;
+    padding-bottom: 0.68rem !important;
+  }
+
+  .fitmate-auth-page button {
+    min-height: 2.75rem !important;
+    border-radius: 0.82rem !important;
+    box-shadow: none !important;
+  }
+
+  /* Keep the public landing clean on phones instead of oversized like a desktop ad. */
+  .fitmate-marketing-page section {
+    padding: 1.8rem 0.78rem !important;
+  }
+
+  .fitmate-marketing-page h1 {
+    font-size: 2rem !important;
+    line-height: 1.02 !important;
+  }
+
+  .fitmate-marketing-page h2 {
+    font-size: 1.42rem !important;
+  }
+
+  .fitmate-marketing-page [class*="shadow-2xl"],
+  .fitmate-marketing-page [class*="shadow-xl"],
+  .fitmate-marketing-page [class*="shadow-lg"] {
+    box-shadow: 0 4px 14px rgb(15 23 42 / 0.06) !important;
+  }
+
+  .fitmate-marketing-page [class*="rounded-[2"],
+  .fitmate-marketing-page [class*="rounded-[3"],
+  .fitmate-marketing-page .rounded-3xl,
+  .fitmate-marketing-page .rounded-2xl {
+    border-radius: 1rem !important;
+  }
+}
+
+/* ========================================================================== 
+   FitMate v14.83 — mobile density pass
+   Reduce page-length on phones without changing the bottom navigation dock.
+   ========================================================================== */
+@media (max-width: 640px) {
+  .fitmate-app-page > :where(section),
+  .fitmate-app-page > div > :where(section),
+  .fitmate-app-page > main > :where(section) {
+    padding-top: 0.65rem !important;
+    padding-bottom: 0.65rem !important;
+  }
+
+  .fitmate-app-page [class*="py-12"],
+  .fitmate-app-page [class*="py-10"],
+  .fitmate-app-page [class*="py-8"],
+  .fitmate-app-page [class*="py-7"],
+  .fitmate-app-page [class*="py-6"],
+  .fitmate-app-page [class*="py-5"],
+  .fitmate-app-page [class*="py-4"] {
+    padding-top: 0.65rem !important;
+    padding-bottom: 0.65rem !important;
+  }
+
+  .fitmate-app-page [class*="px-8"],
+  .fitmate-app-page [class*="px-7"],
+  .fitmate-app-page [class*="px-6"],
+  .fitmate-app-page [class*="px-5"],
+  .fitmate-app-page [class*="px-4"] {
+    padding-left: 0.72rem !important;
+    padding-right: 0.72rem !important;
+  }
+
+  .fitmate-app-page :where(.space-y-8, .space-y-7, .space-y-6, .space-y-5, .space-y-4) > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0.68rem !important;
+  }
+
+  .fitmate-app-page [class*="min-h-[420px]"] {
+    min-height: 18rem !important;
+  }
+
+  .fitmate-app-page footer {
+    display: none !important;
+  }
+
+  /* Dense summary grids: show quick stats side-by-side instead of a tall stack. */
+  .fitmate-app-page section.grid[class*="sm:grid-cols-2"]:not([class*="lg:grid-cols-["]),
+  .fitmate-app-page section.grid[class*="lg:grid-cols-3"]:not([class*="lg:grid-cols-["]),
+  .fitmate-app-page section.grid[class*="lg:grid-cols-4"]:not([class*="lg:grid-cols["]) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .fitmate-app-page article[class*="p-4"],
+  .fitmate-app-page article[class*="p-5"],
+  .fitmate-app-page article[class*="p-6"],
+  .fitmate-app-page section[class*="p-4"],
+  .fitmate-app-page section[class*="p-5"],
+  .fitmate-app-page section[class*="p-6"] {
+    padding: 0.68rem !important;
+  }
+
+  /* Coach behaves like a native chat screen: the message area scrolls, not the whole page. */
+  .fitmate-coach-page {
+    height: 100dvh;
+    min-height: 100dvh !important;
+    overflow: hidden;
+  }
+
+  .fitmate-coach-page > div {
+    min-height: 0;
+  }
+
+  .fitmate-coach-messages {
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Nutrition is intentionally very compact; one scan/result should fit near one viewport. */
+  .fitmate-nutrition-page > div {
+    padding-top: 0.6rem !important;
+  }
+
+  .fitmate-nutrition-page section {
+    margin-top: 0 !important;
+  }
+
+  .fitmate-nutrition-page textarea {
+    min-height: 2.7rem !important;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Dashboard is an overview on phones. Detailed analytics live in Progress. */
+  .fitmate-dashboard-page .fitmate-dashboard-detail {
+    display: none !important;
+  }
+
+  .fitmate-dashboard-page > section:first-of-type p[class*="max-w"] {
+    display: none !important;
+  }
+
+  .fitmate-dashboard-page > section:first-of-type [class*="rounded-[2.25rem]"] {
+    padding: 0.8rem !important;
+  }
+
+  .fitmate-dashboard-page > section:first-of-type [class*="text-4xl"] {
+    font-size: 1.25rem !important;
+  }
+
+  .fitmate-dashboard-page > section:first-of-type .flex.flex-wrap.gap-3 {
+    margin-top: 0.25rem;
+    gap: 0.45rem !important;
+  }
+
+  .fitmate-dashboard-page > section:first-of-type button {
+    min-height: 2.35rem !important;
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.75rem !important;
+  }
+}
+
+/* ========================================================================== 
+   FitMate v14.84 — true mobile app pass
+   Core rule: action first, details second. Keep the proven bottom dock intact.
+   ========================================================================== */
+@media (max-width: 640px) {
+  .fitmate-app-page {
+    overflow-x: hidden;
+    background-image: none !important;
+  }
+
+  /* App headers are utility bars, not desktop navigation banners. */
+  .fitmate-app-page > :where(header, nav.sticky) {
+    min-height: 3.45rem;
+    border-bottom-color: rgb(226 232 240 / 0.72) !important;
+    background-color: rgb(255 255 255 / 0.94) !important;
+    backdrop-filter: blur(14px) !important;
+  }
+
+  .dark .fitmate-app-page > :where(header, nav.sticky) {
+    border-bottom-color: rgb(255 255 255 / 0.08) !important;
+    background-color: rgb(7 17 12 / 0.94) !important;
+  }
+
+  /* Dense utility cards. Mobile cards should group controls, not dominate space. */
+  .fitmate-app-page :where(section, article, aside)[class*="shadow"],
+  .fitmate-app-page :where(div)[class*="rounded-3xl"][class*="shadow"],
+  .fitmate-app-page :where(div)[class*="rounded-[2"][class*="shadow"] {
+    box-shadow: none !important;
+  }
+
+  .fitmate-app-page :where(button, a)[class*="hover:-translate"],
+  .fitmate-app-page :where(button, a)[class*="hover:scale"] {
+    transform: none !important;
+  }
+
+  /* ----------------------------------------------------------------------
+     Coach — dedicated full-height messenger experience.
+     ---------------------------------------------------------------------- */
+  .fitmate-coach-page {
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    padding-bottom: max(4.8rem, calc(4.35rem + env(safe-area-inset-bottom))) !important;
+    overflow: hidden !important;
+  }
+
+  .fitmate-coach-page > .fitmate-coach-header {
+    min-height: 3.65rem !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  .fitmate-coach-page .fitmate-coach-avatar {
+    width: 2.35rem !important;
+    height: 2.35rem !important;
+    border-radius: 0.8rem !important;
+  }
+
+  .fitmate-coach-page .fitmate-coach-refresh {
+    min-height: 2.15rem !important;
+    height: 2.15rem !important;
+    padding-inline: 0.7rem !important;
+  }
+
+  .fitmate-coach-shell {
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .fitmate-coach-messages {
+    min-height: 0 !important;
+    padding: 0.7rem 0.7rem 0.6rem !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .fitmate-chat-bubble {
+    max-width: 84% !important;
+    border-radius: 1rem !important;
+    padding: 0.58rem 0.72rem !important;
+    font-size: 0.82rem !important;
+    line-height: 1.42 !important;
+  }
+
+  .fitmate-coach-suggestions {
+    scrollbar-width: none;
+    margin-inline: -0.15rem;
+    padding-inline: 0.15rem;
+  }
+
+  .fitmate-coach-suggestions::-webkit-scrollbar {
+    display: none;
+  }
+
+  .fitmate-coach-suggestions button {
+    min-height: 2.2rem !important;
+    max-width: 14rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .fitmate-coach-composer {
+    padding: 0.42rem 0.68rem 0.5rem !important;
+    background: rgb(255 255 255 / 0.96) !important;
+  }
+
+  .dark .fitmate-coach-composer {
+    background: rgb(7 17 12 / 0.97) !important;
+  }
+
+  .fitmate-coach-page .fitmate-coach-input {
+    min-height: 2.5rem !important;
+    height: 2.5rem;
+    max-height: 6rem !important;
+    padding: 0.58rem 0.62rem !important;
+    border-radius: 0 !important;
+  }
+
+  .fitmate-coach-page .fitmate-coach-send {
+    min-height: 2.5rem !important;
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    border-radius: 0.8rem !important;
+  }
+
+  /* ----------------------------------------------------------------------
+     Dashboard — one glance, one action. Detailed analytics stay in Progress.
+     ---------------------------------------------------------------------- */
+  .fitmate-dashboard-page .fitmate-dashboard-profile {
+    display: none !important;
+  }
+
+  .fitmate-dashboard-page > section:first-of-type {
+    padding-top: 0.55rem !important;
+    padding-bottom: 0.45rem !important;
+  }
+
+  .fitmate-dashboard-page > section:first-of-type > div > div {
+    border-radius: 1rem !important;
+    padding: 0.78rem !important;
+    background-image: none !important;
+  }
+
+  .fitmate-dashboard-page > section:first-of-type p:not(:first-child) {
+    display: none !important;
+  }
+
+  .fitmate-dashboard-page > section:first-of-type h1 {
+    margin-top: 0.2rem !important;
+    font-size: 1.15rem !important;
+  }
+
+  .fitmate-dashboard-page > section:nth-of-type(2) {
+    padding-top: 0.15rem !important;
+    padding-bottom: 0.35rem !important;
+  }
+
+  .fitmate-dashboard-page > section:nth-of-type(2) .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 0.42rem !important;
+  }
+
+  .fitmate-dashboard-page > section:nth-of-type(2) .grid > div {
+    min-width: 0;
+    padding: 0.58rem 0.42rem !important;
+    text-align: center;
+  }
+
+  .fitmate-dashboard-page > section:nth-of-type(2) .grid > div > div {
+    display: block !important;
+  }
+
+  .fitmate-dashboard-page > section:nth-of-type(2) .grid > div span {
+    display: none !important;
+  }
+
+  .fitmate-dashboard-page > section:nth-of-type(2) .grid > div p:first-child {
+    font-size: 0.6rem !important;
+    line-height: 1.15 !important;
+  }
+
+  .fitmate-dashboard-page > section:nth-of-type(2) .grid > div p:nth-child(2) {
+    margin-top: 0.2rem !important;
+    font-size: 1rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .fitmate-dashboard-page > section:nth-of-type(2) .grid > div > p:last-child {
+    display: none !important;
+  }
+
+  .fitmate-dashboard-page > section:nth-of-type(3) {
+    padding-top: 0.35rem !important;
+    padding-bottom: 0.45rem !important;
+  }
+
+  .fitmate-dashboard-page > section:nth-of-type(3) > div {
+    display: block !important;
+  }
+
+  .fitmate-dashboard-page > section:nth-of-type(3) > div > div:last-child {
+    padding: 0.72rem !important;
+    border-radius: 1rem !important;
+  }
+
+  .fitmate-dashboard-page > section:nth-of-type(3) > div > div:last-child p:not(:first-child) {
+    display: none !important;
+  }
+
+  .fitmate-dashboard-page > section:nth-of-type(3) > div > div:last-child h2 {
+    margin-top: 0.2rem !important;
+  }
+
+  .fitmate-dashboard-page > section:nth-of-type(3) > div > div:last-child button {
+    margin-top: 0.55rem !important;
+    min-height: 2.45rem !important;
+  }
+
+  /* ----------------------------------------------------------------------
+     Plan — remove duplicated profile marketing; keep choice + weekly plan.
+     ---------------------------------------------------------------------- */
+  .fitmate-plan-page .fitmate-plan-hero,
+  .fitmate-plan-page .fitmate-plan-profile-summary {
+    display: none !important;
+  }
+
+  .fitmate-plan-page > nav + section + section + section,
+  .fitmate-plan-page .fitmate-plan-level-picker {
+    margin-top: 0 !important;
+  }
+
+  .fitmate-plan-level-picker {
+    padding: 0.68rem !important;
+    border: 1px solid #e5e7eb;
+  }
+
+  .fitmate-plan-level-picker > div:first-child {
+    text-align: left !important;
+  }
+
+  .fitmate-plan-level-picker > div:first-child p:last-child {
+    display: none !important;
+  }
+
+  .fitmate-plan-level-picker > div:first-child h2 {
+    margin-top: 0.1rem !important;
+    font-size: 0.95rem !important;
+  }
+
+  .fitmate-plan-level-picker > .mt-8 {
+    margin-top: 0.55rem !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 0.4rem !important;
+  }
+
+  .fitmate-plan-level-picker > .mt-8 > button {
+    min-height: 3.5rem !important;
+    padding: 0.55rem 0.42rem !important;
+    text-align: center !important;
+  }
+
+  .fitmate-plan-level-picker > .mt-8 > button :where(p, div):not(:first-child) {
+    display: none !important;
+  }
+
+  .fitmate-plan-level-picker > .mt-8 > button h3 {
+    margin-top: 0.15rem !important;
+    font-size: 0.78rem !important;
+  }
+
+  .fitmate-plan-page .fitmate-plan-summary {
+    display: none !important;
+  }
+
+  .fitmate-plan-page .fitmate-plan-week {
+    margin-top: 0.8rem !important;
+  }
+
+  .fitmate-plan-page .fitmate-plan-week > div:first-child h3 {
+    margin-top: 0 !important;
+  }
+
+  .fitmate-plan-page .fitmate-plan-week > .mt-6 {
+    margin-top: 0.5rem !important;
+    display: flex !important;
+    gap: 0.5rem !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-bottom: 0.25rem;
+  }
+
+  .fitmate-plan-page .fitmate-plan-week > .mt-6::-webkit-scrollbar {
+    display: none;
+  }
+
+  .fitmate-plan-page .fitmate-plan-week > .mt-6 > div {
+    flex: 0 0 78vw;
+    scroll-snap-align: start;
+    padding: 0.65rem !important;
+  }
+
+  /* ----------------------------------------------------------------------
+     Workout — the current session gets priority; cards are dense and flat.
+     ---------------------------------------------------------------------- */
+  .fitmate-workout-page > header {
+    min-height: 3.45rem !important;
+  }
+
+  .fitmate-workout-page > div {
+    padding-top: 0.55rem !important;
+  }
+
+  .fitmate-workout-page section[class*="bg-gradient"] {
+    padding: 0.72rem !important;
+    border-radius: 1rem !important;
+    background-image: linear-gradient(135deg, #16a34a, #059669) !important;
+  }
+
+  .fitmate-workout-page section[class*="bg-gradient"] p:not(:first-child) {
+    display: none !important;
+  }
+
+  .fitmate-workout-page section[class*="bg-gradient"] h1 {
+    margin-top: 0.15rem !important;
+    font-size: 1.1rem !important;
+  }
+
+  .fitmate-workout-page section[class*="rounded-3xl"][class*="border"] {
+    padding: 0.68rem !important;
+    border-radius: 1rem !important;
+  }
+
+  .fitmate-workout-page section[class*="rounded-3xl"][class*="border"] h2 {
+    font-size: 0.98rem !important;
+  }
+
+  .fitmate-workout-page section[class*="rounded-3xl"][class*="border"] [class*="mt-6"],
+  .fitmate-workout-page section[class*="rounded-3xl"][class*="border"] [class*="mt-5"] {
+    margin-top: 0.55rem !important;
+  }
+
+  /* ----------------------------------------------------------------------
+     Exercise Guide — searchable two-column library, details only on tap.
+     ---------------------------------------------------------------------- */
+  .fitmate-exercises-page > div {
+    padding: 0.65rem 0.68rem !important;
+  }
+
+  .fitmate-exercises-header {
+    margin-bottom: 0.55rem !important;
+    gap: 0.4rem !important;
+  }
+
+  .fitmate-exercises-header > div > div:first-child,
+  .fitmate-exercises-header > div > p,
+  .fitmate-exercises-header > a {
+    display: none !important;
+  }
+
+  .fitmate-exercises-header h1 {
+    font-size: 1.2rem !important;
+  }
+
+  .fitmate-exercises-filters {
+    margin-bottom: 0.55rem !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.4rem !important;
+  }
+
+  .fitmate-exercises-filters input {
+    grid-column: 1 / -1;
+  }
+
+  .fitmate-exercises-filters :where(input, select) {
+    min-height: 2.45rem !important;
+    padding: 0.48rem 0.62rem !important;
+    font-size: 0.74rem !important;
+  }
+
+  .fitmate-exercises-filters select:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .fitmate-exercises-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.48rem !important;
+  }
+
+  .fitmate-exercises-grid .fitmate-exercise-card > div:first-child {
+    height: 7rem !important;
+  }
+
+  .fitmate-exercises-grid .fitmate-exercise-card > div:nth-child(2) {
+    padding: 0.58rem !important;
+  }
+
+  .fitmate-exercises-grid .fitmate-exercise-card > div:nth-child(2) > p,
+  .fitmate-exercises-grid .fitmate-exercise-card > div:nth-child(2) > div:last-child {
+    display: none !important;
+  }
+
+  .fitmate-exercises-grid .fitmate-exercise-card h2 {
+    font-size: 0.78rem !important;
+    line-height: 1.25 !important;
+  }
+
+  /* ----------------------------------------------------------------------
+     Progress — dashboard-like summaries swipe horizontally instead of stack.
+     ---------------------------------------------------------------------- */
+  .fitmate-progress-page > header {
+    padding-block: 0.55rem !important;
+  }
+
+  .fitmate-progress-page > div {
+    padding: 0.6rem 0.68rem !important;
+  }
+
+  .fitmate-progress-page > div > section:first-child {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 0.38rem !important;
+  }
+
+  .fitmate-progress-page > div > section:first-child > div {
+    padding: 0.55rem 0.35rem !important;
+    text-align: center;
+  }
+
+  .fitmate-progress-page > div > section:first-child p {
+    font-size: 0.58rem !important;
+  }
+
+  .fitmate-progress-page > div > section:first-child strong,
+  .fitmate-progress-page > div > section:first-child [class*="text-2xl"] {
+    font-size: 0.95rem !important;
+  }
+
+  .fitmate-progress-page > div > section:nth-child(2),
+  .fitmate-progress-page > div > section:nth-child(3),
+  .fitmate-progress-page > div > section:nth-child(5) {
+    display: flex !important;
+    gap: 0.5rem !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .fitmate-progress-page > div > section:nth-child(2)::-webkit-scrollbar,
+  .fitmate-progress-page > div > section:nth-child(3)::-webkit-scrollbar,
+  .fitmate-progress-page > div > section:nth-child(5)::-webkit-scrollbar {
+    display: none;
+  }
+
+  .fitmate-progress-page > div > section:nth-child(2) > *,
+  .fitmate-progress-page > div > section:nth-child(3) > *,
+  .fitmate-progress-page > div > section:nth-child(5) > * {
+    flex: 0 0 84vw;
+    min-width: 0;
+    scroll-snap-align: start;
+  }
+
+  /* ----------------------------------------------------------------------
+     Nutrition — scan is the primary action; secondary tracking stays compact.
+     ---------------------------------------------------------------------- */
+  .fitmate-nutrition-page > header {
+    min-height: 3.4rem !important;
+  }
+
+  .fitmate-nutrition-page > div {
+    padding: 0.5rem 0.68rem !important;
+  }
+
+  .fitmate-nutrition-page > div > section:first-child {
+    padding: 0.65rem !important;
+  }
+
+  .fitmate-nutrition-page > div > section:first-child p[class*="leading"] {
+    display: none !important;
+  }
+
+  .fitmate-nutrition-page section.grid.grid-cols-2 {
+    gap: 0.4rem !important;
+  }
+
+  /* ----------------------------------------------------------------------
+     Jogging — open on route/start controls, not a marketing hero.
+     ---------------------------------------------------------------------- */
+  .fitmate-jogging-page {
+    background-image: none !important;
+  }
+
+  .fitmate-jogging-page > header {
+    min-height: 3.45rem !important;
+  }
+
+  .fitmate-jogging-page > div {
+    padding-top: 0.5rem !important;
+  }
+
+  .fitmate-jogging-page > div > section:first-child {
+    display: none !important;
+  }
+
+  .fitmate-jogging-page section[class*="rounded-[2rem]"] {
+    border-radius: 1rem !important;
+    box-shadow: none !important;
+  }
+
+  .fitmate-jogging-page section[class*="p-5"],
+  .fitmate-jogging-page section[class*="p-6"] {
+    padding: 0.68rem !important;
+  }
+
+  /* ----------------------------------------------------------------------
+     Settings — compact control center. It may scroll, but without giant cards.
+     ---------------------------------------------------------------------- */
+  .fitmate-settings-page > header {
+    padding-block: 0.55rem !important;
+  }
+
+  .fitmate-settings-page > header p {
+    display: none !important;
+  }
+
+  .fitmate-settings-page > header h1 {
+    margin-top: 0 !important;
+    font-size: 1.15rem !important;
+  }
+
+  .fitmate-settings-page > div {
+    padding: 0.6rem 0.68rem !important;
+  }
+
+  .fitmate-settings-page > div > section {
+    padding: 0.68rem !important;
+    border-radius: 1rem !important;
+  }
+
+  .fitmate-settings-page > div > section h2 {
+    font-size: 0.96rem !important;
+  }
+
+  .fitmate-settings-page > div > section h2 + p,
+  .fitmate-settings-page > div > section > p[class*="text-sm"] {
+    display: none !important;
+  }
+
+  .fitmate-settings-page textarea {
+    min-height: 3.4rem !important;
+  }
+
+  .fitmate-settings-page [class*="mt-5"],
+  .fitmate-settings-page [class*="mt-4"] {
+    margin-top: 0.55rem !important;
+  }
+
+  /* ----------------------------------------------------------------------
+     Premium — mobile checkout first, long explanation de-emphasised.
+     ---------------------------------------------------------------------- */
+  .fitmate-premium-page > header {
+    min-height: 3.45rem !important;
+  }
+
+  .fitmate-premium-page > div {
+    padding: 0.6rem 0.68rem !important;
+  }
+
+  .fitmate-premium-page > div > section:first-child {
+    padding: 0.8rem !important;
+    border-radius: 1rem !important;
+  }
+
+  .fitmate-premium-page > div > section:first-child h1 {
+    margin-top: 0.35rem !important;
+    font-size: 1.35rem !important;
+  }
+
+  .fitmate-premium-page > div > section:first-child p[class*="leading"] {
+    display: none !important;
+  }
+
+  /* ----------------------------------------------------------------------
+     Motivation — mood + message, no oversized intro.
+     ---------------------------------------------------------------------- */
+  .fitmate-motivation-page .fitmate-motivation-hero {
+    display: none !important;
+  }
+
+  .fitmate-motivation-page > section:last-of-type {
+    padding-top: 0.6rem !important;
+  }
+
+  .fitmate-motivation-page .fitmate-mood-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 0.4rem !important;
+  }
+
+  .fitmate-motivation-page .fitmate-mood-grid button {
+    min-height: 3rem !important;
+    padding: 0.55rem 0.35rem !important;
+    text-align: center !important;
+  }
+
+  .fitmate-motivation-page .fitmate-mood-grid button p:last-child {
+    display: none !important;
+  }
+
+  .fitmate-motivation-page blockquote {
+    margin-top: 0.55rem !important;
+    font-size: 1.15rem !important;
+    line-height: 1.35 !important;
+  }
+}

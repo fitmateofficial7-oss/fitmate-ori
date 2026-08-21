@@ -154,8 +154,8 @@ export default function MotivationPage() {
   };
 
   return (
-    <main className="fitmate-app-page min-h-screen bg-slate-50 pb-32 text-slate-950 dark:bg-[#07110c] dark:text-slate-100">
-      <section className="px-4 py-8 sm:px-6 sm:py-12">
+    <main className="fitmate-app-page fitmate-motivation-page min-h-screen bg-slate-50 pb-32 text-slate-950 dark:bg-[#07110c] dark:text-slate-100">
+      <section className="fitmate-motivation-hero px-4 py-8 sm:px-6 sm:py-12">
         <div className="mx-auto max-w-5xl rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#0b1511] sm:p-10">
           <div className="flex max-w-3xl items-start gap-4">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-300">
@@ -179,7 +179,7 @@ export default function MotivationPage() {
 
       <section className="px-4 sm:px-6">
         <div className="mx-auto max-w-5xl">
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="fitmate-mood-grid grid gap-3 sm:grid-cols-3">
             {MOODS.map((item) => {
               const active = mood === item.value;
               return (

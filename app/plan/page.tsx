@@ -1478,7 +1478,7 @@ export default function PlanPage(): import("react").JSX.Element {
   // ====================================================
 
   return (
-    <main className="fitmate-app-page min-h-screen bg-white pb-24">
+    <main className="fitmate-app-page fitmate-plan-page min-h-screen bg-white pb-24">
 
       {/* ==================================================
           NAVBAR
@@ -1547,7 +1547,7 @@ export default function PlanPage(): import("react").JSX.Element {
           HEADER
       ================================================== */}
 
-      <section className="px-6 py-10">
+      <section className="fitmate-plan-hero px-6 py-10">
 
         <div className="mx-auto max-w-7xl">
 
@@ -1611,7 +1611,7 @@ export default function PlanPage(): import("react").JSX.Element {
           PROFILE SUMMARY
       ================================================== */}
 
-      <section className="px-6">
+      <section className="fitmate-plan-profile-summary px-6">
 
         <div className="mx-auto max-w-7xl">
 
@@ -1749,7 +1749,7 @@ export default function PlanPage(): import("react").JSX.Element {
 
           {/* DIFFICULTY */}
 
-          <div className="rounded-3xl bg-white p-8 shadow-sm md:p-10">
+          <div className="fitmate-plan-level-picker rounded-3xl bg-white p-8 shadow-sm md:p-10">
 
             <div className="text-center">
 
@@ -2086,7 +2086,7 @@ export default function PlanPage(): import("react").JSX.Element {
 
               {/* PLAN SUMMARY */}
 
-              <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+              <div className="fitmate-plan-summary mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
 
                 <div className="rounded-2xl bg-gray-50 p-5">
 
@@ -2162,7 +2162,7 @@ export default function PlanPage(): import("react").JSX.Element {
 
               {/* WEEKLY PLAN */}
 
-              <div className="mt-10">
+              <div className="fitmate-plan-week mt-10">
 
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 

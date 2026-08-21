@@ -33,36 +33,72 @@ const APP_ROUTES = ITEMS.map((item) => item.href);
 type BubbleSoundKind = "open" | "close" | "select";
 let bubbleAudioContext: AudioContext | null = null;
 
-function playBubbleSound(kind: BubbleSoundKind) {
-  if (typeof window === "undefined") return;
+async function getBubbleAudioContext() {
+  if (typeof window === "undefined") return null;
+
+  const AudioContextConstructor =
+    window.AudioContext ??
+    (window as typeof window & { webkitAudioContext?: typeof AudioContext })
+      .webkitAudioContext;
+
+  if (!AudioContextConstructor) return null;
+
+  if (!bubbleAudioContext || bubbleAudioContext.state === "closed") {
+    bubbleAudioContext = new AudioContextConstructor();
+  }
+
+  if (bubbleAudioContext.state === "suspended") {
+    await bubbleAudioContext.resume();
+  }
+
+  return bubbleAudioContext;
+}
+
+async function playBubbleSound(kind: BubbleSoundKind) {
   try {
-    const AudioContextConstructor =
-      window.AudioContext ??
-      (window as typeof window & { webkitAudioContext?: typeof AudioContext })
-        .webkitAudioContext;
-    if (!AudioContextConstructor) return;
-    bubbleAudioContext ??= new AudioContextConstructor();
-    const context = bubbleAudioContext;
-    if (context.state === "suspended") void context.resume();
-    const oscillator = context.createOscillator();
-    const gain = context.createGain();
-    const now = context.currentTime;
+    const context = await getBubbleAudioContext();
+    if (!context || context.state !== "running") return;
+
+    const now = context.currentTime + 0.004;
     const tones = {
-      open: [390, 510, 0.08],
-      close: [470, 340, 0.07],
-      select: [430, 560, 0.065],
+      open: [520, 760, 0.095],
+      close: [610, 330, 0.085],
+      select: [470, 690, 0.075],
     } as const;
     const [start, end, duration] = tones[kind];
+
+    // Main rounded "bubble" tone.
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
     oscillator.type = "sine";
     oscillator.frequency.setValueAtTime(start, now);
     oscillator.frequency.exponentialRampToValueAtTime(end, now + duration);
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.035, now + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.07, now + 0.008);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
     oscillator.connect(gain);
     gain.connect(context.destination);
+
+    // A very short higher harmonic makes the tap audible on phone speakers
+    // without turning the menu sound into a notification beep.
+    const popOscillator = context.createOscillator();
+    const popGain = context.createGain();
+    popOscillator.type = "sine";
+    popOscillator.frequency.setValueAtTime(start * 1.8, now);
+    popOscillator.frequency.exponentialRampToValueAtTime(
+      Math.max(240, end * 1.18),
+      now + duration * 0.7
+    );
+    popGain.gain.setValueAtTime(0.0001, now);
+    popGain.gain.exponentialRampToValueAtTime(0.022, now + 0.004);
+    popGain.gain.exponentialRampToValueAtTime(0.0001, now + duration * 0.72);
+    popOscillator.connect(popGain);
+    popGain.connect(context.destination);
+
     oscillator.start(now);
+    popOscillator.start(now);
     oscillator.stop(now + duration + 0.02);
+    popOscillator.stop(now + duration + 0.02);
   } catch {
     // Navigation should never depend on audio support.
   }
@@ -118,7 +154,7 @@ export default function FloatingBubbleMenu() {
   };
 
   const closeMenu = () => {
-    playBubbleSound("close");
+    void playBubbleSound("close");
     setOpen(false);
   };
 
@@ -155,12 +191,12 @@ export default function FloatingBubbleMenu() {
         <div className="fitmate-mobile-menu__status-row">
           <AccountPlanBadge />
           <div className="fitmate-mobile-menu__preferences">
-            <button type="button" onClick={toggleTheme} className="fitmate-mobile-menu__preference">
+            <button type="button" onClick={() => { void playBubbleSound("select"); toggleTheme(); }} className="fitmate-mobile-menu__preference">
               {dark ? tr("Terang", "Light") : tr("Gelap", "Dark")}
             </button>
             <div className="fitmate-mobile-menu__language" aria-label={tr("Bahasa", "Language")}>
-              <button type="button" className={language === "id" ? "is-active" : ""} onClick={() => setLanguage("id")}>ID</button>
-              <button type="button" className={language === "en" ? "is-active" : ""} onClick={() => setLanguage("en")}>EN</button>
+              <button type="button" className={language === "id" ? "is-active" : ""} onClick={() => { void playBubbleSound("select"); setLanguage("id"); }}>ID</button>
+              <button type="button" className={language === "en" ? "is-active" : ""} onClick={() => { void playBubbleSound("select"); setLanguage("en"); }}>EN</button>
             </div>
           </div>
         </div>
@@ -175,7 +211,7 @@ export default function FloatingBubbleMenu() {
                 aria-current={active ? "page" : undefined}
                 className={`fitmate-mobile-menu__item ${active ? "is-active" : ""}`}
                 onClick={() => {
-                  playBubbleSound("select");
+                  void playBubbleSound("select");
                   setOpen(false);
                 }}
               >
@@ -193,7 +229,7 @@ export default function FloatingBubbleMenu() {
         {quickItems.slice(0, 2).map((item) => {
           const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
-            <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={`fitmate-mobile-dock__item ${active ? "is-active" : ""}`} onClick={() => playBubbleSound("select")}>
+            <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={`fitmate-mobile-dock__item ${active ? "is-active" : ""}`} onClick={() => void playBubbleSound("select")}>
               <span className="fitmate-mobile-dock__icon"><FitMateIcon name={item.icon} className="h-[18px] w-[18px]" /></span>
               <span>{tr(item.labelId, item.labelEn)}</span>
             </Link>
@@ -208,7 +244,7 @@ export default function FloatingBubbleMenu() {
           className={`fitmate-mobile-dock__bubble ${open ? "is-open" : ""}`}
           onClick={() => {
             const next = !open;
-            playBubbleSound(next ? "open" : "close");
+            void playBubbleSound(next ? "open" : "close");
             setOpen(next);
           }}
         >
@@ -221,7 +257,7 @@ export default function FloatingBubbleMenu() {
         {quickItems.slice(2, 4).map((item) => {
           const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
-            <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={`fitmate-mobile-dock__item ${active ? "is-active" : ""}`} onClick={() => playBubbleSound("select")}>
+            <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={`fitmate-mobile-dock__item ${active ? "is-active" : ""}`} onClick={() => void playBubbleSound("select")}>
               <span className="fitmate-mobile-dock__icon"><FitMateIcon name={item.icon} className="h-[18px] w-[18px]" /></span>
               <span>{tr(item.labelId, item.labelEn)}</span>
             </Link>

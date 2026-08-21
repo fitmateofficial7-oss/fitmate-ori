@@ -1266,7 +1266,7 @@ export default function JoggingPage() {
   const activeStats = finishedStats ?? stats;
 
   return (
-    <main className="fitmate-app-page min-h-screen scroll-pb-40 bg-[radial-gradient(circle_at_top_left,rgba(110,231,183,0.24),transparent_34%),linear-gradient(180deg,#f8fffb,#eefbf3_45%,#f8fafc)] pb-44 text-slate-950 sm:pb-36 dark:bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.16),transparent_32%),linear-gradient(180deg,#06110c,#081810_55%,#020617)] dark:text-white">
+    <main className="fitmate-app-page fitmate-jogging-page min-h-screen scroll-pb-40 bg-[radial-gradient(circle_at_top_left,rgba(110,231,183,0.24),transparent_34%),linear-gradient(180deg,#f8fffb,#eefbf3_45%,#f8fafc)] pb-44 text-slate-950 sm:pb-36 dark:bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.16),transparent_32%),linear-gradient(180deg,#06110c,#081810_55%,#020617)] dark:text-white">
       <header className="sticky top-0 z-40 border-b border-emerald-100/80 bg-white/88 px-4 py-3 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/85">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
           <FitMateBrand href="/dashboard" size="sm" showCompany />

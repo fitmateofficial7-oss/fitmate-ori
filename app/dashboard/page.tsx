@@ -1194,7 +1194,7 @@ export default function DashboardPage() {
   // ======================================================
 
   return (
-    <main className="fitmate-app-page min-h-screen bg-white pb-28">
+    <main className="fitmate-app-page fitmate-dashboard-page min-h-screen bg-white pb-28">
 
       {/* NAVBAR */}
 
@@ -1530,7 +1530,7 @@ export default function DashboardPage() {
 
           {/* PROFILE */}
 
-          <div className="rounded-3xl bg-white p-6 shadow-sm lg:col-span-2">
+          <div className="fitmate-dashboard-profile rounded-3xl bg-white p-6 shadow-sm lg:col-span-2">
 
             <div className="flex items-center justify-between">
 
@@ -1681,7 +1681,7 @@ export default function DashboardPage() {
 
       {/* PROGRESS CHART */}
 
-      <section className="px-6">
+      <section className="fitmate-dashboard-detail px-6">
 
         <div className="mx-auto max-w-7xl rounded-3xl bg-white p-6 shadow-sm md:p-8">
 
@@ -1774,7 +1774,7 @@ export default function DashboardPage() {
 
       {/* EXERCISE LOAD PROGRESS */}
 
-      <section className="px-6 py-10">
+      <section className="fitmate-dashboard-detail px-6 py-10">
 
         <div className="mx-auto max-w-7xl">
 
@@ -2040,7 +2040,7 @@ export default function DashboardPage() {
 
       {/* BODY WEIGHT PROGRESS */}
 
-      <section className="px-6 py-10">
+      <section className="fitmate-dashboard-detail px-6 py-10">
 
         <div className="mx-auto max-w-7xl">
 
@@ -2587,7 +2587,7 @@ export default function DashboardPage() {
 
       {/* AI INSIGHTS */}
 
-      <section className="px-6">
+      <section className="fitmate-dashboard-detail px-6">
 
         <div className="mx-auto max-w-7xl">
 
@@ -2666,7 +2666,7 @@ export default function DashboardPage() {
 
       {/* WORKOUT HISTORY */}
 
-      <section className="px-6 py-10">
+      <section className="fitmate-dashboard-detail px-6 py-10">
 
         <div className="mx-auto max-w-7xl">
 
@@ -2874,159 +2874,33 @@ export default function DashboardPage() {
 
       </section>
 
-      {/* QUICK ACTIONS */}
+      {/* MOBILE-FIRST SHORTCUTS */}
 
-      <section className="px-6 pb-12">
-
+      <section className="px-6 pb-8">
         <div className="mx-auto max-w-7xl">
-
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-
-            <button
-              type="button"
-              onClick={() => router.push("/jogging")}
-              className="rounded-3xl bg-gradient-to-br from-emerald-600 to-teal-800 p-6 text-left text-white shadow-xl shadow-emerald-600/15 transition hover:-translate-y-1 hover:shadow-2xl"
-            >
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/15"><FitMateIcon name="run" className="h-5 w-5" /></span>
-              <div className="mt-4 flex items-center gap-2">
-                <h3 className="text-xl font-bold">
-                  {tr("Jogging GPS", "GPS Jogging")}
-                </h3>
-                <span className="rounded-full bg-white/15 px-2 py-1 text-[10px] font-black uppercase tracking-wider">
-                  Free
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {[
+              { href: "/plan", icon: "list" as const, id: "Rencana", en: "Plan" },
+              { href: "/nutrition", icon: "food" as const, id: "Nutrisi", en: "Nutrition" },
+              { href: "/progress", icon: "chart" as const, id: "Progres", en: "Progress" },
+              { href: "/settings", icon: "settings" as const, id: "Pengaturan", en: "Settings" },
+            ].map((item) => (
+              <button
+                key={item.href}
+                type="button"
+                onClick={() => router.push(item.href)}
+                className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3 text-left shadow-sm transition hover:border-green-200 hover:bg-green-50"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-green-100 text-green-700">
+                  <FitMateIcon name={item.icon} className="h-4 w-4" />
                 </span>
-              </div>
-              <p className="mt-2 text-sm leading-6 text-emerald-50/85">
-                {tr(
-                  "Rekam rute, pace, jarak, kalori, lalu bagikan kartu aktivitas.",
-                  "Track route, pace, distance, calories, then share an activity card."
-                )}
-              </p>
-              <p className="mt-4 font-semibold text-emerald-100">
-                {tr("Mulai merekam", "Start tracking")}
-              </p>
-            </button>
-
-            <button
-              type="button"
-              onClick={() =>
-                router.push(
-                  "/plan"
-                )
-              }
-              className="rounded-3xl bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-            >
-
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-700"><FitMateIcon name="list" className="h-5 w-5" /></span>
-
-              <h3 className="mt-4 text-xl font-bold">
-                {tr("Rencana Latihan Saya", "My Workout Plan")}
-              </h3>
-
-              <p className="mt-2 text-sm text-gray-500">
-                {tr(
-                  "Lihat rencana latihanmu.",
-                  "See the workout plan matched to your profile and goals."
-                )}
-              </p>
-
-              <p className="mt-4 font-semibold text-green-600">
-                {tr("Lihat rencana", "View plan")}
-              </p>
-
-            </button>
-
-            <button
-              type="button"
-              onClick={() =>
-                router.push(
-                  "/coach"
-                )
-              }
-              className="rounded-3xl bg-gradient-to-br from-slate-950 to-green-950 p-6 text-left text-white shadow-xl shadow-slate-300/50 transition hover:-translate-y-1 hover:shadow-2xl"
-            >
-
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-400 text-slate-950"><FitMateIcon name="message" className="h-5 w-5" /></span>
-
-              <h3 className="mt-4 text-xl font-bold">
-                {tr(
-                  "Coach & Analisis Makanan",
-                  "Coach & Meal Analysis"
-                )}
-              </h3>
-
-              <p className="mt-2 text-sm leading-6 text-slate-300">
-                {tr(
-                  "Konsultasi latihan atau unggah foto makanan untuk estimasi nutrisi.",
-                  "Ask about training or upload a meal photo for a nutrition estimate."
-                )}
-              </p>
-
-              <p className="mt-4 font-semibold text-green-300">
-                Ask FitMate
-              </p>
-
-            </button>
-
-            <button
-              type="button"
-              onClick={() =>
-                router.push(
-                  "/workout"
-                )
-              }
-              className="rounded-3xl bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-            >
-
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-700"><FitMateIcon name="dumbbell" className="h-5 w-5" /></span>
-
-              <h3 className="mt-4 text-xl font-bold">
-                {tr("Mulai Latihan", "Start Workout")}
-              </h3>
-
-              <p className="mt-2 text-sm text-gray-500">
-                Start or continue today&apos;s workout session.
-              </p>
-
-              <p className="mt-4 font-semibold text-green-600">
-                {tr("Buka Latihan", "Go to Workout")}
-              </p>
-
-            </button>
-
-            <button
-              type="button"
-              onClick={() =>
-                router.push(
-                  "/plan?generate=true"
-                )
-              }
-              className="rounded-3xl bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-            >
-
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-700"><FitMateIcon name="activity" className="h-5 w-5" /></span>
-
-              <h3 className="mt-4 text-xl font-bold">
-                {tr("Buat Rencana Baru", "Create New Plan")}
-              </h3>
-
-              <p className="mt-2 text-sm text-gray-500">
-                {tr(
-                  "Buat rencana latihan baru sesuai profil Anda.",
-                  "Create a new workout plan based on your profile."
-                )}
-              </p>
-
-              <p className="mt-4 font-semibold text-green-600">
-                {tr("Buat Rencana", "Create Plan")}
-              </p>
-
-            </button>
-
+                <span className="min-w-0 truncate text-sm font-black text-slate-800">
+                  {tr(item.id, item.en)}
+                </span>
+              </button>
+            ))}
           </div>
-
         </div>
-
       </section>
 
       {/* FOOTER */}
