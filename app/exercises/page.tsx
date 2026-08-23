@@ -8,6 +8,8 @@ import FitMateIcon from "@/components/fitmate-icon";
 import { useLanguage } from "@/components/language-provider";
 import { supabase } from "@/lib/supabase";
 import { getExerciseGuide } from "@/lib/exercise-guides";
+import { getExerciseSplitAsset } from "@/lib/exercise-split-assets";
+import ExerciseMuscleMap from "@/components/exercise-muscle-map";
 import LiveIcon from "@/components/live-icon";
 import { usePremiumAccess } from "@/hooks/use-premium-access";
 
@@ -30,16 +32,6 @@ type Exercise = {
 };
 
 const FREE_EXERCISE_LIMIT = 10;
-
-const Exercise3DGuide = dynamic(
-  () => import("@/components/exercise-3d-guide"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-[520px] animate-pulse rounded-3xl border border-emerald-100 bg-emerald-50/70 dark:border-emerald-400/10 dark:bg-emerald-950/20" />
-    ),
-  }
-);
 
 const Exercise3DPreview = dynamic(
   () => import("@/components/exercise-3d-preview"),
@@ -65,6 +57,17 @@ export default function ExercisesPage() {
 
   const [selectedExercise, setSelectedExercise] =
     useState<Exercise | null>(null);
+  const [savedSlugs, setSavedSlugs] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem("fitmate:saved-exercises");
+      const parsed = raw ? JSON.parse(raw) : [];
+      if (Array.isArray(parsed)) setSavedSlugs(new Set(parsed.filter((item) => typeof item === "string")));
+    } catch {
+      // Saved exercises are optional; ignore storage failures.
+    }
+  }, []);
 
   useEffect(() => {
     async function fetchExercises() {
@@ -188,6 +191,40 @@ export default function ExercisesPage() {
         language
       )
     : null;
+
+  const selectedSplitAsset = selectedExercise
+    ? getExerciseSplitAsset(selectedExercise.slug)
+    : null;
+
+  const relatedExercises = selectedExercise
+    ? exercises
+        .filter(
+          (exercise) =>
+            String(exercise.id) !== String(selectedExercise.id) &&
+            exercise.category === selectedExercise.category
+        )
+        .slice(0, 3)
+    : [];
+
+  const isExerciseLocked = (exercise: Exercise) =>
+    !isPremium && !freeExerciseIds.has(String(exercise.id));
+
+  const toggleSavedExercise = (slug: string) => {
+    setSavedSlugs((current) => {
+      const next = new Set(current);
+      if (next.has(slug)) next.delete(slug);
+      else next.add(slug);
+      try {
+        window.localStorage.setItem(
+          "fitmate:saved-exercises",
+          JSON.stringify(Array.from(next))
+        );
+      } catch {
+        // Keep the in-memory state even if storage is unavailable.
+      }
+      return next;
+    });
+  };
 
   return (
     <main className="fitmate-app-page fitmate-exercises-page min-h-screen bg-white pb-28 text-slate-900">
@@ -361,9 +398,7 @@ export default function ExercisesPage() {
                   language
                 );
                 const shortDescription = guide.motionLabel;
-                const isLocked =
-                  !isPremium &&
-                  !freeExerciseIds.has(String(exercise.id));
+                const isLocked = isExerciseLocked(exercise);
 
                 return (
                   <button
@@ -474,217 +509,205 @@ export default function ExercisesPage() {
           )}
 
 
-        {/* DETAIL MODAL */}
+        {/* MOBILE-FIRST EXERCISE DETAIL */}
 
-        {selectedExercise && (
-
+        {selectedExercise && selectedGuide && (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-2 sm:p-6"
-            onClick={() =>
-              setSelectedExercise(null)
-            }
+            className="fixed inset-0 z-50 bg-black/70 sm:flex sm:items-center sm:justify-center sm:p-6"
+            onClick={() => setSelectedExercise(null)}
           >
-
-            <div
+            <article
               role="dialog"
               aria-modal="true"
               aria-labelledby="exercise-guide-title"
-              className="max-h-[94vh] w-full max-w-5xl overflow-y-auto rounded-3xl border border-slate-200 bg-white p-5 text-slate-900 shadow-2xl sm:p-8"
-              onClick={(e) =>
-                e.stopPropagation()
-              }
+              className="fitmate-exercise-detail-mobile h-[100dvh] w-full overflow-y-auto bg-[#07100c] text-white sm:h-[92vh] sm:max-w-[480px] sm:rounded-[30px] sm:border sm:border-emerald-400/15 sm:shadow-2xl"
+              onClick={(event) => event.stopPropagation()}
             >
-
-              <div className="mb-6 flex items-start justify-between">
-
-                <div>
-
-                  <p className="text-sm font-semibold text-green-600">
-                    {selectedExercise.category}
-                  </p>
-
-                  <h2 className="mt-1 text-3xl font-bold">
-                    <span id="exercise-guide-title">
-                      {selectedExercise.name}
-                    </span>
-                  </h2>
-
-                </div>
-
+              <header className="sticky top-0 z-20 flex h-12 items-center justify-between border-b border-white/5 bg-[#07100c]/95 px-3 backdrop-blur-xl">
                 <button
-                  onClick={() =>
-                    setSelectedExercise(null)
-                  }
-                  className="rounded-full bg-slate-100 px-4 py-2 text-slate-600 hover:bg-slate-200"
+                  type="button"
+                  onClick={() => setSelectedExercise(null)}
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-green-400 active:bg-white/5"
+                  aria-label={tr("Kembali", "Back")}
                 >
-                  <FitMateIcon name="x" className="h-4 w-4" />
+                  <span className="text-2xl leading-none">‹</span>
                 </button>
 
-              </div>
+                <p className="text-[15px] font-black">
+                  {tr("Panduan Gerakan", "Exercise Guide")}
+                </p>
 
-              <Exercise3DGuide
-                key={selectedExercise.slug}
-                exerciseName={selectedExercise.name}
-                exerciseSlug={selectedExercise.slug}
-                equipment={selectedExercise.equipment}
-                targetMuscle={selectedExercise.target_muscle}
-              />
+                <button
+                  type="button"
+                  onClick={() => toggleSavedExercise(selectedExercise.slug)}
+                  aria-pressed={savedSlugs.has(selectedExercise.slug)}
+                  aria-label={
+                    savedSlugs.has(selectedExercise.slug)
+                      ? tr("Hapus dari tersimpan", "Remove from saved")
+                      : tr("Simpan gerakan", "Save exercise")
+                  }
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-green-400 active:bg-white/5"
+                >
+                  <span className="text-xl leading-none">
+                    {savedSlugs.has(selectedExercise.slug) ? "★" : "☆"}
+                  </span>
+                </button>
+              </header>
 
-              <div className="mt-6 grid gap-4 sm:grid-cols-3">
-
-                <div className="rounded-xl bg-slate-50 p-4">
-                  <p className="text-xs text-slate-500">
-                    {tr("Otot utama", "Primary muscle")}
-                  </p>
-
-                  <p className="mt-1 font-medium">
-                    {selectedExercise.target_muscle}
-                  </p>
-                </div>
-
-
-                <div className="rounded-xl bg-slate-50 p-4">
-                  <p className="text-xs text-slate-500">
-                    {tr("Alat", "Equipment")}
-                  </p>
-
-                  <p className="mt-1 font-medium">
-                    {selectedExercise.equipment}
-                  </p>
-                </div>
-
-
-                <div className="rounded-xl bg-slate-50 p-4">
-                  <p className="text-xs text-slate-500">
-                    {tr("Tingkat", "Level")}
-                  </p>
-
-                  <p className="mt-1 font-medium capitalize">
-                    {selectedExercise.difficulty === "easy"
-                      ? tr("Mudah", "Easy")
-                      : selectedExercise.difficulty === "medium"
-                        ? tr("Sedang", "Medium")
-                        : tr("Sulit", "Hard")}
-                  </p>
-                </div>
-
-              </div>
-
-              {selectedGuide && (
-                <div className="mt-8 grid gap-5 lg:grid-cols-2">
-                  <div className="rounded-2xl border border-slate-200 bg-white p-5 lg:col-span-2">
-                    <h3 className="text-lg font-semibold">
-                      {tr(
-                        "Tentang gerakan",
-                        "About this movement"
-                      )}
-                    </h3>
-                    <p className="mt-2 leading-7 text-slate-600">
-                      {selectedGuide.motionLabel}
-                    </p>
+              <div className="px-3 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] pt-3">
+                <section className="mb-3">
+                  <h2
+                    id="exercise-guide-title"
+                    className="text-[21px] font-black leading-tight tracking-tight"
+                  >
+                    {selectedExercise.name}
+                  </h2>
+                  <div className="mt-1.5 flex items-center gap-2 text-[11px] font-bold text-green-400">
+                    <span className="h-2 w-2 rounded-full bg-green-500" />
+                    <span>{selectedExercise.category}</span>
+                    <span className="text-white/20">•</span>
+                    <span className="text-white/45">{selectedExercise.target_muscle}</span>
                   </div>
+                </section>
 
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                    <h3 className="text-lg font-semibold">
-                      {tr("Persiapan alat", "Equipment setup")}
-                    </h3>
-                    <ol className="mt-4 space-y-3">
-                      {selectedGuide.equipmentSetup.map(
-                        (step, index) => (
-                          <li
-                            key={step}
-                            className="flex gap-3 text-sm leading-6 text-slate-700"
-                          >
-                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-100 text-xs font-bold text-green-700">
-                              {index + 1}
-                            </span>
-                            {step}
-                          </li>
-                        )
-                      )}
-                    </ol>
-                  </div>
+                <ExerciseMuscleMap
+                  primary={selectedExercise.target_muscle}
+                  secondary={selectedExercise.secondary_muscles}
+                />
 
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                    <h3 className="text-lg font-semibold">
-                      {tr(
-                        "Cara melakukan",
-                        "How to perform it"
-                      )}
-                    </h3>
-                    <ol className="mt-4 space-y-3">
-                      {selectedGuide.phases.map(
-                        (step, index) => (
-                          <li
-                            key={step}
-                            className="flex gap-3 text-sm leading-6 text-slate-700"
-                          >
-                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-100 text-xs font-bold text-green-700">
-                              {index + 1}
-                            </span>
-                            {step}
-                          </li>
-                        )
-                      )}
-                    </ol>
-                  </div>
+                <section className="mt-4 rounded-[18px] border border-white/[0.07] bg-white/[0.025] p-3">
+                  <h3 className="text-[14px] font-black text-green-400">
+                    {tr("Langkah Gerakan", "Movement Steps")}
+                  </h3>
 
-                  <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-5">
-                    <p className="text-xs font-bold uppercase tracking-wide text-amber-300">
-                      {tr("Fokus gerakan", "Movement focus")}
-                    </p>
-                    <p className="mt-3 text-sm leading-6 text-slate-700">
-                      {selectedGuide.formFocus}
-                    </p>
-                    <p className="mt-4 text-xs leading-5 text-slate-500">
-                      {tr(
-                        "Gunakan panduan ini sebagai referensi. Berhenti jika terasa sakit.",
-                        "Use this guide as a reference. Stop if you feel pain."
-                      )}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-
-              {/* SECONDARY MUSCLES */}
-
-              {selectedExercise.secondary_muscles &&
-                selectedExercise.secondary_muscles.length >
-                  0 && (
-
-                  <div className="mt-8">
-
-                    <h3 className="text-lg font-semibold">
-                      {tr("Otot pendukung", "Supporting muscles")}
-                    </h3>
-
-                    <div className="mt-3 flex flex-wrap gap-2">
-
-                      {selectedExercise.secondary_muscles.map(
-                        (muscle) => (
-
-                          <span
-                            key={muscle}
-                            className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700"
-                          >
-                            {muscle}
+                  <div className="mt-3 grid grid-cols-[minmax(0,1fr)_88px] gap-3">
+                    <ol className="space-y-2.5">
+                      {selectedGuide.phases.slice(0, 3).map((step, index) => (
+                        <li
+                          key={`${step}-${index}`}
+                          className="grid grid-cols-[22px_minmax(0,1fr)] gap-2 text-[12px] font-semibold leading-[1.35] text-white/75"
+                        >
+                          <span className="flex h-[22px] w-[22px] items-center justify-center rounded-full border border-white/10 bg-black/30 text-[10px] font-black text-white">
+                            {index + 1}
                           </span>
+                          <span>{step}</span>
+                        </li>
+                      ))}
+                    </ol>
 
-                        )
+                    <div className="relative h-[102px] overflow-hidden rounded-[14px] border border-white/10 bg-[#101b16]">
+                      {selectedSplitAsset?.stepSrcs?.[0] ? (
+                        <img
+                          src={selectedSplitAsset.stepSrcs[0]}
+                          alt={`${selectedExercise.name} ${tr("posisi awal", "start position")}`}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <Exercise3DPreview
+                          exerciseName={selectedExercise.name}
+                          preset={selectedGuide.preset}
+                          language={language}
+                        />
                       )}
-
                     </div>
-
                   </div>
 
+                  <div className="mt-3 flex gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                    <span className="shrink-0 rounded-full bg-green-500/10 px-2.5 py-1 text-[10px] font-black text-green-400">
+                      {selectedExercise.equipment}
+                    </span>
+                    <span className="shrink-0 rounded-full bg-white/5 px-2.5 py-1 text-[10px] font-black capitalize text-white/55">
+                      {selectedExercise.difficulty === "easy"
+                        ? tr("Mudah", "Easy")
+                        : selectedExercise.difficulty === "medium"
+                          ? tr("Sedang", "Medium")
+                          : tr("Sulit", "Hard")}
+                    </span>
+                  </div>
+                </section>
+
+                {relatedExercises.length > 0 && (
+                  <section className="mt-4">
+                    <h3 className="px-0.5 text-[14px] font-black text-green-400">
+                      {tr("Latihan Terkait", "Related Exercises")}
+                    </h3>
+
+                    <div className="mt-2 space-y-1.5">
+                      {relatedExercises.map((exercise) => {
+                        const locked = isExerciseLocked(exercise);
+
+                        return (
+                          <button
+                            type="button"
+                            key={exercise.id}
+                            onClick={() => {
+                              if (locked) {
+                                router.push(
+                                  "/premium?from=exercises&feature=full-3d-library"
+                                );
+                                return;
+                              }
+                              setSelectedExercise(exercise);
+                            }}
+                            className="grid w-full grid-cols-[48px_minmax(0,1fr)_24px] items-center gap-3 rounded-[15px] border border-white/[0.06] bg-white/[0.025] px-2.5 py-2 text-left active:bg-white/[0.06]"
+                          >
+                            <div className="relative h-12 w-12 overflow-hidden rounded-[10px] bg-[#101b16]">
+                              <img
+                                src={`/exercise-posters/${exercise.slug}/poster.webp`}
+                                alt=""
+                                className="h-full w-full object-cover"
+                                onError={(event) => {
+                                  event.currentTarget.style.display = "none";
+                                }}
+                              />
+                            </div>
+
+                            <div className="min-w-0">
+                              <p className="truncate text-[12px] font-black text-white/90">
+                                {exercise.name}
+                              </p>
+                              <p className="mt-0.5 truncate text-[10px] font-bold text-green-400/80">
+                                {exercise.target_muscle}
+                              </p>
+                            </div>
+
+                            <span className="text-xl font-light text-green-400">
+                              {locked ? "⌾" : "›"}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </section>
                 )}
 
-            </div>
-
+                <section className="mt-4 grid grid-cols-2 gap-2">
+                  <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.025] px-3 py-2.5">
+                    <p className="text-[10px] font-black uppercase tracking-[0.08em] text-white/35">
+                      {tr("Fokus", "Focus")}
+                    </p>
+                    <p className="mt-1 line-clamp-2 text-[11px] font-semibold leading-4 text-white/70">
+                      {selectedGuide.formFocus}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => router.push("/coach")}
+                    className="rounded-[14px] border border-green-500/15 bg-green-500/10 px-3 py-2.5 text-left active:bg-green-500/15"
+                  >
+                    <p className="text-[10px] font-black uppercase tracking-[0.08em] text-green-400/70">
+                      Coach
+                    </p>
+                    <p className="mt-1 text-[11px] font-black leading-4 text-green-300">
+                      {tr("Tanya teknik gerakan", "Ask about technique")}
+                    </p>
+                  </button>
+                </section>
+              </div>
+            </article>
           </div>
-
         )}
+
 
       </div>
     </main>
