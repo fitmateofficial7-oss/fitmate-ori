@@ -42,32 +42,32 @@ const GOAL_OPTIONS = [
     value: "Membentuk Otot",
     id: "Membentuk Otot",
     en: "Build Muscle",
-    descriptionId: "Menambah massa otot dan kekuatan tubuh.",
-    descriptionEn: "Build muscle mass and overall strength.",
+    descriptionId: "Bangun otot & kekuatan.",
+    descriptionEn: "Build muscle & strength.",
   },
   {
     icon: "activity" as FitMateIconName,
     value: "Mengurangi Lemak",
     id: "Mengurangi Lemak",
     en: "Lose Fat",
-    descriptionId: "Mengurangi lemak sambil menjaga massa otot.",
-    descriptionEn: "Reduce fat while preserving muscle mass.",
+    descriptionId: "Turunkan lemak, jaga otot.",
+    descriptionEn: "Lose fat, keep muscle.",
   },
   {
     icon: "energy" as FitMateIconName,
     value: "Menambah Kekuatan",
     id: "Menambah Kekuatan",
     en: "Gain Strength",
-    descriptionId: "Meningkatkan kekuatan dan performa.",
-    descriptionEn: "Improve strength and performance.",
+    descriptionId: "Naikkan kekuatan.",
+    descriptionEn: "Build strength.",
   },
   {
     icon: "run" as FitMateIconName,
     value: "Menjaga Kebugaran",
     id: "Menjaga Kebugaran",
     en: "Stay Fit",
-    descriptionId: "Meningkatkan kesehatan dan kebugaran umum.",
-    descriptionEn: "Improve general health and fitness.",
+    descriptionId: "Lebih fit & sehat.",
+    descriptionEn: "Get fitter & healthier.",
   },
 ];
 
@@ -536,7 +536,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <main className="fitmate-app-page min-h-screen bg-white px-4 py-8 sm:px-6 sm:py-12">
+    <main className="fitmate-app-page fitmate-onboarding-page min-h-screen bg-white px-4 py-8 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-2xl">
         <div className="text-center">
           <FitMateBrand href="/" size="lg" showCompany centered className="mx-auto" />

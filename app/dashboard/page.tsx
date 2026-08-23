@@ -141,9 +141,6 @@ export default function DashboardPage() {
   const [loading, setLoading] =
     useState(true);
 
-  const [loggingOut, setLoggingOut] =
-    useState(false);
-
   // ======================================================
   // ERROR
   // ======================================================
@@ -1070,61 +1067,6 @@ export default function DashboardPage() {
   };
 
   // ======================================================
-  // LOGOUT
-  // ======================================================
-
-  const handleLogout =
-    async () => {
-      if (loggingOut) {
-        return;
-      }
-
-      const confirmed =
-        window.confirm(
-          "Are you sure you want to logout?"
-        );
-
-      if (!confirmed) {
-        return;
-      }
-
-      try {
-        setLoggingOut(true);
-
-        const {
-          error,
-        } =
-          await supabase.auth.signOut();
-
-        if (error) {
-          throw new Error(
-            error.message
-          );
-        }
-
-        localStorage.removeItem(
-          "fitmate_ai_plan"
-        );
-
-        window.location.href =
-          "/login";
-      } catch (error) {
-        console.error(
-          "Logout error:",
-          error
-        );
-
-        alert(
-          error instanceof Error
-            ? error.message
-            : "Logout failed."
-        );
-      } finally {
-        setLoggingOut(false);
-      }
-    };
-
-  // ======================================================
   // LOADING
   // ======================================================
 
@@ -1198,7 +1140,7 @@ export default function DashboardPage() {
 
       {/* NAVBAR */}
 
-      <nav className="sticky top-0 z-30 border-b border-white/80 bg-white/85 px-4 py-4 shadow-sm shadow-slate-200/40 backdrop-blur-xl sm:px-6">
+      <nav className="sticky top-0 z-30 hidden border-b border-white/80 bg-white/85 px-4 py-4 shadow-sm shadow-slate-200/40 backdrop-blur-xl sm:block sm:px-6">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
 
           <FitMateBrand href="/dashboard" size="sm" showCompany />
@@ -1255,17 +1197,10 @@ export default function DashboardPage() {
 
             <button
               type="button"
-              onClick={
-                handleLogout
-              }
-              disabled={
-                loggingOut
-              }
-              className="rounded-xl border border-red-200 px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+              onClick={() => router.push("/settings")}
+              className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-green-700"
             >
-              {loggingOut
-                ? tr("Sedang keluar...", "Logging out...")
-                : tr("Keluar", "Log out")}
+              {tr("Pengaturan", "Settings")}
             </button>
 
           </div>
@@ -1312,7 +1247,7 @@ export default function DashboardPage() {
                 </p>
 
                 <h1 className="mt-3 flex items-center gap-3 text-4xl font-bold md:text-5xl">
-                  {tr("Ringkasan latihan", "Training overview")}
+                  {tr("Latihan hari ini", "Today’s workout")}
                 </h1>
 
                 <p className="mt-4 max-w-2xl text-green-50">
@@ -1400,7 +1335,7 @@ export default function DashboardPage() {
                 <div>
 
                   <p className="text-sm font-medium text-gray-500">
-                    {tr("Total Latihan", "Total Workouts")}
+                    {tr("Latihan", "Workouts")}
                   </p>
 
                   <p className="mt-2 text-4xl font-bold text-gray-900">
@@ -1431,7 +1366,7 @@ export default function DashboardPage() {
                 <div>
 
                   <p className="text-sm font-medium text-gray-500">
-                    {tr("Streak Latihan", "Workout Streak")}
+                    {tr("Streak", "Streak")}
                   </p>
 
                   <p className="mt-2 text-4xl font-bold text-gray-900">
@@ -1462,7 +1397,7 @@ export default function DashboardPage() {
                 <div>
 
                   <p className="text-sm font-medium text-gray-500">
-                    {tr("Berat Saat Ini", "Current Weight")}
+                    {tr("Berat", "Weight")}
                   </p>
 
                   <p className="mt-2 text-4xl font-bold text-gray-900">
@@ -1495,7 +1430,7 @@ export default function DashboardPage() {
                 <div>
 
                   <p className="text-sm font-medium text-gray-500">
-                    {tr("Tingkat Penyelesaian", "Completion Rate")}
+                    {tr("Selesai", "Complete")}
                   </p>
 
                   <p className="mt-2 text-4xl font-bold text-gray-900">
@@ -2070,7 +2005,7 @@ export default function DashboardPage() {
               <div className="rounded-2xl bg-green-50 px-6 py-5 text-center">
 
                 <p className="text-sm font-medium text-green-600">
-                  {tr("Berat Saat Ini", "Current Weight")}
+                  {tr("Berat", "Weight")}
                 </p>
 
                 <p className="mt-1 text-3xl font-bold text-green-900">
@@ -2191,7 +2126,7 @@ export default function DashboardPage() {
               <div className="rounded-2xl border border-gray-100 bg-white p-5">
 
                 <p className="text-sm text-gray-500">
-                  {tr("Berat Saat Ini", "Current Weight")}
+                  {tr("Berat", "Weight")}
                 </p>
 
                 <p className="mt-2 text-2xl font-bold text-gray-900">

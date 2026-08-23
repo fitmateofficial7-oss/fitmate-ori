@@ -164,7 +164,7 @@ export default function MotivationPage() {
             <div>
               <p className="text-sm font-semibold text-green-700 dark:text-green-300">{tr("Persiapan latihan", "Workout prep")}</p>
               <h1 className="mt-1 text-3xl font-bold tracking-tight sm:text-4xl">
-                {tr("Sesuaikan sesi dengan kondisimu hari ini", "Match the session to how you feel today")}
+                {tr("Kondisimu hari ini", "How do you feel?")}
               </h1>
               <p className="mt-3 leading-7 text-slate-500 dark:text-slate-400">
                 {tr(
@@ -241,7 +241,7 @@ export default function MotivationPage() {
               </span>
               <h2 className="mt-4 text-lg font-semibold">{tr("Mulai latihan", "Start workout")}</h2>
               <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
-                {tr("Buka sesi hari ini dan mulai dari gerakan pertama.", "Open today's session and begin with the first exercise.")}
+                {tr("Langsung mulai sesi.", "Start your session.")}
               </p>
             </Link>
 
@@ -251,7 +251,7 @@ export default function MotivationPage() {
               </span>
               <h2 className="mt-4 text-lg font-semibold">{tr("Tanya Coach", "Ask Coach")}</h2>
               <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
-                {tr("Bahas kendala latihan, recovery, atau penyesuaian program.", "Discuss training, recovery, or program adjustments.")}
+                {tr("Tanya Coach jika perlu.", "Ask Coach if needed.")}
               </p>
             </Link>
           </div>

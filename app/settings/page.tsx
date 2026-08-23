@@ -88,6 +88,7 @@ export default function SettingsPage() {
   const [deleteReason, setDeleteReason] = useState("");
   const [deleting, setDeleting] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const notificationSupported = useMemo(
     () => typeof window !== "undefined" && "Notification" in window,
@@ -221,6 +222,39 @@ export default function SettingsPage() {
     setSaving(false);
   }
 
+  async function logout() {
+    if (loggingOut) return;
+
+    const confirmed = window.confirm(
+      tr(
+        "Keluar dari akun FitMate?",
+        "Log out of your FitMate account?"
+      )
+    );
+
+    if (!confirmed) return;
+
+    setLoggingOut(true);
+    setError("");
+    setMessage("");
+
+    try {
+      const { error: signOutError } = await supabase.auth.signOut();
+      if (signOutError) throw signOutError;
+
+      localStorage.removeItem("fitmate_ai_plan");
+      router.replace("/login");
+      router.refresh();
+    } catch (logoutError) {
+      setError(
+        logoutError instanceof Error
+          ? logoutError.message
+          : tr("Gagal keluar. Coba lagi.", "Could not log out. Try again.")
+      );
+      setLoggingOut(false);
+    }
+  }
+
   const deleteConfirmationText = language === "id" ? "HAPUS AKUN" : "DELETE ACCOUNT";
 
   async function enableNotifications() {
@@ -317,7 +351,7 @@ export default function SettingsPage() {
         <div className="mx-auto flex max-w-5xl flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-black uppercase tracking-[0.16em] text-green-600">{tr("Pengaturan FitMate", "FitMate Settings")}</p>
-            <h1 className="mt-2 text-3xl font-black">{tr("Keamanan & Pengaturan", "Safety & Settings")}</h1>
+            <h1 className="mt-2 text-3xl font-black">{tr("Pengaturan", "Settings")}</h1>
             <p className="mt-2 text-sm text-slate-500">{email}</p>
           </div>
           <FitMateBrand href="/dashboard" size="sm" showCompany />
@@ -331,16 +365,28 @@ export default function SettingsPage() {
           </div>
         )}
 
+        <section className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/5">
+          <div className="min-w-0">
+            <p className="text-sm font-black">{tr("Akun", "Account")}</p>
+            <p className="truncate text-xs text-slate-500 dark:text-slate-400">{email}</p>
+          </div>
+          <button
+            type="button"
+            onClick={logout}
+            disabled={loggingOut}
+            className="shrink-0 rounded-xl bg-rose-50 px-4 py-2.5 text-sm font-black text-rose-600 transition hover:bg-rose-100 disabled:opacity-50 dark:bg-rose-500/10 dark:text-rose-300"
+          >
+            {loggingOut ? tr("Keluar…", "Logging out…") : tr("Keluar", "Log out")}
+          </button>
+        </section>
+
         <section className="overflow-hidden rounded-[2rem] border border-amber-200 bg-gradient-to-br from-amber-50 via-white to-green-50 p-5 shadow-sm dark:border-amber-400/20 dark:from-amber-500/10 dark:via-white/5 dark:to-green-500/10 sm:p-7">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.16em] text-amber-600">FitMate Premium</p>
               <h2 className="mt-2 text-xl font-black">{tr("FitMate Premium", "FitMate Premium")}</h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">
-                {tr(
-                  "10 konsultasi, 10 scan makanan per hari, dan generate ulang program.",
-                  "10 consultations, 10 meal scans per day, and workout-plan regeneration."
-                )}
+                {tr("Kuota lebih besar & fitur lengkap.", "Higher limits & full features.")}
               </p>
             </div>
             <Link href="/premium" className="shrink-0 rounded-2xl bg-slate-950 px-5 py-3 text-center font-black text-white shadow-lg dark:bg-white dark:text-slate-950">
@@ -349,8 +395,10 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7">
-          <h2 className="text-xl font-black">{tr("Cedera & keterbatasan", "Injuries & limitations")}</h2>
+        <details className="fitmate-mobile-details">
+          <summary>{tr("Kondisi latihan", "Training condition")}</summary>
+          <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7">
+          <h2 className="text-xl font-black">{tr("Kondisi latihan", "Training condition")}</h2>
           <p className="mt-2 text-sm leading-6 text-slate-500">
             {tr("Satu kondisi per baris.", "This data is used to avoid unsuitable movements. Enter one item per line.")}
           </p>
@@ -375,14 +423,17 @@ export default function SettingsPage() {
           </div>
           <label className="mt-4 flex items-start gap-3 rounded-2xl bg-amber-50 p-4 text-sm text-amber-900 dark:bg-amber-500/10 dark:text-amber-100">
             <input type="checkbox" checked={medicalClearance} onChange={(event) => setMedicalClearance(event.target.checked)} className="mt-1" />
-            <span>{tr("Saya perlu persetujuan tenaga kesehatan sebelum latihan intensif.", "I may need healthcare clearance before intensive exercise.")}</span>
+            <span>{tr("Perlu izin tenaga kesehatan untuk latihan intensif.", "Medical clearance needed for intense training.")}</span>
           </label>
         </section>
+        </details>
 
-        <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7">
+        <details className="fitmate-mobile-details">
+          <summary>{tr("Pengingat", "Reminders")}</summary>
+          <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <h2 className="text-xl font-black">{tr("Jadwal & notifikasi", "Schedule & notifications")}</h2>
+              <h2 className="text-xl font-black">{tr("Pengingat", "Reminders")}</h2>
               <p className="mt-2 text-sm text-slate-500">{tr("Pengingat PWA bekerja paling baik setelah FitMate dipasang di HP.", "PWA reminders work best after FitMate is installed on your phone.")}</p>
             </div>
             <button type="button" onClick={enableNotifications} className="rounded-2xl bg-green-600 px-4 py-2.5 text-sm font-black text-white">
@@ -457,12 +508,15 @@ export default function SettingsPage() {
             </button>
           )}
         </section>
+        </details>
 
         <button type="button" onClick={saveSettings} disabled={saving} className="w-full rounded-2xl bg-green-600 py-4 text-lg font-black text-white disabled:opacity-50">
-          {saving ? tr("Menyimpan…", "Saving…") : tr("Simpan semua pengaturan", "Save all settings")}
+          {saving ? tr("Menyimpan…", "Saving…") : tr("Simpan", "Save")}
         </button>
 
-        <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7">
+        <details className="fitmate-mobile-details">
+          <summary>{tr("Tentang FitMate", "About FitMate")}</summary>
+          <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7">
           <div className="grid gap-6 md:grid-cols-[auto_1fr] md:items-center">
             <FitMateBrand size="lg" showCompany />
             <div>
@@ -489,9 +543,12 @@ export default function SettingsPage() {
             </div>
           </div>
         </section>
+        </details>
 
-        <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7">
-          <h2 className="text-xl font-black">{tr("Data & akun", "Data & account")}</h2>
+        <details className="fitmate-mobile-details">
+          <summary>{tr("Data & privasi", "Data & privacy")}</summary>
+          <section className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7">
+          <h2 className="text-xl font-black">{tr("Data akun", "Account data")}</h2>
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
             <button type="button" onClick={exportData} disabled={exporting} className="rounded-2xl bg-slate-900 px-4 py-3 font-black text-white dark:bg-white dark:text-slate-950">
               {exporting ? tr("Mengekspor…", "Exporting…") : tr("Download data saya", "Download my data")}
@@ -513,6 +570,7 @@ export default function SettingsPage() {
             </button>
           </div>
         </section>
+        </details>
 
         <CompanySignature className="py-4" />
       </div>

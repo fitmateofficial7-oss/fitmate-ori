@@ -353,10 +353,7 @@ export default function PremiumPage() {
                 )}
               </h1>
               <p className="mt-4 max-w-2xl text-base font-semibold leading-7 text-slate-300 sm:text-lg">
-                {tr(
-                  "10 generate/minggu, 10 konsultasi + 10 scan/hari, Progres, Nutrisi, dan semua panduan gerakan.",
-                  "10 plans/week, 10 consultations + 10 scans/day, Progress, Nutrition, and all exercise guides."
-                )}
+                {tr("10 plan/minggu · 10 Coach + 10 scan/hari · fitur lengkap", "10 plans/week · 10 Coach + 10 scans/day · full access")}
               </p>
 
               <div className="mt-6 grid gap-3 text-sm font-bold text-slate-200 sm:grid-cols-2">
@@ -625,13 +622,15 @@ export default function PremiumPage() {
           </section>
         )}
 
-        <section className="mt-6 grid gap-4 md:grid-cols-3">
+        <details className="fitmate-mobile-details">
+          <summary>{tr("Status langganan", "Subscription status")}</summary>
+          <section className="mt-6 grid gap-4 md:grid-cols-3">
           <div className="rounded-2xl border border-slate-200 bg-white p-5 dark:border-white/10 dark:bg-white/5">
             <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
               FitMate Free
             </p>
             <h2 className="mt-2 text-xl font-black text-slate-950 dark:text-white">
-              {tr("Untuk mencoba fitur utama", "Try the core experience")}
+              {tr("Free", "Free")}
             </h2>
             <ul className="mt-4 space-y-2 text-sm font-semibold text-slate-600 dark:text-slate-300">
               <li>{tr("2 generate seumur hidup", "2 lifetime generations")}</li>
@@ -653,7 +652,7 @@ export default function PremiumPage() {
               FitMate Premium
             </p>
             <h2 className="mt-2 text-xl font-black text-slate-950 dark:text-white">
-              {tr("Akses fitur Premium", "Premium feature access")}
+              {tr("Premium", "Premium")}
             </h2>
             <p className="mt-3 text-sm font-semibold leading-6 text-slate-700 dark:text-amber-50">
               {tr(
@@ -706,15 +705,18 @@ export default function PremiumPage() {
             </div>
           </div>
         </section>
+        </details>
 
-        <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 dark:border-white/10 dark:bg-white/5 sm:p-7">
+        <details className="fitmate-mobile-details">
+          <summary>{tr("Riwayat transaksi", "Transactions")}</summary>
+          <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 dark:border-white/10 dark:bg-white/5 sm:p-7">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
                 {tr("Pembayaran", "Billing")}
               </p>
               <h2 className="mt-1 text-2xl font-black text-slate-950 dark:text-white">
-                {tr("Riwayat transaksi", "Transaction history")}
+                {tr("Transaksi", "Transactions")}
               </h2>
             </div>
             <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">
@@ -766,6 +768,7 @@ export default function PremiumPage() {
             </p>
           )}
         </section>
+        </details>
 
         <div className="mt-6 flex flex-wrap gap-3 text-sm font-black">
           <Link href="/subscription-terms" className="rounded-xl bg-slate-100 px-4 py-2 text-slate-700 dark:bg-white/5 dark:text-slate-200">

@@ -552,7 +552,7 @@ export default function NutritionPage() {
         <div className="mx-auto flex max-w-4xl items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="text-[10px] font-black uppercase tracking-[0.14em] text-green-600 dark:text-green-300">FitMate Nutrition</p>
-            <h1 className="truncate text-lg font-black">{tr("Makan lebih terukur", "Eat with better insight")}</h1>
+            <h1 className="truncate text-lg font-black">{tr("Nutrisi", "Nutrition")}</h1>
           </div>
           <Link href="/coach" className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-slate-100 px-3 text-xs font-black dark:bg-white/10">
             <FitMateIcon name="message" className="h-4 w-4" />
@@ -620,7 +620,7 @@ export default function NutritionPage() {
                 <div className="flex min-w-0 flex-col justify-center">
                   <p className="truncate text-xs font-black">{scanFile?.name}</p>
                   <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-                    {tr("FitMate akan mengestimasi kalori dan makro.", "FitMate will estimate calories and macros.")}
+                    {tr("Siap dianalisis.", "Ready to analyze.")}
                   </p>
                   <div className="mt-2 flex gap-2">
                     <button
@@ -652,7 +652,7 @@ export default function NutritionPage() {
               <>
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="text-[10px] font-black uppercase tracking-[0.12em] text-green-600 dark:text-green-300">{tr("Hasil analisis", "Analysis result")}</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.12em] text-green-600 dark:text-green-300">{tr("Hasil", "Result")}</p>
                     <h2 className="mt-1 truncate text-lg font-black">{scanResult.dish_name}</h2>
                     {scanHealthScore !== null && (
                       <div className="mt-1 flex items-center gap-2 text-sm font-black">
@@ -704,7 +704,7 @@ export default function NutritionPage() {
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="text-xs font-black">{tr("Hari ini", "Today")}</p>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">{tr("Ringkasan target harian", "Daily target summary")}</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">{tr("Target hari ini", "Today’s targets")}</p>
                 </div>
                 <button type="button" onClick={() => setOpenPanel((current) => current === "targets" ? null : "targets")} className="rounded-lg bg-slate-100 px-2.5 py-2 text-[11px] font-black dark:bg-white/10">
                   {tr("Target", "Targets")}
@@ -850,8 +850,8 @@ export default function NutritionPage() {
           <section className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-3 text-amber-900 dark:border-amber-400/20 dark:bg-amber-400/10 dark:text-amber-100">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/70 dark:bg-slate-950/30"><FitMateIcon name="lock" className="h-4 w-4" /></span>
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-black">{tr("Tracking nutrisi ada di Premium", "Nutrition tracking is Premium")}</p>
-              <p className="mt-0.5 text-[11px] opacity-80">{tr("Foto makanan tetap bisa dipakai sesuai kuota akunmu.", "Meal photos still work according to your account quota.")}</p>
+              <p className="text-xs font-black">{tr("Tracking Premium", "Premium tracking")}</p>
+              <p className="mt-0.5 text-[11px] opacity-80">{tr("Scan foto tetap tersedia.", "Meal scan stays available.")}</p>
             </div>
             <Link href="/premium?from=nutrition" className="rounded-lg bg-amber-400 px-2.5 py-2 text-[10px] font-black text-slate-950">Premium</Link>
           </section>

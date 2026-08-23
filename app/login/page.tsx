@@ -223,10 +223,7 @@ export default function LoginPage() {
               {tr("Lanjutkan progresmu.", "Continue your progress.")}
             </h1>
             <p className="mt-3 leading-7 text-slate-500">
-              {tr(
-                "Rencana latihan, Coach, dan riwayat progresmu siap dilanjutkan.",
-                "Your training plan, Coach, and progress history are ready."
-              )}
+              {tr("Latihanmu siap dilanjutkan.", "Your training is ready.")}
             </p>
 
             {notice && (
@@ -460,10 +457,7 @@ export default function LoginPage() {
               )}
             </h2>
             <p className="mt-5 max-w-md text-lg leading-8 text-green-50">
-              {tr(
-                "Lanjutkan progresmu hari ini.",
-                "A little progress every day still counts. Let’s continue where you left off."
-              )}
+              {tr("Lanjutkan progresmu.", "Continue your progress.")}
             </p>
           </div>
 

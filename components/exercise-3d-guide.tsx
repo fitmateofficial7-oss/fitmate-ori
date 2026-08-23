@@ -27,7 +27,7 @@ function InfoPanel({ title, subtitle, src, onZoom }: InfoPanelProps) {
       <div className="flex items-start justify-between gap-3 border-b border-emerald-100 bg-emerald-50/70 px-4 py-3 dark:border-emerald-400/10 dark:bg-emerald-950/20">
         <div>
           <p className="text-sm font-black text-slate-900 dark:text-white">{title}</p>
-          <p className="mt-1 text-xs font-semibold leading-5 text-slate-500 dark:text-slate-400">{subtitle}</p>
+          <p className="fitmate-info-subtitle mt-1 text-xs font-semibold leading-5 text-slate-500 dark:text-slate-400">{subtitle}</p>
         </div>
         {src && onZoom ? (
           <button
@@ -114,7 +114,7 @@ export default function Exercise3DGuide({ exerciseName, exerciseSlug }: Exercise
               </p>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2 xl:w-[470px]">
+            <div className="fitmate-exercise-guide-help grid gap-3 sm:grid-cols-2 xl:w-[470px]">
               <div className="rounded-3xl border border-emerald-200/80 bg-white p-4 shadow-sm dark:border-emerald-400/10 dark:bg-slate-950/90">
                 <p className="text-[11px] font-black uppercase tracking-[0.15em] text-emerald-700 dark:text-emerald-200">
                   {tr("Di halaman ini", "On this page")}
@@ -149,7 +149,7 @@ export default function Exercise3DGuide({ exerciseName, exerciseSlug }: Exercise
                   <div>
                     <p className="text-lg font-black text-slate-900 dark:text-white">{tr("Langkah-langkah", "Step-by-step")}</p>
                     <p className="mt-1 text-sm font-semibold text-slate-500 dark:text-slate-400">
-                      {tr("Tekan gambar untuk memperbesar dan melihat lebih jelas.", "Tap the image to zoom in for a clearer view.")}
+                      {tr("Geser langkah.", "Swipe steps.")}
                     </p>
                   </div>
                   <div className="inline-flex items-center gap-2 self-start rounded-full bg-emerald-600 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-white shadow-sm">
@@ -220,7 +220,7 @@ export default function Exercise3DGuide({ exerciseName, exerciseSlug }: Exercise
                 </div>
               </div>
 
-              <div className="grid gap-4">
+              <div className="fitmate-exercise-guide-info grid gap-4">
                 <InfoPanel
                   title={tr("Otot yang dilatih", "Target muscles")}
                   subtitle={tr("Bagian otot utama yang paling dominan bekerja.", "Main muscles worked by this movement.")}
@@ -246,8 +246,8 @@ export default function Exercise3DGuide({ exerciseName, exerciseSlug }: Exercise
               <p className="font-black">{tr("Gambar 2D belum tersedia", "2D images not available yet")}</p>
               <p className="mt-2">
                 {tr(
-                  `Untuk ${exerciseName}, file terpisah HD belum ditemukan di upload terakhir. Silakan tambahkan file latihan ini jika ingin ditampilkan juga dalam format baru.`,
-                  `The split HD files for ${exerciseName} were not found in the latest upload. Please add them if you want this exercise shown in the new format.`
+                  `Panduan ${exerciseName} belum tersedia.`,
+                  `${exerciseName} guide is not available yet.`
                 )}
               </p>
             </div>

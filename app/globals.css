@@ -3090,3 +3090,161 @@ select {
     line-height: 1.35 !important;
   }
 }
+
+/* ========================================================================== 
+   FitMate v14.86 — minimal mobile copy
+   On phones: show the action, number, or state first. Secondary modules remain
+   available behind a single tap instead of creating a long scrolling page.
+   Bottom navigation is intentionally untouched.
+   ========================================================================== */
+@media (max-width: 640px) {
+  .fitmate-app-page {
+    --fitmate-mobile-gap: .55rem;
+  }
+
+  /* Native-feeling expandable rows for secondary/advanced features. */
+  .fitmate-mobile-details {
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .fitmate-mobile-details > summary {
+    list-style: none;
+    min-height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    padding: .72rem .82rem;
+    border: 1px solid rgb(226 232 240);
+    border-radius: .95rem;
+    background: #fff;
+    color: #0f172a;
+    font-size: .82rem;
+    font-weight: 800;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .fitmate-mobile-details > summary::-webkit-details-marker { display: none; }
+  .fitmate-mobile-details > summary::after {
+    content: "+";
+    display: grid;
+    width: 1.45rem;
+    height: 1.45rem;
+    place-items: center;
+    border-radius: 999px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 1rem;
+    line-height: 1;
+  }
+  .fitmate-mobile-details[open] > summary::after { content: "−"; }
+  .fitmate-mobile-details[open] > :not(summary) { margin-top: .45rem !important; }
+
+  .dark .fitmate-mobile-details > summary {
+    border-color: rgb(255 255 255 / .09);
+    background: rgb(255 255 255 / .05);
+    color: #f8fafc;
+  }
+  .dark .fitmate-mobile-details > summary::after {
+    background: rgb(255 255 255 / .08);
+    color: #cbd5e1;
+  }
+
+  /* Coach: conversation only; no explanatory copy competing with chat. */
+  .fitmate-coach-empty p { display: none !important; }
+  .fitmate-coach-empty h2 { margin-top: .5rem !important; font-size: 1rem !important; }
+  .fitmate-coach-refresh { padding-inline: .55rem !important; }
+
+  /* Nutrition: camera/result first. */
+  .fitmate-nutrition-page header p { display: none !important; }
+  .fitmate-nutrition-page header h1 { font-size: 1.05rem !important; }
+  .fitmate-nutrition-page > div { gap: .5rem !important; }
+  .fitmate-nutrition-page section { border-radius: .9rem !important; }
+  .fitmate-nutrition-page section p[class*="leading-5"] { line-height: 1.35 !important; }
+
+  /* Progress: four numbers + compact expandable feature rows. */
+  .fitmate-progress-page > header p { display: none !important; }
+  .fitmate-progress-page > header h1 { margin: 0 !important; font-size: 1.1rem !important; }
+  .fitmate-progress-page > div { gap: .5rem !important; }
+  .fitmate-progress-page .fitmate-mobile-details > section {
+    display: block !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  .fitmate-progress-page .fitmate-mobile-details > section > :where(article, div) {
+    padding: .72rem !important;
+    border-radius: .9rem !important;
+    box-shadow: none !important;
+  }
+  .fitmate-progress-page .fitmate-mobile-details > section > :where(article, div) + :where(article, div) {
+    margin-top: .45rem;
+  }
+  .fitmate-progress-page .fitmate-mobile-details h2 { font-size: .95rem !important; }
+  .fitmate-progress-page .fitmate-mobile-details h3 { font-size: .82rem !important; }
+  .fitmate-progress-page .fitmate-mobile-details p[class*="leading"] { line-height: 1.4 !important; }
+
+  /* Settings: only account + premium + save are always visible. */
+  .fitmate-settings-page > div { gap: .5rem !important; }
+  .fitmate-settings-page .fitmate-mobile-details > section {
+    padding: .7rem !important;
+    border-radius: .9rem !important;
+    box-shadow: none !important;
+  }
+  .fitmate-settings-page .fitmate-mobile-details h2,
+  .fitmate-settings-page .fitmate-mobile-details p + h2 { font-size: .95rem !important; }
+  .fitmate-settings-page .fitmate-mobile-details textarea { min-height: 3rem !important; }
+  .fitmate-settings-page .fitmate-mobile-details .mt-7 { margin-top: .7rem !important; }
+  .fitmate-settings-page > div > button { min-height: 2.8rem !important; padding-block: .6rem !important; font-size: .85rem !important; }
+
+  /* Premium: checkout remains primary, billing/history become tap-to-open rows. */
+  .fitmate-premium-page .fitmate-mobile-details > section {
+    padding: .72rem !important;
+    border-radius: .9rem !important;
+    box-shadow: none !important;
+  }
+
+  /* Exercise detail: remove tutorial copy, swipe secondary visual cards sideways. */
+  .fitmate-exercise-guide-help { display: none !important; }
+  .fitmate-info-subtitle { display: none !important; }
+  .fitmate-exercise-guide-info {
+    display: flex !important;
+    gap: .5rem !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-bottom: .15rem;
+  }
+  .fitmate-exercise-guide-info::-webkit-scrollbar { display: none; }
+  .fitmate-exercise-guide-info > section {
+    flex: 0 0 78vw;
+    scroll-snap-align: start;
+  }
+
+  /* Onboarding/auth: one decision per screen; explanations are secondary. */
+  .fitmate-onboarding-page h1,
+  .fitmate-onboarding-page h2 { font-size: 1.35rem !important; line-height: 1.15 !important; }
+  .fitmate-onboarding-page h1 + p,
+  .fitmate-onboarding-page h2 + p { display: none !important; }
+  .fitmate-onboarding-page button p { display: none !important; }
+  .fitmate-auth-page h1 + p,
+  .fitmate-auth-page h2 + p { display: none !important; }
+
+  /* Jogging: status should be scannable while moving. Required Play disclosure
+     remains untouched in its dedicated permission flow. */
+  .fitmate-jogging-page p[class*="leading-7"]:not([data-play-disclosure]) {
+    line-height: 1.35 !important;
+  }
+
+  /* Motivation already prioritizes mood; remove helper descriptions on phone. */
+  .fitmate-motivation-page h2 + p { display: none !important; }
+}
+
+/* Desktop/tablet keep all wrapped content visible exactly like normal sections. */
+@media (min-width: 641px) {
+  .fitmate-mobile-details > summary { display: none !important; }
+  .fitmate-mobile-details:not([open]) > :not(summary) { display: block !important; }
+}

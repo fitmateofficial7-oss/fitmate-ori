@@ -42,7 +42,8 @@ assert(
 assert(
   progress.includes("<PremiumFeatureGate") &&
     nutrition.includes("usePremiumAccess") &&
-    nutrition.includes("Tracking nutrisi ada di Premium") &&
+    nutrition.includes("!premiumLoading && isPremium") &&
+    nutrition.includes("!premiumLoading ? (") &&
     nutrition.includes('capture="environment"'),
   "Progress must stay Premium-gated while Nutrition keeps meal scan accessible and locks advanced tracking for Free accounts."
 );

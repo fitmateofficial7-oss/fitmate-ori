@@ -57,8 +57,8 @@ export default function MobileWelcome() {
             </p>
             <p className="mt-5 max-w-[21rem] text-[15px] font-medium leading-6 text-white/72">
               {tr(
-                "Mulai perjalanan fitnessmu bersama FitMate. Latihan, nutrisi, jogging, Coach, dan progres dalam satu aplikasi.",
-                "Start your fitness journey with FitMate. Workouts, nutrition, jogging, Coach, and progress in one app."
+                "Latihanmu, lebih simpel.",
+                "Your training, simplified."
               )}
             </p>
           </div>

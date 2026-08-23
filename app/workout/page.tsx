@@ -336,12 +336,6 @@ export default function WorkoutPage() {
     );
 
   const [
-    loggingOut,
-    setLoggingOut,
-  ] =
-    useState(false);
-
-  const [
     errorMessage,
     setErrorMessage,
   ] =
@@ -1509,71 +1503,6 @@ export default function WorkoutPage() {
       );
     };
 
-  // ====================================================
-  // LOGOUT
-  // ====================================================
-
-  const handleLogout =
-    async () => {
-      if (
-        loggingOut
-      ) {
-        return;
-      }
-
-      const confirmed =
-        window.confirm(
-          "Are you sure you want to logout?"
-        );
-
-      if (
-        !confirmed
-      ) {
-        return;
-      }
-
-      try {
-        setLoggingOut(
-          true
-        );
-
-        const {
-          error,
-        } =
-          await supabase.auth.signOut();
-
-        if (error) {
-          throw new Error(
-            error.message
-          );
-        }
-
-        localStorage.removeItem(
-          "fitmate_ai_plan"
-        );
-
-        window.location.href =
-          "/login";
-
-      } catch (error) {
-        console.error(
-          "Logout error:",
-          error
-        );
-
-        alert(
-          error instanceof Error
-            ? error.message
-            : "Logout failed."
-        );
-
-      } finally {
-        setLoggingOut(
-          false
-        );
-      }
-    };
-
   const selectedExerciseGuide =
     selectedExercise
       ? getExerciseGuide(
@@ -1624,7 +1553,7 @@ export default function WorkoutPage() {
     return (
       <main className="fitmate-app-page min-h-screen bg-white">
 
-        <nav className="border-b border-gray-100 bg-white px-6 py-5">
+        <nav className="hidden border-b border-gray-100 bg-white px-6 py-5 sm:block">
 
           <div className="mx-auto flex max-w-7xl items-center justify-between">
 
@@ -1632,12 +1561,10 @@ export default function WorkoutPage() {
 
             <button
               type="button"
-              onClick={
-                handleLogout
-              }
-              className="rounded-xl border border-red-200 px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-50"
+              onClick={() => router.push("/settings")}
+              className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 hover:text-green-700"
             >
-              {tr("Keluar", "Log out")}
+              {tr("Pengaturan", "Settings")}
             </button>
 
           </div>
@@ -1702,7 +1629,7 @@ export default function WorkoutPage() {
 
   return (
     <main className="fitmate-app-page fitmate-workout-page min-h-screen bg-slate-50 pb-48 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
-      <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/90 px-4 py-3 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/90 sm:px-6">
+      <header className="sticky top-0 z-30 hidden border-b border-slate-200/80 bg-white/90 px-4 py-3 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/90 sm:block sm:px-6">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
           <FitMateBrand href="/dashboard" size="sm" showCompany />
 
@@ -1716,11 +1643,10 @@ export default function WorkoutPage() {
             </button>
             <button
               type="button"
-              onClick={handleLogout}
-              disabled={loggingOut}
-              className="rounded-xl px-3 py-2 text-sm font-bold text-rose-600 hover:bg-rose-50 disabled:opacity-50 dark:text-rose-300 dark:hover:bg-rose-400/10"
+              onClick={() => router.push("/settings")}
+              className="rounded-xl px-3 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10"
             >
-              {loggingOut ? tr("Keluar…", "Logging out…") : tr("Keluar", "Log out")}
+              {tr("Pengaturan", "Settings")}
             </button>
           </div>
         </div>
@@ -1772,7 +1698,7 @@ export default function WorkoutPage() {
                   ? `${activeCompletedExercises}/${activeTotalExercises} ${tr("gerakan selesai", "exercises complete")}`
                   : selectedDay
                     ? `${selectedDay.exercises.length} ${tr("gerakan", "exercises")} · ${localizeWorkoutFocus(selectedDay.focus, selectedDay.exercises.length > 0, language)}`
-                    : tr("Pilih satu hari untuk melihat sesi.", "Select a day to view the session.")}
+                    : tr("Pilih hari latihan.", "Choose a training day.")}
               </p>
             </div>
 
@@ -1816,7 +1742,7 @@ export default function WorkoutPage() {
                   {tr("Gerakan", "Exercises")}
                 </p>
                 <h2 className="mt-1 text-2xl font-black">
-                  {tr("Selesaikan satu per satu", "Complete them one by one")}
+                  {tr("Gerakan hari ini", "Today’s exercises")}
                 </h2>
               </div>
               <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-600 dark:bg-white/10 dark:text-slate-300">

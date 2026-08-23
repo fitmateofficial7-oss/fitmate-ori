@@ -1725,12 +1725,12 @@ export default function PlanPage(): import("react").JSX.Element {
                   <p className="mt-1 text-sm font-semibold text-slate-600">
                     {billing.isPremium
                       ? tr(
-                          `${billing.generation.premiumWeeklyRemaining} dari ${billing.generation.premiumWeeklyLimit} generate minggu ini masih tersedia. Reset ${formatQuotaReset(billing.generation.premiumWeeklyResetsAt, language)}.`,
-                          `${billing.generation.premiumWeeklyRemaining} of ${billing.generation.premiumWeeklyLimit} generations remain this week. Resets ${formatQuotaReset(billing.generation.premiumWeeklyResetsAt, language)}.`
+                          `${billing.generation.premiumWeeklyRemaining}/${billing.generation.premiumWeeklyLimit} tersisa · reset ${formatQuotaReset(billing.generation.premiumWeeklyResetsAt, language)}`,
+                          `${billing.generation.premiumWeeklyRemaining}/${billing.generation.premiumWeeklyLimit} left · reset ${formatQuotaReset(billing.generation.premiumWeeklyResetsAt, language)}`
                         )
                       : tr(
-                          `${billing.generation.freeRemaining} dari ${billing.generation.freeLimit} generate gratis masih tersedia seumur hidup.`,
-                          `${billing.generation.freeRemaining} of ${billing.generation.freeLimit} lifetime free generations remain.`
+                          `${billing.generation.freeRemaining}/${billing.generation.freeLimit} generate gratis`,
+                          `${billing.generation.freeRemaining}/${billing.generation.freeLimit} free generations`
                         )}
                   </p>
                 </div>
@@ -1740,7 +1740,7 @@ export default function PlanPage(): import("react").JSX.Element {
                     onClick={() => router.push("/premium")}
                     className="rounded-xl bg-slate-950 px-5 py-3 text-sm font-black text-white"
                   >
-                    {tr("Lihat Premium Rp49.000", "View Premium IDR 49,000")}
+                    {tr("Premium Rp49rb", "Premium IDR 49K")}
                   </button>
                 )}
               </div>
@@ -1758,10 +1758,7 @@ export default function PlanPage(): import("react").JSX.Element {
               </p>
 
               <h2 className="mt-2 text-3xl font-bold text-gray-900">
-                {tr(
-                  "Pilih tingkat latihan",
-                  "Choose your training level"
-                )}
+                {tr("Level latihan", "Training level")}
               </h2>
 
               <p className="mx-auto mt-3 max-w-2xl text-gray-600">

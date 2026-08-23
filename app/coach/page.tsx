@@ -246,7 +246,7 @@ export default function CoachPage() {
             disabled={loadingHistory}
             className="fitmate-coach-refresh inline-flex h-9 min-h-9 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-[11px] font-black text-slate-600 disabled:opacity-50 dark:border-white/10 dark:bg-white/5 dark:text-slate-300"
           >
-            {loadingHistory ? tr("Memuat…", "Loading…") : tr("Segarkan", "Refresh")}
+            {loadingHistory ? "…" : tr("Ulang", "Reload")}
           </button>
         </div>
       </header>
@@ -280,10 +280,7 @@ export default function CoachPage() {
                   {tr("Ada yang mau ditanyakan?", "What can I help with?")}
                 </h2>
                 <p className="mt-1 max-w-xs text-xs leading-5 text-slate-500 dark:text-slate-400">
-                  {tr(
-                    "Konsultasikan latihan, teknik, recovery, atau nutrisi yang berkaitan dengan fitness.",
-                    "Ask about training, technique, recovery, or fitness-related nutrition."
-                  )}
+                  {tr("Tanya soal latihan, teknik, atau recovery.", "Ask about training, technique, or recovery.")}
                 </p>
               </div>
 
