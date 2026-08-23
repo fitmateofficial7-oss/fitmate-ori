@@ -14,6 +14,7 @@ import {
 } from "@/lib/legal";
 import { supabase } from "@/lib/supabase";
 import { getAuthRedirectUrl } from "@/lib/auth-redirect";
+import { identifyTikTokUser, TIKTOK_STANDARD_EVENTS, trackTikTokEvent } from "@/lib/tiktok-business";
 
 export default function RegisterPage() {
   const { tr } = useLanguage();
@@ -124,6 +125,13 @@ export default function RegisterPage() {
           )
         );
       }
+
+      await identifyTikTokUser({
+        id: data.user.id,
+        email: data.user.email,
+        phoneNumber: data.user.phone,
+      });
+      await trackTikTokEvent(TIKTOK_STANDARD_EVENTS.REGISTRATION);
 
       if (!data.session) {
         window.location.assign(

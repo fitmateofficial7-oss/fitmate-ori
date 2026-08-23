@@ -8,6 +8,7 @@ import CompanySignature from "@/components/company-signature";
 import FitMateBrand from "@/components/fitmate-brand";
 import { useLanguage } from "@/components/language-provider";
 import { supabase } from "@/lib/supabase";
+import { logoutTikTokUser, refreshTikTokIdentity } from "@/lib/tiktok-business";
 
 type InstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -218,6 +219,7 @@ export default function SettingsPage() {
       setError(profileResult.error?.message || reminderResult.error?.message || "Save failed.");
     } else {
       setMessage(tr("Pengaturan tersimpan.", "Settings saved."));
+      void refreshTikTokIdentity({ id: userId, email });
     }
     setSaving(false);
   }
@@ -239,6 +241,7 @@ export default function SettingsPage() {
     setMessage("");
 
     try {
+      await logoutTikTokUser();
       const { error: signOutError } = await supabase.auth.signOut();
       if (signOutError) throw signOutError;
 

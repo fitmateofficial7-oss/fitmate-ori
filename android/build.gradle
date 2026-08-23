@@ -18,9 +18,14 @@ buildscript {
 apply from: "variables.gradle"
 
 allprojects {
+    apply plugin: 'idea'
     repositories {
-        google()
         mavenCentral()
+        google()
+        maven { url 'https://jitpack.io' }
+        // Required by the TikTok Business Android SDK integration guide.
+        // Keep last so modern repositories remain preferred.
+        jcenter()
     }
 }
 

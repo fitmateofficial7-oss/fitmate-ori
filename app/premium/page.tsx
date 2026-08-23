@@ -15,6 +15,7 @@ import {
   formatIdr,
 } from "@/lib/subscription";
 import { supabase } from "@/lib/supabase";
+import { trackTikTokPremiumCheckout, trackTikTokPremiumConversion } from "@/lib/tiktok-business";
 
 function formatDate(value: string | null, language: "id" | "en") {
   if (!value) return "—";
@@ -91,6 +92,10 @@ export default function PremiumPage() {
         const status = await loadBilling();
         if (!active) return;
 
+        if (checkoutResult === "success" && status.isPremium) {
+          await trackTikTokPremiumConversion(status);
+        }
+
         if (checkoutResult === "canceled") {
           setNotice(tr("Pembayaran dibatalkan. Tidak ada biaya yang diproses.", "Checkout was canceled. No charge was processed."));
         } else if (checkoutResult === "success" && !status.isPremium) {
@@ -131,6 +136,7 @@ export default function PremiumPage() {
         if (stopped) return;
 
         if (status.isPremium) {
+          await trackTikTokPremiumConversion(status);
           setCheckingPayment(false);
           setNotice(tr("Premium aktif. Semua fitur langganan sudah terbuka.", "Premium is active. Subscription features are now unlocked."));
           window.history.replaceState(null, "", "/premium");
@@ -214,6 +220,7 @@ export default function PremiumPage() {
         throw new Error(tr("Tautan pembayaran tidak tersedia.", "Checkout link is unavailable."));
       }
 
+      await trackTikTokPremiumCheckout(paymentMode);
       window.location.assign(payload.checkoutUrl);
     } catch (checkoutError) {
       setError(checkoutError instanceof Error ? checkoutError.message : tr("Gagal membuka pembayaran.", "Unable to open checkout."));
@@ -228,6 +235,7 @@ export default function PremiumPage() {
     try {
       const status = await loadBilling();
       if (status.isPremium) {
+        await trackTikTokPremiumConversion(status);
         setCheckingPayment(false);
         setNotice(tr("Premium sudah aktif.", "Premium is active."));
       }

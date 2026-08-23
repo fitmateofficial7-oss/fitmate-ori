@@ -7,6 +7,7 @@ import RestTimerNotificationManager from "@/components/rest-timer-notification-m
 import LanguageProvider from "@/components/language-provider";
 import LanguageToggle from "@/components/language-toggle";
 import ThemeToggle from "@/components/theme-toggle";
+import TikTokSessionSync from "@/components/tiktok-session-sync";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -87,6 +88,7 @@ export default function RootLayout({
       <body className="fitmate-simple-ui min-h-full flex flex-col">
         <LanguageProvider>
           <ClientMonitoring />
+          <TikTokSessionSync />
           <PwaManager />
           <RestTimerNotificationManager />
           {children}

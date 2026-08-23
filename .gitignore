@@ -63,3 +63,7 @@ android/fitmate-release-signing.properties
 *.log
 android/keystore.properties*.bak
 android/*signing*.properties.bak
+
+# TikTok App Events SDK local credentials (never commit)
+/android/tiktok.properties
+

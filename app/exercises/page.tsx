@@ -12,6 +12,7 @@ import { getExerciseSplitAsset } from "@/lib/exercise-split-assets";
 import ExerciseMuscleMap from "@/components/exercise-muscle-map";
 import LiveIcon from "@/components/live-icon";
 import { usePremiumAccess } from "@/hooks/use-premium-access";
+import { TIKTOK_STANDARD_EVENTS, trackTikTokEvent, trackTikTokExerciseView, trackTikTokExerciseWishlist } from "@/lib/tiktok-business";
 
 type Exercise = {
   id: number | string;
@@ -184,6 +185,22 @@ export default function ExercisesPage() {
     equipment,
   ]);
 
+  useEffect(() => {
+    const query = search.trim();
+    if (query.length < 2) return;
+
+    const timer = window.setTimeout(() => {
+      void trackTikTokEvent(TIKTOK_STANDARD_EVENTS.SEARCH);
+    }, 700);
+
+    return () => window.clearTimeout(timer);
+  }, [search]);
+
+  useEffect(() => {
+    if (!selectedExercise) return;
+    void trackTikTokExerciseView(selectedExercise);
+  }, [selectedExercise]);
+
   const selectedGuide = selectedExercise
     ? getExerciseGuide(
         selectedExercise.slug,
@@ -212,7 +229,8 @@ export default function ExercisesPage() {
   const toggleSavedExercise = (slug: string) => {
     setSavedSlugs((current) => {
       const next = new Set(current);
-      if (next.has(slug)) next.delete(slug);
+      const wasSaved = next.has(slug);
+      if (wasSaved) next.delete(slug);
       else next.add(slug);
       try {
         window.localStorage.setItem(
@@ -221,6 +239,11 @@ export default function ExercisesPage() {
         );
       } catch {
         // Keep the in-memory state even if storage is unavailable.
+      }
+
+      if (!wasSaved) {
+        const exercise = exercises.find((item) => item.slug === slug);
+        if (exercise) void trackTikTokExerciseWishlist(exercise);
       }
       return next;
     });

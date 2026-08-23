@@ -6,6 +6,7 @@ import FitMateBrand from "@/components/fitmate-brand";
 import FitMateIcon, { type FitMateIconName } from "@/components/fitmate-icon";
 import { useLanguage } from "@/components/language-provider";
 import { supabase } from "@/lib/supabase";
+import { refreshTikTokIdentity, TIKTOK_STANDARD_EVENTS, trackTikTokEvent } from "@/lib/tiktok-business";
 
 type FormData = {
   goal: string;
@@ -415,6 +416,17 @@ export default function OnboardingPage() {
           `Failed to save your fitness profile: ${saveProfileError.message}`
         );
       }
+
+      await refreshTikTokIdentity({
+        id: user.id,
+        email: user.email,
+        phoneNumber: user.phone,
+        userName:
+          typeof user.user_metadata?.full_name === "string"
+            ? user.user_metadata.full_name
+            : null,
+      });
+      await trackTikTokEvent(TIKTOK_STANDARD_EVENTS.COMPLETE_TUTORIAL);
 
       // The plan page regenerates the existing record in place.
       // Keeping the same plan record preserves workout history.

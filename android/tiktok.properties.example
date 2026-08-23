@@ -1,0 +1,9 @@
+# FitMate TikTok App Events SDK v1.5.0
+# Copy this file to android/tiktok.properties and fill values from TikTok Events Manager.
+# android/tiktok.properties is gitignored.
+#
+# IMPORTANT: Do NOT put TikTok App Secret in this file or anywhere in the APK.
+
+TIKTOK_APP_ID=
+TIKTOK_TT_APP_ID=
+TIKTOK_ACCESS_TOKEN=

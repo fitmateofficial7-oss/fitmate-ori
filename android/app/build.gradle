@@ -1,5 +1,31 @@
 apply plugin: 'com.android.application'
 
+// TikTok App Events SDK configuration.
+// Values can come from android/tiktok.properties, Gradle -P properties, or CI environment variables.
+// Never add TIKTOK_APP_SECRET here: an App Secret must stay server-side.
+def tiktokPropertiesFile = rootProject.file("tiktok.properties")
+def tiktokProperties = new Properties()
+if (tiktokPropertiesFile.exists()) {
+    tiktokProperties.load(new FileInputStream(tiktokPropertiesFile))
+}
+
+def resolveTikTokConfig = { String key ->
+    def gradleValue = project.findProperty(key)
+    if (gradleValue != null && gradleValue.toString().trim()) return gradleValue.toString().trim()
+    def envValue = System.getenv(key)
+    if (envValue != null && envValue.trim()) return envValue.trim()
+    return tiktokProperties.getProperty(key, "").trim()
+}
+
+def escapeBuildConfigValue = { String value ->
+    value.replace("\\", "\\\\").replace('"', '\\"')
+}
+
+def tiktokAppId = resolveTikTokConfig("TIKTOK_APP_ID")
+def tiktokTtAppId = resolveTikTokConfig("TIKTOK_TT_APP_ID")
+def tiktokAccessToken = resolveTikTokConfig("TIKTOK_ACCESS_TOKEN")
+
+
 def fitmateSigningPropertiesFile = rootProject.file("fitmate-release-signing.properties")
 def fitmateSigningProperties = new Properties()
 if (fitmateSigningPropertiesFile.exists()) {
@@ -9,6 +35,15 @@ if (fitmateSigningPropertiesFile.exists()) {
 android {
     namespace "com.growsia.fitmate"
     compileSdk rootProject.ext.compileSdkVersion
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     signingConfigs {
         release {
@@ -34,6 +69,9 @@ android {
         versionCode 1
         versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "TIKTOK_APP_ID", "\"${escapeBuildConfigValue(tiktokAppId)}\""
+        buildConfigField "String", "TIKTOK_TT_APP_ID", "\"${escapeBuildConfigValue(tiktokTtAppId)}\""
+        buildConfigField "String", "TIKTOK_ACCESS_TOKEN", "\"${escapeBuildConfigValue(tiktokAccessToken)}\""
         aaptOptions {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
@@ -64,6 +102,13 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
+
+    // TikTok App Events SDK (TikTok Business Android SDK)
+    implementation 'com.github.tiktok:tiktok-business-android-sdk:1.5.0'
+    // TikTok lifecycle + install attribution requirements
+    implementation 'androidx.lifecycle:lifecycle-process:2.3.1'
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.3.1'
+    implementation 'com.android.installreferrer:installreferrer:2.2'
 }
 
 apply from: 'capacitor.build.gradle'
