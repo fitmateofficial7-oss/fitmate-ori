@@ -51,7 +51,8 @@
     "verify:remote-policy": "node scripts/verify-remote-policy-release.cjs",
     "verify:merged-android-permissions": "node scripts/verify-merged-android-permissions.cjs",
     "prebuild": "node scripts/ensure-exercise-preset-compat.cjs",
-    "verify:capacitor-install": "node scripts/verify-capacitor-install.cjs"
+    "verify:capacitor-install": "node scripts/verify-capacitor-install.cjs",
+    "audit:exercise-videos": "node scripts/audit-exercise-videos.cjs"
   },
   "dependencies": {
     "@capacitor-community/background-geolocation": "^1.2.26",

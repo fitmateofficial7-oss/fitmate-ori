@@ -2,6 +2,7 @@ import type { SVGProps } from "react";
 
 export type FitMateIconName =
   | "activity"
+  | "bookmark"
   | "camera"
   | "chart"
   | "check"
@@ -48,6 +49,8 @@ export default function FitMateIcon({
   switch (name) {
     case "activity":
       return <svg {...common}><path d="M3 12h4l2-6 4 12 2-6h6" /></svg>;
+    case "bookmark":
+      return <svg {...common}><path d="M6 4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21l-6-3.5L6 21V4.5Z" /></svg>;
     case "camera":
       return <svg {...common}><path d="M5 7h3l1.3-2h5.4L16 7h3a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z" /><circle cx="12" cy="13" r="3.2" /></svg>;
     case "chart":

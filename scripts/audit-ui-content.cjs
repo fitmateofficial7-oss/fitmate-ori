@@ -19,6 +19,7 @@ const dashboard = read("app/dashboard/page.tsx");
 const threeDGuide = read("components/exercise-3d-guide.tsx");
 const twoDScene = read("components/exercise-2d-scene.tsx");
 const threeDPreview = read("components/exercise-3d-preview.tsx");
+const exerciseVideoAssets = read("lib/exercise-video-assets.ts");
 const coachApi = read("app/api/coach/route.ts");
 const coachPage = read("app/coach/page.tsx");
 const generatePlanApi = read("app/api/generate-plan/route.ts");
@@ -93,10 +94,13 @@ assert(
   "Mood Booster must avoid repeated messages."
 );
 assert(
-  exercisesPage.includes("<Exercise3DPreview") &&
-    exercisesPage.includes("<Exercise3DGuide") &&
-    threeDPreview.includes("Exercise2DScene"),
-  "The exercise library must use the lightweight 2D preview and full 2D guide."
+  exercisesPage.includes("getExerciseVideoAsset") &&
+    exercisesPage.includes("posterSrc") &&
+    exercisesPage.includes("<ExerciseMuscleMap") &&
+    exercisesPage.includes("<video") &&
+    exerciseVideoAssets.includes("/exercise-videos/") &&
+    exerciseVideoAssets.includes("/exercise-video-posters/"),
+  "The exercise library must use video-derived thumbnails and expose the complete mobile video movement guide."
 );
 assert(
   threeDGuide.includes("getExerciseSplitAsset") &&

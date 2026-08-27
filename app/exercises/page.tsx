@@ -2,13 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import FitMateIcon from "@/components/fitmate-icon";
 import { useLanguage } from "@/components/language-provider";
 import { supabase } from "@/lib/supabase";
 import { getExerciseGuide } from "@/lib/exercise-guides";
-import { getExerciseSplitAsset } from "@/lib/exercise-split-assets";
+import { getExerciseVideoAsset } from "@/lib/exercise-video-assets";
 import ExerciseMuscleMap from "@/components/exercise-muscle-map";
 import LiveIcon from "@/components/live-icon";
 import { usePremiumAccess } from "@/hooks/use-premium-access";
@@ -34,15 +33,89 @@ type Exercise = {
 
 const FREE_EXERCISE_LIMIT = 10;
 
-const Exercise3DPreview = dynamic(
-  () => import("@/components/exercise-3d-preview"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-full w-full animate-pulse bg-emerald-50 dark:bg-emerald-950/20" />
-    ),
-  }
-);
+function ExerciseMovementVideo({
+  src,
+  label,
+  openLabel,
+  closeLabel,
+}: {
+  src: string;
+  label: string;
+  openLabel: string;
+  closeLabel: string;
+}) {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    if (!isFullscreen) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsFullscreen(false);
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [isFullscreen]);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setIsFullscreen(true)}
+        className="group relative h-full w-full bg-black"
+        aria-label={openLabel}
+      >
+        <video
+          key={src}
+          src={src}
+          aria-label={label}
+          className="h-full w-full bg-black object-contain"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          disablePictureInPicture
+        />
+        <span className="pointer-events-none absolute bottom-1.5 right-1.5 flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-black/60 text-white/90 backdrop-blur-sm">
+          <FitMateIcon name="video" className="h-4 w-4" />
+        </span>
+      </button>
+
+      {isFullscreen && (
+        <div
+          className="fixed inset-0 z-[90] flex items-center justify-center bg-black"
+          role="dialog"
+          aria-modal="true"
+          aria-label={label}
+          onClick={() => setIsFullscreen(false)}
+        >
+          <video
+            key={`${src}-fullscreen`}
+            src={src}
+            aria-label={label}
+            className="h-full w-full object-contain"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            disablePictureInPicture
+            onClick={(event) => event.stopPropagation()}
+          />
+          <button
+            type="button"
+            onClick={() => setIsFullscreen(false)}
+            className="absolute right-4 top-[max(1rem,env(safe-area-inset-top))] flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/65 text-2xl font-light text-white shadow-lg backdrop-blur-md active:scale-95"
+            aria-label={closeLabel}
+          >
+            <FitMateIcon name="x" className="h-5 w-5" />
+          </button>
+        </div>
+      )}
+    </>
+  );
+}
 
 export default function ExercisesPage() {
   const router = useRouter();
@@ -209,8 +282,8 @@ export default function ExercisesPage() {
       )
     : null;
 
-  const selectedSplitAsset = selectedExercise
-    ? getExerciseSplitAsset(selectedExercise.slug)
+  const selectedVideoAsset = selectedExercise
+    ? getExerciseVideoAsset(selectedExercise.slug, selectedExercise.name)
     : null;
 
   const relatedExercises = selectedExercise
@@ -259,7 +332,7 @@ export default function ExercisesPage() {
           <div>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-green-200 bg-green-50 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-green-700">
               <FitMateIcon name="activity" className="h-4 w-4" />
-              {tr("Panduan gerakan 2D", "2D movement guide")}
+              {tr("Panduan video gerakan", "Movement video guide")}
             </div>
 
             <h1 className="text-4xl font-black tracking-tight sm:text-5xl">
@@ -422,6 +495,7 @@ export default function ExercisesPage() {
                 );
                 const shortDescription = guide.motionLabel;
                 const isLocked = isExerciseLocked(exercise);
+                const videoAsset = getExerciseVideoAsset(exercise.slug, exercise.name);
 
                 return (
                   <button
@@ -439,8 +513,8 @@ export default function ExercisesPage() {
                       isLocked
                         ? `${tr("Tersedia di Premium", "Available with Premium")}: ${exercise.name}`
                         : `${tr(
-                            "Lihat panduan 2D",
-                            "View 2D guide"
+                            "Lihat panduan video",
+                            "View video guide"
                           )} ${exercise.name}`
                     }
                     className="fitmate-exercise-card group relative flex min-h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white text-left shadow-sm transition hover:border-green-400 hover:shadow-lg hover:shadow-green-100/70"
@@ -450,13 +524,18 @@ export default function ExercisesPage() {
                         isLocked ? "blur-[5px] opacity-35" : ""
                       }`}
                     >
-                      <Exercise3DPreview
-                        exerciseName={exercise.name}
-                        preset={guide.preset}
-                        language={language}
-                      />
-                      <span className="absolute right-3 top-3 rounded-full border border-white/70 bg-white/90 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-green-700 shadow-sm">
-                        {tr("Contoh gerakan", "Movement preview")}
+                      {videoAsset ? (
+                        <img
+                          src={videoAsset.posterSrc}
+                          alt={`${exercise.name} ${tr("thumbnail video", "video thumbnail")}`}
+                          className="h-full w-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-[#0a1410]" />
+                      )}
+                      <span className="absolute right-3 top-3 rounded-full border border-white/10 bg-black/65 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-emerald-300 shadow-sm backdrop-blur-sm">
+                        {tr("Video gerakan", "Movement video")}
                       </span>
                     </div>
 
@@ -498,8 +577,8 @@ export default function ExercisesPage() {
                       <div className="mt-auto flex items-center justify-between border-t border-slate-100 pt-4 text-sm font-black text-green-700">
                         <span>
                           {tr(
-                            "Lihat panduan 2D",
-                            "View 2D guide"
+                            "Lihat panduan video",
+                            "View video guide"
                           )}
                         </span>
                         <LiveIcon
@@ -571,9 +650,10 @@ export default function ExercisesPage() {
                   }
                   className="flex h-9 w-9 items-center justify-center rounded-full text-green-400 active:bg-white/5"
                 >
-                  <span className="text-xl leading-none">
-                    {savedSlugs.has(selectedExercise.slug) ? "★" : "☆"}
-                  </span>
+                  <FitMateIcon
+                    name="bookmark"
+                    className={`h-5 w-5 ${savedSlugs.has(selectedExercise.slug) ? "fill-current" : ""}`}
+                  />
                 </button>
               </header>
 
@@ -603,7 +683,7 @@ export default function ExercisesPage() {
                     {tr("Langkah Gerakan", "Movement Steps")}
                   </h3>
 
-                  <div className="mt-3 grid grid-cols-[minmax(0,1fr)_88px] gap-3">
+                  <div className="mt-3 grid grid-cols-[minmax(0,1fr)_104px] gap-3">
                     <ol className="space-y-2.5">
                       {selectedGuide.phases.slice(0, 3).map((step, index) => (
                         <li
@@ -618,19 +698,18 @@ export default function ExercisesPage() {
                       ))}
                     </ol>
 
-                    <div className="relative h-[102px] overflow-hidden rounded-[14px] border border-white/10 bg-[#101b16]">
-                      {selectedSplitAsset?.stepSrcs?.[0] ? (
-                        <img
-                          src={selectedSplitAsset.stepSrcs[0]}
-                          alt={`${selectedExercise.name} ${tr("posisi awal", "start position")}`}
-                          className="h-full w-full object-cover"
+                    <div className="relative h-[160px] overflow-hidden rounded-[14px] border border-white/10 bg-black">
+                      {selectedVideoAsset ? (
+                        <ExerciseMovementVideo
+                          src={selectedVideoAsset.src}
+                          label={`${selectedExercise.name} ${tr("video gerakan", "movement video")}`}
+                          openLabel={tr("Buka video layar penuh", "Open full-screen video")}
+                          closeLabel={tr("Tutup video", "Close video")}
                         />
                       ) : (
-                        <Exercise3DPreview
-                          exerciseName={selectedExercise.name}
-                          preset={selectedGuide.preset}
-                          language={language}
-                        />
+                        <div className="flex h-full w-full items-center justify-center bg-black px-3 text-center text-[10px] font-bold text-white/40">
+                          {tr("Video belum tersedia", "Video not available")}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -675,14 +754,17 @@ export default function ExercisesPage() {
                             className="grid w-full grid-cols-[48px_minmax(0,1fr)_24px] items-center gap-3 rounded-[15px] border border-white/[0.06] bg-white/[0.025] px-2.5 py-2 text-left active:bg-white/[0.06]"
                           >
                             <div className="relative h-12 w-12 overflow-hidden rounded-[10px] bg-[#101b16]">
-                              <img
-                                src={`/exercise-posters/${exercise.slug}/poster.webp`}
-                                alt=""
-                                className="h-full w-full object-cover"
-                                onError={(event) => {
-                                  event.currentTarget.style.display = "none";
-                                }}
-                              />
+                              {(() => {
+                                const relatedVideoAsset = getExerciseVideoAsset(exercise.slug, exercise.name);
+                                return relatedVideoAsset ? (
+                                  <img
+                                    src={relatedVideoAsset.posterSrc}
+                                    alt=""
+                                    className="h-full w-full object-cover"
+                                    loading="lazy"
+                                  />
+                                ) : null;
+                              })()}
                             </div>
 
                             <div className="min-w-0">
