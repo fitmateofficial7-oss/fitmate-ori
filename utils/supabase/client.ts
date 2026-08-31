@@ -7,4 +7,10 @@ export const createClient = () =>
   createBrowserClient(
     supabaseUrl!,
     supabaseKey!,
+    {
+      auth: {
+        flowType: "implicit",
+        detectSessionInUrl: true,
+      },
+    },
   );

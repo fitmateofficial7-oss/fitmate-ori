@@ -19,5 +19,14 @@ if (!supabasePublicKey) {
 
 export const supabase = createBrowserClient(
   supabaseUrl,
-  supabasePublicKey
+  supabasePublicKey,
+  {
+    auth: {
+      // Email apps often open recovery links in another browser or WebView.
+      // Keep recovery credentials in the link instead of depending on a PKCE
+      // verifier stored in the browser that requested the reset.
+      flowType: "implicit",
+      detectSessionInUrl: true,
+    },
+  }
 );

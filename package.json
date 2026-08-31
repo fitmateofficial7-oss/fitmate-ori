@@ -1,6 +1,6 @@
 {
   "name": "fitmate-ai",
-  "version": "1.4.79",
+  "version": "1.4.92",
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
@@ -26,7 +26,7 @@
     "audit:premium-gates": "node scripts/audit-premium-gates.cjs",
     "audit:jogging": "node scripts/audit-jogging-feature.cjs",
     "verify:xendit": "node scripts/verify-xendit-config.mjs",
-    "native:configure": "node scripts/configure-native-background-gps.cjs",
+    "native:configure": "node scripts/configure-native-background-gps.cjs && npm run android:enforce-api36",
     "native:add:android": "npx cap add android && npm run native:configure",
     "native:add:ios": "npx cap add ios && npm run native:configure",
     "native:sync": "npm run native:verify-url && npm run native:prepare-welcome && npx cap sync && npm run native:configure",
@@ -52,7 +52,8 @@
     "verify:merged-android-permissions": "node scripts/verify-merged-android-permissions.cjs",
     "prebuild": "node scripts/ensure-exercise-preset-compat.cjs",
     "verify:capacitor-install": "node scripts/verify-capacitor-install.cjs",
-    "audit:exercise-videos": "node scripts/audit-exercise-videos.cjs"
+    "audit:exercise-videos": "node scripts/audit-exercise-videos.cjs",
+    "android:enforce-api36": "node scripts/enforce-android-api36.cjs"
   },
   "dependencies": {
     "@capacitor-community/background-geolocation": "^1.2.26",

@@ -120,8 +120,8 @@ export default function ResetPasswordPage() {
 
         setErrorMessage(
           tr(
-            "Tautan reset tidak valid, sudah kedaluwarsa, atau dibuka dari browser yang berbeda. Minta tautan reset baru dari halaman login lalu buka pada browser yang sama.",
-            "This reset link is invalid, expired, or was opened in a different browser. Request a new reset link from the login page and open it in the same browser."
+            "Tautan reset tidak valid atau sudah kedaluwarsa. Minta tautan reset baru dari halaman login.",
+            "This reset link is invalid or has expired. Request a new reset link from the login page."
           )
         );
         setChecking(false);
@@ -175,7 +175,7 @@ export default function ResetPasswordPage() {
       if (!session) {
         throw new Error(
           tr(
-            "Sesi reset sudah tidak aktif. Minta tautan reset baru dari halaman login.",
+            "Sesi reset sudah tidak aktif atau tautannya telah kedaluwarsa. Minta tautan reset baru dari halaman login.",
             "The reset session is no longer active. Request a new reset link from the login page."
           )
         );
