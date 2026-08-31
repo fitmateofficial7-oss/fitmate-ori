@@ -22,6 +22,7 @@ export default function LoginPage() {
   const [resetLoading, setResetLoading] =
     useState(false);
   const [resetSent, setResetSent] = useState(false);
+  const [resetCooldown, setResetCooldown] = useState(0);
   const [notice, setNotice] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -79,6 +80,16 @@ export default function LoginPage() {
       window.cancelAnimationFrame(frame);
     };
   }, [tr]);
+
+  useEffect(() => {
+    if (resetCooldown <= 0) return;
+
+    const timer = window.setInterval(() => {
+      setResetCooldown((seconds) => Math.max(0, seconds - 1));
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [resetCooldown]);
 
   const handleLogin = async (
     event: FormEvent<HTMLFormElement>
@@ -189,6 +200,16 @@ export default function LoginPage() {
       return;
     }
 
+    if (resetCooldown > 0) {
+      setErrorMessage(
+        tr(
+          `Tunggu ${resetCooldown} detik sebelum meminta tautan baru.`,
+          `Wait ${resetCooldown} seconds before requesting another link.`
+        )
+      );
+      return;
+    }
+
     setResetLoading(true);
 
     try {
@@ -205,19 +226,31 @@ export default function LoginPage() {
       }
 
       setResetSent(true);
+      setResetCooldown(60);
     } catch (error) {
       console.error(
         "Password reset request error:",
         error
       );
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : tr(
-              "Tautan reset belum dapat dikirim. Coba lagi.",
-              "The reset link could not be sent. Try again."
-            )
-      );
+      const rawMessage = error instanceof Error ? error.message : "";
+      const isRateLimited = /rate.?limit|too many requests|429/i.test(rawMessage);
+
+      if (isRateLimited) {
+        setResetCooldown(60);
+        setErrorMessage(
+          tr(
+            "Permintaan tautan reset terlalu sering. Tunggu beberapa menit, lalu coba kembali. Jika tetap muncul, layanan email sedang mencapai batas pengiriman.",
+            "Too many reset links were requested. Wait a few minutes and try again. If this continues, the email service has reached its sending limit."
+          )
+        );
+      } else {
+        setErrorMessage(
+          tr(
+            "Tautan reset belum dapat dikirim. Periksa email dan coba kembali.",
+            "The reset link could not be sent. Check the email address and try again."
+          )
+        );
+      }
     } finally {
       setResetLoading(false);
     }
@@ -313,7 +346,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   data-testid="forgot-password-submit"
-                  disabled={resetLoading}
+                  disabled={resetLoading || resetCooldown > 0}
                   className="w-full rounded-2xl bg-gradient-to-r from-green-500 to-green-600 py-4 font-black text-white shadow-xl shadow-green-500/20 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {resetLoading
@@ -321,6 +354,11 @@ export default function LoginPage() {
                         "Mengirim tautan…",
                         "Sending link…"
                       )
+                    : resetCooldown > 0
+                      ? tr(
+                          `Coba lagi dalam ${resetCooldown} detik`,
+                          `Try again in ${resetCooldown} seconds`
+                        )
                     : tr(
                         "Kirim tautan reset",
                         "Send reset link"
