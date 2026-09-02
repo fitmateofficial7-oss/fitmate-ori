@@ -308,16 +308,17 @@ export async function POST(request: NextRequest) {
       success_return_url: `${appUrl}/premium?checkout=success&reference=${encodeURIComponent(referenceId)}`,
       cancel_return_url: `${appUrl}/premium?checkout=canceled&reference=${encodeURIComponent(referenceId)}`,
     };
-    const sessionMetadata = {
+    // Xendit session metadata accepts strings only. QRIS has no recurring
+    // consent, so omit that field instead of sending null to the provider.
+    const sessionMetadata: Record<string, string> = {
       fitmate_user_id: user.id,
       plan_code: PREMIUM_PLAN_CODE,
       payment_mode: paymentMode,
       reference_id: referenceId,
       subscription_terms_version: FITMATE_SUBSCRIPTION_TERMS_VERSION,
-      recurring_consent_version:
-        paymentMode === "recurring"
-          ? FITMATE_RECURRING_PAYMENT_CONSENT_VERSION
-          : null,
+      ...(paymentMode === "recurring"
+        ? { recurring_consent_version: FITMATE_RECURRING_PAYMENT_CONSENT_VERSION }
+        : {}),
     };
 
     const session =

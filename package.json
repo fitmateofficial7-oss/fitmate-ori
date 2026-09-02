@@ -1,6 +1,6 @@
 {
   "name": "fitmate-ai",
-  "version": "1.4.93",
+  "version": "1.4.94",
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
@@ -23,6 +23,7 @@
     "audit:sql": "node scripts/audit-sql-compatibility.cjs",
     "audit:subscription": "node scripts/audit-subscription-flow.cjs",
     "test:billing-periods": "node --no-warnings --experimental-strip-types scripts/test-billing-periods.mjs",
+    "test:billing-checkout": "node --test scripts/test-billing-checkout.cjs",
     "audit:premium-gates": "node scripts/audit-premium-gates.cjs",
     "audit:jogging": "node scripts/audit-jogging-feature.cjs",
     "verify:xendit": "node scripts/verify-xendit-config.mjs",

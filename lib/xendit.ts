@@ -112,8 +112,12 @@ export type XenditPaymentSession = {
 
 export type XenditSubscriptionSession = XenditPaymentSession;
 
+type XenditSessionPayload = Record<string, unknown> & {
+  metadata?: Record<string, string>;
+};
+
 export async function createXenditPaymentSession(
-  payload: Record<string, unknown>,
+  payload: XenditSessionPayload,
   idempotencyKey: string
 ) {
   return xenditRequest<XenditPaymentSession>("/sessions", {
@@ -125,7 +129,7 @@ export async function createXenditPaymentSession(
 }
 
 export async function createXenditSubscriptionSession(
-  payload: Record<string, unknown>,
+  payload: XenditSessionPayload,
   idempotencyKey: string
 ) {
   return createXenditPaymentSession(payload, idempotencyKey);
